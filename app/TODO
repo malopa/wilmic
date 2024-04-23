@@ -1,0 +1,21 @@
+mfanyakazi  ....  assets..  .. above 20000 request assets data.
+
+mfanyabiashara  .. bank statment.. barua ya utambulisho . ... assets..
+
+verification when sending sms...... .. 
+
+tawiriis_live_db
+tawiriDb@023
+user:tawiri
+
+tawiridbuser
+tawiriDB@2023
+
+export postgres db
+pg_dump -U tawiri -h localhost -d tawiriis_live_db > ./cmsdump.sql
+
+Transfer file from remote to local machine current director
+scp twr@192.168.4.2:/var/www/tawiriis/cmsdump.sql .
+
+import postgres 
+psql -h localhost -d tawiriis_live_db -U postgres -f tawiriis_live_db.sql

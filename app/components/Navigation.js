@@ -21,12 +21,20 @@ export default function Navigation(props) {
                       }
                 },
                 {
-                    label: 'Loan Type',
+                    label: 'Loan Interest',
                     icon: 'pi pi-cloud-download',
                     command: () => {
                         router.push("/loan-type")
                       }
                 },
+                {
+                    label: 'Tax',
+                    icon: 'pi pi-pound',
+                    command: () => {
+                        router.push("/tax")
+                      }
+                },
+                
             ]
         },
     ];
@@ -56,16 +64,16 @@ export default function Navigation(props) {
     <nav className='flex flex-col'>
         <Link className='p-2 text-white no-underline w-full my-0' href="/dashboard"> <i className='pi pi-home m-2 text-lg'></i>Dashboard</Link>
         <Link className='p-2 text-white no-underline w-full my-0' href="/user"> <i className='pi pi-user m-2 text-lg'></i> Users</Link>
-        {/* <Link className='p-2 text-white no-underline w-full my-0' href="/customer"><i className='pi pi-users m-2 text-lg'></i> Customers</Link> */}
-        {/* <Link className='p-2 text-white no-underline w-full my-0' href="/loan"><i className='pi pi-home m-2 text-lg'></i> Loans</Link> */}
-        {/* <Link className='p-2 text-white no-underline w-full my-0' href="/report"> <i className='pi pi-file-pdf m-2 text-lg'></i> Report</Link> */}
-        <Link className='p-2 text-white no-underline w-full my-0' href="/brand"> <i className='pi pi-cog m-2 text-lg'></i>Brands</Link>
+        <Link className='p-2 text-white no-underline w-full my-0' href="/customer"><i className='pi pi-users m-2 text-lg'></i> Customers</Link> 
+        <Link className='p-2 text-white no-underline w-full my-0' href="/loan"><i className='pi pi-home m-2 text-lg'></i> Loans</Link>
+        <Link className='p-2 text-white no-underline w-full my-0' href="/report"> <i className='pi pi-file-pdf m-2 text-lg'></i> Report</Link>
+        {/* <Link className='p-2 text-white no-underline w-full my-0' href="/brand"> <i className='pi pi-cog m-2 text-lg'></i>Brands</Link>
         <Link className='p-2 text-white no-underline w-full my-0' href="/condition"> <i className='pi pi-cog m-2 text-lg'></i>Condition</Link>
         <Link className='p-2 text-white no-underline w-full my-0' href="/model"> <i className='pi pi-cog m-2 text-lg'></i>Models</Link>
         <Link className='p-2 text-white no-underline w-full my-0' href="/car"> <i className='pi pi-cog m-2 text-lg'></i>Cars</Link>
         <Link className='p-2 text-white no-underline w-full my-0' href="/country"> <i className='pi pi-cog m-2 text-lg'></i>Country</Link>
         <Link className='p-2 text-white no-underline w-full my-0' href="/state"> <i className='pi pi-cog m-2 text-lg'></i>States</Link>
-        <Link className='p-2 text-white no-underline w-full my-0' href="/destination"> <i className='pi pi-cog m-2 text-lg'></i>Destinations</Link>
+        <Link className='p-2 text-white no-underline w-full my-0' href="/destination"> <i className='pi pi-cog m-2 text-lg'></i>Destinations</Link> */}
         {/* <Accordion className='bg-red-400'>{createDynamicTabs()}</Accordion> */}
 
         <PanelMenu model={items} className="w-full bg-red-400" />

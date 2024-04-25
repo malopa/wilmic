@@ -2,7 +2,7 @@
 import { cookies } from 'next/headers'
 import {BASE_URL} from './base'
 import { jwtDecode } from "jwt-decode";
-import { NextResponse } from 'next/server';
+import { NextRequest, NextResponse } from 'next/server';
 import { redirect } from 'next/navigation';
 import { serialize } from 'cookie';
 import { revalidatePath } from 'next/cache';
@@ -23,13 +23,15 @@ export const login = async (data)=>{
     // console.log("access--",body?.access," refresh--",body?.refresh)
     cookies().set('access',body?.access,{ httpOnly:true})
     cookies().set('refresh',body?.refresh,{ httpOnly:true})
+
+
     revalidatePath("/dashboard")
     redirect("/dashboard")
     return body
 }
 
 
-export async function updateSession(request ){
+export async function updateSession(request){
     const refreshToken = request.cookies.get('refresh')?.value
     const accessToken = request.cookies.get('access')?.value
 
@@ -71,14 +73,21 @@ export async function updateSession(request ){
         //     value: JSON.stringify(tokensResponse),
         //})
 
-        res.cookies.set({
-            name:'access',
-            value:access
-        })
+        // Object.keys(returnedHeaders).forEach(key =>
+            // res.setHeader("access", access),
+
+        // request.cookies['access'] = access;
+        request.cookies.delete('access')
+        // request.cookies.set('access', access)
+           
+        //   )
+        // res.cookies.set({
+            // name:'access',
+            // value:access
+        // })
 
         console.log("after",request.cookies.get('access')) 
-
-
+        return NextResponse.next();
 
     }
 }
@@ -114,5 +123,10 @@ export async function getSession(){
 export  async function logout(){
     cookies().set("access","")
     cookies().set("refresh","")
+}
+
+
+export  async function updateCookies(access){
+    cookies().set("access",access)
 }
 

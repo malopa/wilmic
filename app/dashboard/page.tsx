@@ -4,11 +4,19 @@ import Container from '../components/Container'
 import DashboardCard from '../components/DashboardCard'
 import { getLoanData } from '../api/data/getdata'
 import Spinner from '../components/Spinner'
+import { useTokenContext } from '../../context/TokenContext'
+import { useEffect } from 'react'
 
 
 export default function Page() {
+  
+  const {token} = useTokenContext()
+
   const {isLoading,data} = getLoanData()
 
+  useEffect(()=>{
+    // window.location.reload()
+  },[])
 
   return (
       <div>

@@ -21,6 +21,9 @@ import Stepper from '../components/steps/index.js';
 import { useMutation } from '@tanstack/react-query';
 import {addCustomer, deleteCustomers} from '../api/customer/api.js'
 import { useTokenContext } from '../../context/TokenContext.js';
+import { Dropdown } from 'primereact/dropdown';
+import { Calendar } from 'primereact/calendar';
+import Link from 'next/link.js';
         
 
 const _steps =[
@@ -39,14 +42,28 @@ const _steps =[
       console.log('onClick', 2)
     }
   }, {
-    title: 'Sponsors',
+    title: 'Guarantor',
     href: 'http://example3.com',
     onClick: (e) => {
       e.preventDefault()
       console.log('onClick', 3)
     }
+    ,
   
-  }]
+  },
+  {
+    disabled:true,
+    title: 'Next of kin',
+    href: 'http://example3.com',
+    onClick: (e) => {
+      e.preventDefault()
+      console.log('onClick', 4)
+    }
+},
+
+
+
+]
 
 export default function CustomDatatable(props) {
 
@@ -67,8 +84,24 @@ export default function CustomDatatable(props) {
         sponsor_name_2:'',
         sponsor_phone_2:'',
         sponsor_relation_2:'',
-        
+        institition_type:'',
+        employee:'',
+        work_place:'',
+        start_at:'',
+        end_at:'',
+        supervisor_name:'',
+        salary_after_tax:'',
+        salary_before_tax:'',
+        supervisor_email:'',
+        super_phone:'',
+        work_position:'',
+        owner:'',
+        education_level:'',
+        next_of_kin_name:'',
+        next_of_phone:'',
+
     };
+
 
     const {token} = useTokenContext()
     const [products, setProducts] = useState(null);
@@ -116,18 +149,19 @@ export default function CustomDatatable(props) {
     const mutation  = useMutation({mutationFn:addCustomer,onSuccess:(data)=>{
         setDeleteProductsDialog(false);
         hideDialog()
+        setCurrentStep(0)
         toast.current.show({ severity: 'success', summary: 'Successful', detail: 'Customer added successfully', life: 3000 });
 
     }})
     const saveProduct = () => {
         
-        const data = {...product,token,sponsor:[
+        const data = {...product,owner:product.owner.code,education_level:product.education_level.code,token,
+            sponsor:[
             {name:product.sponsor_name_1,phone_number:product.sponsor_phone_1,relation:product.sponsor_relation_1},
-            {name:product.sponsor_name_2,phone_number:product.sponsor_phone_2,relation:product.sponsor_relation_2}]
-        }
+            {name:product.sponsor_name_2,phone_number:product.sponsor_phone_2,relation:product.sponsor_relation_2}],
+           }
 
         mutation.mutate(data)
-
        
     };
 
@@ -266,10 +300,13 @@ export default function CustomDatatable(props) {
                 tooltip="Edit user" 
                 tooltipOptions={{ position: 'top' }}
                 onClick={() => editProduct(rowData)} />
-                <Button icon="pi pi-trash" rounded outlined severity="danger" onClick={() => confirmDeleteProduct(rowData)} />
-                {"--d--"+JSON.stringify(rowData.loan_status)}
+                <Link href={`/customer-details/${rowData.id}`}>
+                <Button icon="pi pi-eye" rounded outlined severity="success"  />
+                </Link>
+                {/* <Button icon="pi pi-trash" rounded outlined severity="danger" onClick={() => confirmDeleteProduct(rowData)} /> */}
                 <Button label="Request Loan"  className='ml-2' rounded outlined 
                 severity="success" 
+                disabled={rowData.loan_status == "active"?false:true}
                 tooltip="Assign user role" 
                 tooltipOptions={{ position: 'top' }} 
                 onClick={() => {setLoanVisible(!loanVisible);setProduct(rowData)}} />
@@ -309,10 +346,10 @@ export default function CustomDatatable(props) {
                 currentStep > 0 && <Button label="Back" icon="pi pi-arrow-left" onClick={()=>onClickPrevious()} />
             }
 
-            {(currentStep == 0 || currentStep == 1) && <Button label="Next" icon="pi pi-arrow-right"  onClick={()=>onClickNext()} />}
+            {(currentStep == 0 || currentStep == 1 || currentStep == 2) && <Button label="Next" icon="pi pi-arrow-right"  onClick={()=>onClickNext()} />}
 
            
-            {currentStep == 2 && <>
+            {(currentStep == 3 )&& <>
             <Button label="Cancel" icon="pi pi-times" outlined onClick={hideDialog} />
             <Button label="Save" icon="pi pi-check" onClick={saveProduct} />
             </>}
@@ -340,6 +377,25 @@ export default function CustomDatatable(props) {
         setCurrentStep(p=>p-1)
     }
 
+
+    const institition_type = [
+        { name: 'Governament', code: 'GN' },
+        { name: 'Private', code: 'PR' },
+    ];
+
+    const owenership = [
+        { name: 'Rented', code: 'rented' },
+        { name: 'Family', code: 'family' },
+        { name: 'Owned', code: 'owned' },
+    ];
+
+    const education_level = [
+        { name: 'Primary level', code: 'primary level' },
+        { name: 'Secondary', code: 'Secondary' },
+        { name: 'University', code: 'University' },
+    ];
+
+
   return (
      <div>
             <Toast ref={toast} />
@@ -359,7 +415,7 @@ export default function CustomDatatable(props) {
 
                     <Column selectionMode="false" exportable={false}></Column>
                     <Column field="first_name" header="First Name"  style={{ minWidth: '200px' }} frozen sortable ></Column>
-                    <Column field="middle_name" header="Middle Name" frozen sortable style={{ minWidth: '16rem' }}></Column>
+                    <Column field="middle_name" header="Middle Name"  sortable style={{ minWidth: '16rem' }}></Column>
                     <Column field="last_name" header="Last Name"  sortable style={{ minWidth: '16rem' }}></Column>
                     <Column field="gender" header="Gender" sortable style={{ minWidth: '10rem' }}></Column>
                     <Column field="phone_number" header="phone_number" sortable style={{ minWidth: '10rem' }}></Column>
@@ -370,6 +426,7 @@ export default function CustomDatatable(props) {
                     <Column body={actionBodyTemplate} exportable={false} style={{ minWidth: '18rem' }}></Column>
 
                 </DataTable>
+
             </div>
 
 {/* add product */}
@@ -443,11 +500,22 @@ export default function CustomDatatable(props) {
                 </>}
 
                 {currentStep == 1 && <>
+
+                    <div className='flex justify-between items-center'>
                     <div className="field mt-4">
                         <label htmlFor="name" className="font-bold">
-                            Region
+                            District
                         </label>
                         <InputText id="name" value={product.region} onChange={(e) => onInputChange(e, 'region')} required autoFocus className={classNames({ 'p-invalid': submitted && !product.region })} />
+                    </div>
+
+                    <div className="field mt-4">
+                        <label htmlFor="name" className="font-bold">
+                            Street
+                        </label>
+                        <InputText id="district" value={product.district} onChange={(e) => onInputChange(e, 'district')} required autoFocus className={classNames({ 'p-invalid': submitted && !product.district })} />
+                    </div>
+
                     </div>
 
                     <div className="field">
@@ -468,14 +536,53 @@ export default function CustomDatatable(props) {
                         <label htmlFor="name" className="font-bold">
                             Ownership
                         </label>
-                        <InputText id="name" value={product.name} onChange={(e) => onInputChange(e, 'name')} required autoFocus className={classNames({ 'p-invalid': submitted && !product.name })} />
+
+                        <Dropdown value={product.owner} onChange={(e) => onInputChange(e, 'owner')} options={owenership} optionLabel="name" 
+                        placeholder="Select" className="w-full" />
+
+                        {/* <InputText id="name" value={product.name} onChange={(e) => onInputChange(e, 'name')} required autoFocus className={classNames({ 'p-invalid': submitted && !product.name })} /> */}
                     </div>
+
+
+                    <div className="field">
+                        <label htmlFor="name" className="font-bold">
+                            Education level
+                        </label>
+
+                        <Dropdown 
+                        value={product.education_level} 
+                        onChange={(e) => onInputChange(e, 'education_level')} 
+                        options={education_level} 
+                        optionLabel="name" 
+                        placeholder="Select" 
+                        className="w-full" 
+                        />
+
+                        {/* <InputText id="name" value={product.name} onChange={(e) => onInputChange(e, 'name')} required autoFocus className={classNames({ 'p-invalid': submitted && !product.name })} /> */}
+                    </div>
+
+
+
+                    <div className="field">
+                    <label className="mb-3 font-bold">Marital Status</label>
+                    <div className="formgrid grid">
+                        <div className="field-radiobutton col-6">
+                            <RadioButton inputId="category1" name="gender" value="Male" onChange={onCategoryChange} checked={product.gender === 'Male'} />
+                            <label htmlFor="category1">Married</label>
+                        </div>
+                        <div className="field-radiobutton col-6">
+                            <RadioButton inputId="category2" name="gender" value="Female" onChange={onCategoryChange} checked={product.gender === 'Female'} />
+                            <label htmlFor="category2">Not Married</label>
+                        </div>
+                    </div>
+                </div>
 
                     </>}
 
 
+
                 {currentStep == 2 && <>
-                    <div className='mt-4'> Sponsor 1</div>
+                    <div className='mt-4'> Guarantor 1</div>
                     <div className="field">
                         <label htmlFor="sponsor_name_1" className="font-bold">
                             Name 
@@ -499,7 +606,7 @@ export default function CustomDatatable(props) {
                         <InputText id="sponsor_relation_1" value={product.sponsor_relation_1} onChange={(e) => onInputChange(e, 'sponsor_relation_1')} required autoFocus className={classNames({ 'p-invalid': submitted && !product.relation_1 })} />
                     </div>
 
-                    <div className='mt-4'> Sponsor 2</div>
+                    <div className='mt-4'> Guarantor 2</div>
                     <div className="field">
                         <label htmlFor="sponsor_name_2" className="font-bold">
                             Name 
@@ -524,6 +631,44 @@ export default function CustomDatatable(props) {
                     </div>
 
                 </>}
+
+
+                {currentStep == 3 && <>
+                    {/* <div className='mt-4 font-bold'> Employee Infomation</div> */}
+                    <div className="field">
+                        <label htmlFor="sponsor_name_1" className="font-bold">
+                            Full Name 
+                        </label>
+                        <InputText  id="employee" value={product.employee} onChange={(e) => onInputChange(e, 'employee')} required autoFocus className={classNames({ 'p-invalid': submitted && !product.sponsor_name_1 })} />
+                    </div>
+
+
+
+                    <div className="field">
+                        <label htmlFor="work_place" className="font-bold">
+                            Phone Number
+                        </label>
+                        <InputText id="work_place" value={product.work_place} onChange={(e) => onInputChange(e, 'work_place')} required autoFocus className={classNames({ 'p-invalid': submitted && !product.relation_1 })} />
+                    </div>
+
+
+                    
+
+                    
+
+
+                   
+
+                    <div className='flex justify-between items-center'>
+                       
+
+                       
+
+                    </div>
+
+
+                </>}
+
             </Dialog>
 
         {loanVisible && 

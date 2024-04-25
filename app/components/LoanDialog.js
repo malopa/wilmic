@@ -15,7 +15,8 @@ var emptyProduct = {
     id: null,
     amount: '',
     return_date: '',
-    customer:''
+    customer:'',
+    duration:''
 };
 
 export default function LoanDialog(props) {
@@ -43,10 +44,8 @@ export default function LoanDialog(props) {
 
 
     const saveProduct = () => {
-        
-        const data = {...product,return_date:new Date(product.return_date).toISOString().split('T')[0],customer:+props.customer_id,token}
+        const data = {...product,customer:+props.customer_id,token}
         mutation.mutate(data)
-       
     };
 
     const hideDialog = () => {
@@ -82,13 +81,23 @@ export default function LoanDialog(props) {
         {submitted && !product.amount && <small className="p-error">Amount is required.</small>}
     </div>
 
-    <div className="field">
+
+    <div className="field mt-4">
+        <label htmlFor="amount" className="font-bold">
+            Return Duration in month
+        </label>
+        <InputText id="duration" value={product.duration} onChange={(e) => onInputChange(e, 'duration')} required autoFocus className={classNames({ 'p-invalid': submitted && !product.duration })} />
+        {submitted && !product.duration && <small className="p-error">Amount is required.</small>}
+    </div>
+
+
+    {/* <div className="field">
         <label htmlFor="return_date" className="font-bold">
             Return Date
         </label>
         <Calendar value={product.return_date} dateFormat="yy-mm-dd" onChange={(e) => onInputChange(e, 'return_date')}  className={classNames({ 'p-invalid': submitted && !product.return_date })}/>
         {submitted && !product.return_date && <small className="p-error">Return date is required.</small>}
-    </div>
+    </div> */}
 
 
 </Dialog>

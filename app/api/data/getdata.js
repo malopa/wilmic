@@ -1,4 +1,4 @@
-"use static"
+"use client"
 import {useQuery} from '@tanstack/react-query'
 import { getLoan } from '../loan-request/api'
 import { useTokenContext } from '../../../context/TokenContext'

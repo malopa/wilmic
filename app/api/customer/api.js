@@ -36,9 +36,73 @@ export const updateCustomer = async (data)=>{
 }
 
 
+export const getCustomerInfo = async (data)=>{
+    
+    const res = await fetch(`${BASE_URL}api/v1/customers-data/${data.id}/`,{
+        headers:{
+            'Content-Type':'application/json',
+            "Authorization":'Bearer '+ data.token
+        },
+    })
+
+    const body = await res.json()
+
+    return body;
+}
+
+export const getCustomerSponsor = async (data)=>{
+    
+    const res = await fetch(`${BASE_URL}api/v1/sponsers/${data.id}/`,{
+        headers:{
+            'Content-Type':'application/json',
+            "Authorization":'Bearer '+ data.token
+        },
+    })
+
+    const body = await res.json()
+
+    return body;
+}
+
+
+
+export const getAssets = async (data)=>{
+
+    const res = await fetch(`${BASE_URL}api/v1/asset/?id=${data.id}`,{
+        headers:{
+            'Content-Type':'application/json',
+            "Authorization":'Bearer '+ data.token
+        },
+    })
+
+    const body = await res.json()
+
+    console.log("result------------xxxxxxxxxx",body)
+
+    return body;
+}
+
+
+export const getCustomerEmployee = async (data)=>{
+
+    const res = await fetch(`${BASE_URL}api/v1/employee/?id=${data.id}`,{
+        headers:{
+            'Content-Type':'application/json',
+            "Authorization":'Bearer '+ data.token
+        },
+    })
+
+    const body = await res.json()
+
+    console.log("result------------xxxxxxxxxx",body)
+
+    return body;
+}
+
+
 export const getCustomer = async (data)=>{
     
-    const res = await fetch(`${BASE_URL}api/v1/customers/`,{
+    const res = await fetch(`${BASE_URL}api/v1/customers-data/`,{
         headers:{
             'Content-Type':'application/json',
             "Authorization":'Bearer '+ data

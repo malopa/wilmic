@@ -19,6 +19,56 @@ export const addRole = async (data)=>{
 }
 
 
+export const addTax = async (data)=>{
+    const res = await fetch(`${BASE_URL}api/v1/tax/`,{
+        method:"POST",
+        headers:{
+            'Content-Type':'application/json',
+            "Authorization":'Bearer '+ data.token
+        },
+        body:JSON.stringify(data)
+    })
+
+    const body = await res.json()
+    console.log("---body0---",body)
+
+    return body;
+}
+
+export const updateTax = async (data)=>{
+    const res = await fetch(`${BASE_URL}api/v1/tax/${data.id}`,{
+        method:"PUT",
+        headers:{
+            'Content-Type':'application/json',
+            "Authorization":'Bearer '+ data.token
+        },
+        body:JSON.stringify(data)
+    })
+
+    const body = await res.json()
+    console.log("---body0---",body)
+
+    return body;
+}
+
+
+
+export const getTax = async (data)=>{
+    // alert(JSON.stringify(data))
+    const res = await fetch(`${BASE_URL}api/v1/tax/`,{
+        method:"GET",
+        headers:{
+            'Content-Type':'application/json',
+            "Authorization":'Bearer '+ data.token
+        },
+    })
+
+    const body = await res.json()
+    console.log("---body0---",body)
+
+    return body;
+}
+
 export const updateRole = async (data)=>{
     const res = await fetch(`${BASE_URL}api/v1/roles/${data.id}/`,{
         method:"PUT",

@@ -311,7 +311,7 @@ export default function ClientStatment(props) {
         </React.Fragment>
     );
     const creditBodyTemplate = (rowData) => {
-        return <div>{JSON.stringify(rowData.credit)}</div>;
+        return <div>{formatCurrency(+rowData.credit)}</div>;
     };
 
   return (

@@ -8,6 +8,7 @@ tawiriis_live_db
 tawiriDb@023
 user:tawiri
 
+tawiri_db
 tawiridbuser
 tawiriDB@2023
 
@@ -19,3 +20,6 @@ scp twr@192.168.4.2:/var/www/tawiriis/cmsdump.sql .
 
 import postgres 
 psql -h localhost -d tawiriis_live_db -U postgres -f tawiriis_live_db.sql
+
+fain 0.02 * mkopo * days
+

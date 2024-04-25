@@ -103,7 +103,7 @@ export default function LoanTable(props) {
     })
 
     const saveProduct = () => {
-        let data = {loan_type,min_amount,max_amount,interest,token}
+        let data = {loan_type,interest,token}
         mutation.mutate(data)
     };
 
@@ -294,7 +294,7 @@ export default function LoanTable(props) {
         <React.Fragment>
             <Button label="Cancel" icon="pi pi-times" outlined onClick={hideDialog} />
             {isEditProduct?<Button label="Update" icon="pi pi-check" onClick={updateProduct} />:<Button label="Save" icon="pi pi-check" onClick={saveProduct} />}
-            
+           
             
         </React.Fragment>
     );
@@ -315,7 +315,8 @@ export default function LoanTable(props) {
      <div>
             <Toast ref={toast} />
             <div className="card">
-                <Toolbar className="mb-4" left={leftToolbarTemplate} right={rightToolbarTemplate}></Toolbar>
+                <Toolbar className="mb-4" left={leftToolbarTemplate} 
+                right={rightToolbarTemplate}></Toolbar>
                 <DataTable ref={dt} value={props.loans} 
                         selection={selectedProducts} 
                         onSelectionChange={(e) => setSelectedProducts(e.value)}
@@ -329,9 +330,6 @@ export default function LoanTable(props) {
                         header={header}>
 
                     <Column selectionMode="false" exportable={false}></Column>
-                    <Column field="loan_type" header="Loan Type"  style={{ minWidth: '200px' }} frozen sortable style={{ minWidth: '12rem' }}></Column>
-                    <Column field="min_amount" header="Min Amount" body={minBodyTemplate}  sortable style={{ minWidth: '16rem' }}></Column>
-                    <Column field="max_amount" header="Max Amount" body={maxBodyTemplate}></Column>
                     <Column field="interest" header="Interest"  sortable style={{ minWidth: '8rem' }}></Column>
                     <Column body={actionBodyTemplate} exportable={false} style={{ minWidth: '12rem' }}></Column>
 
@@ -339,55 +337,25 @@ export default function LoanTable(props) {
             </div>
 
 {/* add product */}
-            <Dialog 
+        <Dialog 
             visible={productDialog} 
             style={{ width: '32rem' }} 
             breakpoints={{ '960px': '75vw', '641px': '90vw' }} 
-            header="Loan Type Details" modal className="p-fluid" 
+            header="Loan Interest" modal className="p-fluid" 
             footer={productDialogFooter} 
             onHide={hideDialog}>
 
                 <div className="field">
                     <label htmlFor="name" className="font-bold">
-                        Loan Type
+                        Loan Interest
                     </label>
                     <Input id="loan_type" 
-                    value={loan_type} 
+                    value={interest} 
                     name="loan_type"
-                    onChange={(e) => setLoanType(e.target.value)} 
+                    onChange={(e) => setInterest(e.target.value)} 
                     required autoFocus 
                     />
                 </div>
-                <div className="field">
-                    <label htmlFor="description" className="font-bold">
-                        Minimun Amount
-                    </label>
-                    <Input id="min_amount" value={min_amount} name="min_amount" 
-                    onChange={(e) => setMinAmount(e.target.value)} 
-                    required />
-                </div>
-
-
-                <div className="field">
-                    <label htmlFor="description" className="font-bold">
-                        Max Amount
-                    </label>
-                    <Input id="description" value={max_amount} name="max_amount" 
-                    onChange={(e) => setMaxAmount(e.target.value)} 
-                    required />
-                </div>
-
-                <div className="field">
-                    <label htmlFor="interest" className="font-bold">
-                        Interest
-                    </label>
-                    <Input 
-                    value={interest} 
-                    name="interest" 
-                    onChange={(e) => setInterest(e.target.value)} 
-                    required />
-                </div>
-
 
             </Dialog>
 

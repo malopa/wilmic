@@ -14,7 +14,7 @@ export default function PageCover(props) {
             <div className='flex items-center text-left font-bold text-white mb-4'> 
             
             <img src='logo.jpeg' className='w-[40px] mx-2 rounded-full' alt="image"/>
-            tku</div>
+            wilmic</div>
              <Navigation />
 
             </section>

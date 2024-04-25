@@ -255,8 +255,8 @@ export default function ReportDataTable(props) {
                 tooltipOptions={{ position: 'top' }}
                 onClick={() => editProduct(rowData)} /> */}
 
-                <Button icon="pi pi-times-circle" disabled={rowData.status=='Canceled'?true:false} tooltip="Cancel Loan" tooltipOptions={{ position: 'top' }} rounded outlined severity="danger" onClick={() => {setProduct(rowData),setStatus("Canceled"),confirmDeleteProduct(rowData)}} />
-                <Button icon="pi pi-check-circle"  disabled={rowData.status=='Canceled'?true:false} tooltip="Approve Loan" tooltipOptions={{ position: 'top' }} className='ml-2' rounded outlined severity="success" onClick={() => {setProduct(rowData),setStatus("Approved"),confirmDeleteProduct(rowData)}} />
+                {/* <Button icon="pi pi-times-circle" disabled={rowData.status=='Canceled'?true:false} tooltip="Cancel Loan" tooltipOptions={{ position: 'top' }} rounded outlined severity="danger" onClick={() => {setProduct(rowData),setStatus("Canceled"),confirmDeleteProduct(rowData)}} /> */}
+                {/* <Button icon="pi pi-check-circle"  disabled={rowData.status=='Canceled'?true:false} tooltip="Approve Loan" tooltipOptions={{ position: 'top' }} className='ml-2' rounded outlined severity="success" onClick={() => {setProduct(rowData),setStatus("Approved"),confirmDeleteProduct(rowData)}} /> */}
                 {rowData.status=='Approved' && 
                     <Button label='Deposit' className='ml-2' tooltip="Deposit Return" tooltipOptions={{ position: 'top' }} rounded outlined severity="success" onClick={() => {setProduct(rowData),setProductDialog(true)}} />
                 }
@@ -282,7 +282,7 @@ export default function ReportDataTable(props) {
 
     const header = (
         <div className="flex flex-wrap gap-2 align-items-center justify-content-between">
-            <h4 className="m-0">Manage Loans</h4>
+            <h4 className="m-0"></h4>
             <span className="p-input-icon-left">
                 <i className="pi pi-search" />
                 <InputText type="search" onInput={(e) => setGlobalFilter(e.target.value)} placeholder="Search..." />
@@ -291,8 +291,8 @@ export default function ReportDataTable(props) {
     );
     const productDialogFooter = (
         <React.Fragment>
-            <Button label="Cancel" icon="pi pi-times" outlined onClick={hideDialog} />
-            <Button label="Submit" icon="pi pi-check" onClick={updateProduct} />
+            {/* <Button label="Cancel" icon="pi pi-times" outlined onClick={hideDialog} /> */}
+            {/* <Button label="Submit" icon="pi pi-check" onClick={updateProduct} /> */}
             
         </React.Fragment>
     );

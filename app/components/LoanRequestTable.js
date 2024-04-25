@@ -247,6 +247,9 @@ export default function LoanRequestTable(props) {
         return <Tag value={rowData.inventoryStatus} severity={rowData.status=='pending'?'warning':rowData.status=='Canceled'?'danger':'success'}>{rowData.status}</Tag>;
     };
 
+
+    // 
+
     const actionBodyTemplate = (rowData) => {
         return (
             <React.Fragment>
@@ -256,13 +259,22 @@ export default function LoanRequestTable(props) {
                 onClick={() => editProduct(rowData)} /> */}
 
                 <Button icon="pi pi-times-circle" disabled={rowData.status=='Canceled'?true:false} tooltip="Cancel Loan" tooltipOptions={{ position: 'top' }} rounded outlined severity="danger" onClick={() => {setProduct(rowData),setStatus("Canceled"),confirmDeleteProduct(rowData)}} />
-                <Button icon="pi pi-check-circle"  disabled={rowData.status=='Canceled'?true:false} tooltip="Approve Loan" tooltipOptions={{ position: 'top' }} className='ml-2' rounded outlined severity="success" onClick={() => {setProduct(rowData),setStatus("Approved"),confirmDeleteProduct(rowData)}} />
+                <Button icon="pi pi-check-circle"  className="mx-2" disabled={rowData.status=='Canceled'?true:false} tooltip="Approve Loan" tooltipOptions={{ position: 'top' }}  rounded outlined severity="success" onClick={() => {setProduct(rowData),setStatus("Approved"),confirmDeleteProduct(rowData)}} />
                 {rowData.status=='Approved' && 
                     <Button label='Deposit' className='ml-2' tooltip="Deposit Return" tooltipOptions={{ position: 'top' }} rounded outlined severity="success" onClick={() => {setProduct(rowData),setProductDialog(true)}} />
                 }
-                <Link href={`/client-loan/${rowData.customer.id}`}>
-                    <Button icon="pi pi-eye" tooltip="Preview customer loans" tooltipOptions={{ position: 'top' }} className='ml-2' rounded outlined severity="success" />
-                </Link>
+                {rowData.status=='Approved' && 
+
+                    <Link  className='mx-2' href={`/client-loan/${rowData.customer.id}`}>
+                        <Button icon="pi pi-eye" tooltip="View client loans" tooltipOptions={{ position: 'top' }} className='ml-2' rounded outlined severity="success" />
+                    </Link>
+
+                }
+                {rowData.status !='Approved' && 
+                    <Link href={`/customer-details/${rowData.id}`}>
+                        <Button icon="pi pi-eye" rounded outlined severity="success" tooltip="View client details"  />
+                    </Link>
+                }
 
             </React.Fragment>
         );
@@ -343,7 +355,7 @@ export default function LoanRequestTable(props) {
                     <Column field="amount" header="Amount" body={maxBodyTemplate}></Column>
                     <Column field="return_date" header="Return Date"  sortable style={{ minWidth: '8rem' }}></Column>
                     <Column field="status" header="Status"  body={statusBodyTemplate} sortable style={{ minWidth: '8rem' }}></Column>
-                    <Column body={actionBodyTemplate} exportable={false} style={{ minWidth: '18rem' }}></Column>
+                    <Column body={actionBodyTemplate} exportable={false} style={{ minWidth: '20rem' }}></Column>
 
                 </DataTable>
             </div>

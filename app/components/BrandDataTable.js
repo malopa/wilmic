@@ -299,7 +299,31 @@ export default function BrandDatatable(props) {
         setCurrentStep(p=>p-1)
     }
 
+
+    const cloudinaryUpload = (photo) => {
+        // alert(photo)
+        const data = new FormData()
+        data.append('file', photo)
+        data.append('upload_preset', 'mjnbiwoy')
+        data.append("cloud_name", "dgba3tcha")
+        console.log(photo)
+        fetch("https://api.cloudinary.com/v1_1/dgba3tcha/upload", {
+          method: "post",
+          body: data
+        }).then(res => res.json()).
+          then(data => {
+            console.log("---------------xxx---------",data.secure_url)
+            // setPhoto(data.secure_url)
+            setImages(p=>[...p,data.secure_url]);
+  
+          }).catch(err => {
+            Alert.alert("An Error Occured While Uploading",err)
+          })
+      }
+
+
     const onUpload = () => {
+        
         toast.current.show({ severity: 'info', summary: 'Success', detail: 'File Uploaded' });
     };
 

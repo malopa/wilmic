@@ -1,54 +1,53 @@
 "use client"
 import React, { useState, useEffect, useRef } from 'react';
+import { classNames } from 'primereact/utils';
 import { DataTable } from 'primereact/datatable';
 import { Column } from 'primereact/column';
 import { ProductService } from './service/ProductService.js';
 import { Toast } from 'primereact/toast';
 import { Button } from 'primereact/button';
+import { FileUpload } from 'primereact/fileupload';
 import { Rating } from 'primereact/rating';
 import { Toolbar } from 'primereact/toolbar';
+import { InputTextarea } from 'primereact/inputtextarea';
+import { RadioButton } from 'primereact/radiobutton';
+import { InputNumber } from 'primereact/inputnumber';
 import { Dialog } from 'primereact/dialog';
 import { InputText } from 'primereact/inputtext';
 import { Tag } from 'primereact/tag';
 import { Tooltip } from 'primereact/tooltip';
 import RoleDialog from './RoleDialog.js';
-import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
-import {addLoanType, clientsLoans, deleteLoanType, returnLoan, updateLoan, updateLoanType} from '../api/loan/api.js'
+import Input from './Input.js';
+import { QueryClient, useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
+import {addRole, addTax, deleteRole, getTax, updateTax} from '../api/role/role.js'
 import { useTokenContext } from '../../context/TokenContext.js';
-import Spinner from './Spinner.js'
-import Link from 'next/link.js';
         
 
-export default function ClientLoans(props) {
+
+export default function TaxDataTable(props) {
 
     const {token} = useTokenContext()
-    
-    let info = {id:props.id,token}
-    const {isLoading,data} = useQuery({
-        queryKey:['loans-client'+props.id],queryFn:async ()=> await clientsLoans(info)
-      })
+    const {isLoading,data} = useQuery({queryKey:['taxes'],queryFn:async ()=> getTax({token})})
 
     let emptyProduct = {
         id: null,
-        amount: '',
-        customer_id: null,
+        name: '',
+        percentage: 0,
     };
 
     const [products, setProducts] = useState(null);
     const [productDialog, setProductDialog] = useState(false);
     const [deleteProductDialog, setDeleteProductDialog] = useState(false);
     const [deleteProductsDialog, setDeleteProductsDialog] = useState(false);
-    const [product, setProduct] = useState();
+    const [product, setProduct] = useState(emptyProduct);
+
     const [selectedProducts, setSelectedProducts] = useState(null);
     const [submitted, setSubmitted] = useState(false);
     const [globalFilter, setGlobalFilter] = useState(null);
     const [visible, setVisible] = useState(false);
-    const [status,setStatus] = useState('')
-    const [interest,setInterest] = useState()
-    const [loan_type,setLoanType] = useState("one")
-    const [min_amount,setMinAmount] = useState()
-    const [max_amount,setMaxAmount] = useState()
-    const [isEditProduct,setEditProduct] = useState(false)
+    const [role,setRole] = useState("")
+    const [description,setDescrciption] = useState("")
+    const [action,setAction] = useState()
 
     const toast = useRef(null);
     const dt = useRef(null);
@@ -58,7 +57,7 @@ export default function ClientLoans(props) {
     }, []);
 
     const formatCurrency = (value) => {
-        return (+value).toLocaleString('en-US', { style: 'currency', currency: 'TZS' });
+        return value.toLocaleString('en-US', { style: 'currency', currency: 'USD' });
     };
 
     const openNew = () => {
@@ -80,68 +79,56 @@ export default function ClientLoans(props) {
         setDeleteProductsDialog(false);
     };
 
+    const queryClient = useQueryClient()
+    const mutation = useMutation({mutationFn:addTax,onSuccess:(data)=>{
+        setProductDialog(false)
+        toast.current.show({ severity: 'success', summary: 'Successful', detail: 'Role added successfully', life: 3000 });
+        queryClient.invalidateQueries("taxes")
 
-   
-
-    const client = useQueryClient()
-    const mutation = useMutation({
-        mutationFn:addLoanType,
-        onSuccess:(data)=>{
-            toast.current.show({ severity: 'success', summary: 'Successful', detail: 'Loan added successfully', life: 3000 });
-            // client.invalidateQueries("loans-types")
-        }
-    })
+    }})
 
     const saveProduct = () => {
-        let data = {loan_type,min_amount,max_amount,interest,token}
+        const data = {...product,token}
+
         mutation.mutate(data)
+        setProductDialog(false);
+        
     };
 
 
-    const updateMutation = useMutation({mutationFn:returnLoan,onSuccess:(data)=>{
-        toast.current.show({ severity: 'success', summary: 'Successful', detail: 'Deposited successfully successfully', life: 3000 });
-        client.invalidateQueries("report")
+
+    const updateMutation = useMutation({mutationFn:updateTax,onSuccess:(data)=>{
+        setProductDialog(false)
+        toast.current.show({ severity: 'success', summary: 'Successful', detail: 'Update mutation', life: 3000 });
+        queryClient.invalidateQueries("taxes")
+
     }})
 
-    const updateProduct = () =>{
-        let data = {amount:product.amount,loan:product.id,customer:product.customer.id,token}
-        // alert(JSON.stringify(data))
-        // return;
-        updateMutation.mutate(data)
-        setEditProduct(false);
 
-    }
+    const updateProduct = () => {
+        const data = {...product,token}
+        updateMutation.mutate(data)
+    };
+
     const editProduct = (product) => {
         setProduct(product);
-        setLoanType(product.loan_type)
-        setInterest(product.interest)
-        setMinAmount(product.interest)
-        setMaxAmount(product.max_amount)
 
         setProductDialog(true);
-        setEditProduct(true);
     };
 
     const confirmDeleteProduct = (product) => {
-
         setProduct(product);
         setDeleteProductDialog(true);
     };
 
 
-    const deleteMutation = useMutation({mutationFn:updateLoan,
-    onSuccess:(data)=>{
-        client.invalidateQueries("loans")
-
-        toast.current.show({ severity: 'success', summary: 'Successful', detail: 'Loan Updated sucessfully', life: 3000 });
+    const delMuation = useMutation({mutationFn:deleteRole,onSuccess:(data)=>{
+        toast.current.show({ severity: 'success', summary: 'Successful', detail: 'Role Deleted', life: 3000 });
     }})
 
     const deleteProduct = () => {
-        const data ={...product,customer:product.customer.id,status,token}
-        // alert(JSON.stringify(data))
-        // return;
-        deleteMutation.mutate(data)
-        setDeleteProductDialog(false);
+        delMuation.mutate({id:product.id,token})
+        toast.current.show({ severity: 'success', summary: 'Successful', detail: 'Product Deleted', life: 3000 });
     };
 
     const findIndexById = (id) => {
@@ -213,8 +200,8 @@ export default function ClientLoans(props) {
     const leftToolbarTemplate = () => {
         return (
             <div className="flex flex-wrap gap-2">
-                {/* <Button label="New" icon="pi pi-plus" severity="success" onClick={openNew} /> */}
-                {/* <Button label="Delete" icon="pi pi-trash" severity="danger" onClick={confirmDeleteSelected} disabled={!selectedProducts || !selectedProducts.length} /> */}
+                <Button label="New" icon="pi pi-plus" severity="success" onClick={openNew} />
+                <Button label="Delete" icon="pi pi-trash" severity="danger" onClick={confirmDeleteSelected} disabled={!selectedProducts || !selectedProducts.length} />
             </div>
         );
     };
@@ -232,30 +219,24 @@ export default function ClientLoans(props) {
         return formatCurrency(rowData.price);
     };
 
-    const maxBodyTemplate = (rowData) => {
-        return formatCurrency(rowData.amount + ((5.5/100) * +rowData.amount));
-    };
-
-    const minBodyTemplate = (rowData) => {
-        return formatCurrency(rowData.min_amount);
-    };
-
     const ratingBodyTemplate = (rowData) => {
         return <Rating value={rowData.rating} readOnly cancel={false} />;
     };
 
     const statusBodyTemplate = (rowData) => {
-        return <Tag value={rowData.inventoryStatus} severity={rowData.status=='pending'?'warning':rowData.status=='Canceled'?'danger':'success'}>{rowData.status}</Tag>;
+        return <Tag value={rowData.inventoryStatus} severity={getSeverity(rowData)}></Tag>;
     };
 
     const actionBodyTemplate = (rowData) => {
         return (
             <React.Fragment>
+                <Button icon="pi pi-pencil" rounded outlined className="mr-2" 
+                tooltip="Edit user" 
+                tooltipOptions={{ position: 'top' }}
+                onClick={() => {editProduct(rowData),setAction("edit")}} />
+                <Button icon="pi pi-trash" rounded outlined severity="danger" onClick={() => confirmDeleteProduct(rowData)} />
                 
-                <Link href={`/preview-loan/${rowData.id}/${rowData.amount}`}>
-                    <Button icon="pi pi-eye" tooltip="Preview loan statment" tooltipOptions={{ position: 'top' }} className='ml-2' rounded outlined severity="success" />
-                </Link>
-
+                
             </React.Fragment>
         );
     };
@@ -278,7 +259,7 @@ export default function ClientLoans(props) {
 
     const header = (
         <div className="flex flex-wrap gap-2 align-items-center justify-content-between">
-            <h4 className="m-0">Manage Loans</h4>
+            <h4 className="m-0">Manage Tax</h4>
             <span className="p-input-icon-left">
                 <i className="pi pi-search" />
                 <InputText type="search" onInput={(e) => setGlobalFilter(e.target.value)} placeholder="Search..." />
@@ -288,14 +269,15 @@ export default function ClientLoans(props) {
     const productDialogFooter = (
         <React.Fragment>
             <Button label="Cancel" icon="pi pi-times" outlined onClick={hideDialog} />
-            <Button label="Submit" icon="pi pi-check" onClick={updateProduct} />
-            
+            {action == "edit" ? <Button label="Update" icon="pi pi-check" onClick={updateProduct} />:
+            <Button label="Save" icon="pi pi-check" onClick={saveProduct} />
+        }
         </React.Fragment>
     );
     const deleteProductDialogFooter = (
         <React.Fragment>
             <Button label="No" icon="pi pi-times" outlined onClick={hideDeleteProductDialog} />
-            <Button label="Disburse" icon="pi pi-check" severity="success" onClick={deleteProduct} />
+            <Button label="Yes" icon="pi pi-check" severity="danger" onClick={deleteProduct} />
         </React.Fragment>
     );
     const deleteProductsDialogFooter = (
@@ -310,10 +292,7 @@ export default function ClientLoans(props) {
             <Toast ref={toast} />
             <div className="card">
                 <Toolbar className="mb-4" left={leftToolbarTemplate} right={rightToolbarTemplate}></Toolbar>
-                <center>
-                    {isLoading && <Spinner />}
-                </center>
-
+            
                 <DataTable ref={dt} value={data?.results} 
                         selection={selectedProducts} 
                         onSelectionChange={(e) => setSelectedProducts(e.value)}
@@ -327,14 +306,9 @@ export default function ClientLoans(props) {
                         header={header}>
 
                     <Column selectionMode="false" exportable={false}></Column>
-                    <Column field="customer.first_name" header="First Name"  style={{ minWidth: '200px' }} frozen sortable style={{ minWidth: '12rem' }}></Column>
-                    <Column field="customer.first_name" header="Middle Name"    style={{ minWidth: '16rem' }}></Column>
-                    <Column field="customer.last_name" header="Last Name"    style={{ minWidth: '16rem' }}></Column>
-                    <Column field="customer.phone_number" header="Phone Number"    style={{ minWidth: '16rem' }}></Column>
-                    <Column field="amount" header="Amount" body={maxBodyTemplate}></Column>
-                    <Column field="return_date" header="Return Date"  sortable style={{ minWidth: '8rem' }}></Column>
-                    <Column field="status" header="Status"  body={statusBodyTemplate} sortable style={{ minWidth: '8rem' }}></Column>
-                    <Column body={actionBodyTemplate} exportable={false} style={{ minWidth: '18rem' }}></Column>
+                    <Column field="name" header="Name"  style={{ minWidth: '200px' }} frozen sortable style={{ minWidth: '12rem' }}></Column>
+                    <Column field="percentage" header="Percentage" frozen sortable style={{ minWidth: '16rem' }}></Column>
+                    <Column body={actionBodyTemplate} exportable={false} style={{ minWidth: '12rem' }}></Column>
 
                 </DataTable>
             </div>
@@ -344,22 +318,34 @@ export default function ClientLoans(props) {
             visible={productDialog} 
             style={{ width: '32rem' }} 
             breakpoints={{ '960px': '75vw', '641px': '90vw' }} 
-            header="Deposit" modal className="p-fluid" 
+            header="Product Details" modal className="p-fluid" 
             footer={productDialogFooter} 
             onHide={hideDialog}>
 
                 <div className="field">
                     <label htmlFor="name" className="font-bold">
-                        Amount
+                        Name
                     </label>
-                    <InputText id="loan_type" 
-                    value={product?.amount} 
-                    name="loan_type"
-                    onChange={(e) => onInputChange(e,'amount')} 
-                    required autoFocus 
+                    <Input id="name" 
+                    name="name"
+                    value={product?.name} 
+                    onChange={(e) => onInputChange(e, 'name')}
+                    required  
                     />
                 </div>
 
+                <div className="field">
+                    <label htmlFor="description" className="font-bold">
+                        Percentage
+                    </label>
+                    <Input 
+                        id="percentage" 
+                        name="percentage" 
+                        value={product?.percentage} 
+                        onChange={(e) => onInputChange(e, 'percentage')}
+                        required 
+                     />
+                </div>
 
             </Dialog>
 
@@ -374,7 +360,7 @@ export default function ClientLoans(props) {
                     <i className="pi pi-exclamation-triangle mr-3" style={{ fontSize: '2rem' }} />
                     {product && (
                         <span>
-                            Are you sure you want to change loan status <b>{product.name}</b>?
+                            Are you sure you want to delete <b>{product.name}</b>?
                         </span>
                     )}
                 </div>

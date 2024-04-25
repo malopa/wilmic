@@ -19,6 +19,41 @@ export const addLoan = async (data)=>{
 }
 
 
+export const addAsset = async (data)=>{
+    const res = await fetch(`${BASE_URL}api/v1/asset/`,{
+        method:"POST",
+        headers:{
+            'Content-Type':'application/json',
+            "Authorization":'Bearer '+ data.token
+        },
+        body:JSON.stringify(data)
+    })
+
+    const body = await res.json()
+    console.log("---loan---test----{body--",body)
+
+    return body;
+}
+
+
+export const addEmployee = async (data)=>{
+    const res = await fetch(`${BASE_URL}api/v1/employee/`,{
+        method:"POST",
+        headers:{
+            'Content-Type':'application/json',
+            "Authorization":'Bearer '+ data.token
+        },
+        body:JSON.stringify(data)
+    })
+
+    const body = await res.json()
+    console.log("---loan---test----{body--",body)
+
+    return body;
+}
+
+
+
 export const updateLoanType = async (data)=>{
     const res = await fetch(`${BASE_URL}api/v1/request-loan/${data.id}/`,{
         method:"PUT",

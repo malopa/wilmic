@@ -1,0 +1,364 @@
+@import url('https://fonts.googleapis.com/css2?family=Poppins:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap');
+
+.dashboard{
+    margin:0px;
+    padding:0px;
+    box-sizing: border-box;
+    font-family: "Poppins", sans-serif;
+}
+
+.sectionTop{
+    padding: 1rem;
+    display: flex;
+    justify-content: space-around;
+    background-color: blueviolet;
+    position: static;
+    width: 100%;
+    align-items: center;
+}
+
+.nav{
+    display: flex;
+}
+
+.nav > li{
+    padding: 0 1rem;
+    color: #FFF;
+    list-style: none;
+    cursor: pointer;
+    background-color: blueviolet;
+    transform: all 200ms ease-in-out;
+    font-weight: bold;
+    transition: all 200ms ease-in-out;
+    
+}
+
+.nav > li:hover,.a:hover{
+    color: orange;
+    font-weight: bold;
+}
+
+
+.header{
+    background-color: blueviolet;
+    min-height:100vh;
+}
+
+.headerTitle{
+    font-size: 36px;
+    color:#FFF;
+    font-weight: bold;
+}
+
+.phone1{
+    display: none;
+}
+
+.phone-1{
+    width: 200px;
+}
+
+.headerContent{
+    min-height: 80vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;    
+    padding:0 4rem;
+}
+.leftContent{
+    width: 30vw;
+    margin-right:10rem;
+
+}
+
+
+.us{
+    padding: 4rem;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    text-align: center;
+    background-color: #f2efef;
+    flex-direction: column;
+}
+.usContent{
+    line-height: 2;
+    color:#777;
+}
+
+.serviceTitle{
+    text-align: center;
+    font-size: 28px;
+    font-weight: bold;
+    padding: 1rem;
+}
+.title{
+    font-size: 24px;
+    font-weight: bold;
+    margin-bottom: 2rem;
+}
+.auth{
+    margin-top: 4rem;
+    display: flex;
+}
+
+.btn{
+    border: none;
+    padding: 14px 2.5rem;
+    /* border: 1px solid #4d1f7a; */
+    border-radius: 4px;
+    margin: .8rem;
+    cursor: pointer;
+    font-weight: bold;
+}
+
+.btn.signup{
+    background-color: #4d1f7a;
+    transition: all 200ms ease-in-out;
+    color: #FFF;
+    font-weight: bold;
+}
+
+.btn.signup:hover{
+    background-color: orange;
+}
+
+.btn.login{
+    background-color: orange;
+    transition: all 200ms ease-in-out;
+    color: #000;
+    font-weight: bold;
+}
+
+.btn.login:hover{
+    background-color: rgb(218, 152, 28);
+}
+
+.service{
+    padding: 4rem;
+    display: flex;
+    justify-content: space-around;
+    min-height: 70vh;
+    flex-wrap: wrap;
+    justify-content: flex-start;
+    flex-wrap: wrap;
+}
+
+#less{
+    display: none;
+}
+
+.serviceVard{
+    padding: 1rem;
+    margin: 1rem;
+    width: 30%;
+    box-shadow: 0 0 10px 4px #ccc;;
+    border-radius: 10px;
+    transition: all 200ms ease-in-out;
+}
+
+
+.serviceVard:hover{
+    background-color: #9706c7;
+    color: #FFF;
+}
+
+/* .service-header:hover{
+    color: orange;
+} */
+.serviceContent:hover,.serviceHeader:hover{
+    color:#FFF;
+}
+
+.service:hover{
+    color:white;
+
+}
+
+
+
+
+.serviceVard:hover{
+    box-shadow: 0 4px 3px #ccc;
+}
+
+.serviceHeader{
+    color:orange;
+    font-weight: bold;
+    flex-wrap: wrap;
+    margin-bottom: 1rem;
+    text-align: center;
+}
+
+.serviceContent{
+    color:#777;
+    /* font-family: sans-serif; */
+    line-height: 2;
+    font-size: 14px;
+}
+.serviceContent:hover{
+    color:#FFF;
+}
+
+.aboutTitle{
+    font-weight: bold;
+    font-size: 24px;
+    color:black;
+}
+.about{
+    padding: 4rem;
+    line-height: 2;
+    background-color: #f2efef;
+    text-align: center;
+    flex-wrap: wrap;
+}
+
+.aboutContent{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin: 20px auto;
+    width: 70%;
+    color:#777;
+}
+
+.aboutDesc{
+    padding-left: 2rem;
+    text-align: left;
+    color:#777;
+}
+
+.a{
+    color: #FFF;
+    text-decoration: none;
+}
+
+.footer{
+    background-color: #4d1f7a;
+    padding: 4rem;
+    color: #FFF;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    display: flex;
+    text-align: center;
+}
+
+.footerTitle{
+    font-weight: bold;
+    padding: 10px 0;;
+}
+.copyright{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: 2rem;
+}
+
+.weImage{
+    width: 400px;
+}
+
+.phone{
+    width: 200px;
+    margin-left: 200px;
+}
+
+.topDsc{
+    font-size: 18px;
+    color: #FFF;
+    line-height: 1.5;
+}
+
+
+.moreAbout{
+    /* display: none; */
+}
+
+@media screen and (max-width:768px) {
+    .service{
+        padding:.4rem;
+        width: 100%;
+    }
+        .serviceVard{
+            width: 98%;
+            text-align: center;
+        }
+
+        
+        .us{
+            width: 100%;
+            padding: 3rem 1rem;
+        }
+        .auth{
+            flex-direction: column;
+            /* margin-top:10px; */
+        }
+
+        .about{
+            padding: .8rem;
+        }
+        .aboutContent{
+            flex-direction: column;
+            width: 100%;
+        }
+        .weImage{
+            width: 200px;
+            margin-bottom: 1rem;
+        }
+        .aboutDesc{
+            width: 100%;
+            padding: 0px;
+            text-align: justify;
+        }
+
+        .leftContent{
+            width: 100%;
+            padding:0px;
+            margin-right: 0px;
+        }
+        .headerContent{
+            flex-direction: column;
+            padding: 1rem;
+            margin: 0px;
+            justify-content: flex-start;
+        }
+        .headerTitle{
+            font-size: 24px;
+            margin-bottom: 1rem;
+        }
+
+        .headerContent{
+            min-height: 80vh;
+        }
+
+        .nav{
+            display: none;
+        }
+        .topDesc{
+            font-size: 20px;
+            color: red;
+            line-height: 2;
+        }
+
+        .phone{
+            display: none;
+        }
+
+        .phone1{
+            display: block;
+            margin: 14px;
+        }
+
+        .aboutImage{
+            display: none;
+        }
+
+        .topDesc{
+            font-size: 16px;
+            text-align: justify;
+        }
+        .auth{
+            margin-top:10px;
+        }
+}

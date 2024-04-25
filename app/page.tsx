@@ -1,10 +1,4 @@
 "use client"
-// import "@fortawesome/fontawesome-svg-core/styles.css"; 
-// import { config } from "@fortawesome/fontawesome-svg-core"; 
-// import Header from './components/Header'
-// import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
-
-// import { faAddressBook, faAddressCard, faBarChart, faBars, faCalendarAlt, faCheckCircle, faCogs, faCommentAlt, faCreditCard, faHamburger, faHome, faHomeAlt, faKey, faSignInAlt, faTachometer, faUserCog, faWrench } from "@fortawesome/free-solid-svg-icons";
 import Image from "next/image";
 import Link from "next/link";
 import styles from '../styles/dashboard.module.css'
@@ -29,10 +23,11 @@ const [isMenu,setIsMenu] = useState(false)
         <div className={styles.sectionTop}>
 
             <div className="">
-                <img src='logo.jpeg'  style={{width:50,height:50,borderRadius:25}} />
+                <img src='./logo.jpeg'  style={{width:50,height:50,borderRadius:25}} />
             </div>
 
-            <div  className='absolute right-10 cursor-pointer lg:hidden  justify-center gap-x-1.5 rounded-md  px-3 py-2 text-sm font-semibold text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 hover:bg-gray-50" id="menu-button" aria-expanded="true" aria-haspopup="true"' onClick={()=>openMenu()}>
+            <div  className='absolute right-10 cursor-pointer lg:hidden  justify-center gap-x-1.5 rounded-md  px-3 py-2 text-sm font-semibold text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 hover:bg-gray-50'
+            id="menu-button" aria-expanded="true" aria-haspopup="true" onClick={()=>openMenu()}>
                 <i  
                   className="pi pi-bars hover:text-white" 
                   style={{ color: "orange",fontSize:24,marginRight:4 }}>

@@ -3,7 +3,7 @@ import { ConfirmDialog } from 'primereact/confirmdialog';
 import { Toast } from 'primereact/toast';
 import { Button } from 'primereact/button';
 
-export default function ConfirmDialog() {
+export default function ConfirmDialogCard() {
     const toast = useRef(null);
 
     const accept = () => {

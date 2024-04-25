@@ -9,7 +9,7 @@ import { useEffect } from 'react'
 import { useQuery } from '@tanstack/react-query'
 
 
-export default function Page() {
+export default function DashboardPage() {
   
   const {token} = useTokenContext()
 

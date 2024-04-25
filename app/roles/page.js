@@ -14,7 +14,7 @@ export default function RolePage() {
   useEffect(()=>{
     getRoles(token)
     .then(res=>setRoles(res.results))
-  },[])
+  },[token])
 
   return (
     <PageCover>

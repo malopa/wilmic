@@ -33,7 +33,7 @@ export default function CustomerDetailspage({params}) {
 
             <div style={{maxHeight:'80vh',overflowY:'auto'}}>
             <div>
-              <div className='font-bold text-xl px-2'>Customer Information</div>
+              <div className='font-bold text-xl py-2 px-2'>Client Information</div>
               <div className='p-4 border-1 rounded-md flex justify-between' >
                 <div >
                   <div><span className='w-[14rem]'>Name:</span> <span className='p-4 text-gray-600'>{data?.first_name}</span></div>
@@ -59,7 +59,7 @@ export default function CustomerDetailspage({params}) {
 
           
             <div className='mt-4'>
-              <div className='font-bold text-xl px-2'>Customer Guarantor</div>
+              <div className='font-bold text-xl py-2 px-2'>Client Guarantor</div>
               <div className='p-4 border-1 rounded-md flex justify-between' >
                 <div >
                   <div><span className='w-[12rem]'>Sponsor Name:</span> {sponsor?.name}</div>
@@ -83,7 +83,7 @@ export default function CustomerDetailspage({params}) {
 
             <div className='mt-4'>
               <div className='font-bold text-xl px-2 flex justify-between items-center my-2'>
-                <div>Customer Employee</div>
+                <div className='py-2'>Client Employee</div>
                 <button onClick={()=>setIsEmployee(true)} className=' p-2 bg-blue-800 rounded-md text-white text-sm'><i className='pi pi-plus me-1'></i>Add Employee Details</button>
               </div>
 

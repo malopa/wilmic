@@ -333,7 +333,7 @@ export default function ReportDataTable(props) {
                     <Column selectionMode="false" exportable={false}></Column>
                     <Column field="created_at" header="Date"  sortable style={{ minWidth: '8rem' }}></Column>
 
-                    <Column field="customer.first_name" header="First Name"  style={{ minWidth: '200px' }} frozen sortable style={{ minWidth: '12rem' }}></Column>
+                    <Column field="customer.first_name" header="First Name" frozen sortable style={{ minWidth: '12rem' }}></Column>
                     <Column field="customer.middle_name" header="Middle Name"    style={{ minWidth: '16rem' }}></Column>
                     <Column field="customer.last_name" header="Last Name"    style={{ minWidth: '16rem' }}></Column>
                     <Column field="credit" header="Credit"  body={creditBodyTemplate}    style={{ minWidth: '16rem' }}></Column>

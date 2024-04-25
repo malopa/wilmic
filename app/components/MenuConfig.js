@@ -1,3 +1,4 @@
+import { AccordionTab } from 'primereact/accordion';
 import React from 'react'
 
 export default function MenuConfig() {

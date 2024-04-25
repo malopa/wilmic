@@ -291,7 +291,7 @@ export default function RoleDataTable(props) {
                         header={header}>
 
                     <Column selectionMode="false" exportable={false}></Column>
-                    <Column field="name" header="Role Name"  style={{ minWidth: '200px' }} frozen sortable style={{ minWidth: '12rem' }}></Column>
+                    <Column field="name" header="Role Name" frozen sortable style={{ minWidth: '12rem' }}></Column>
                     <Column field="description" header="Description" frozen sortable style={{ minWidth: '16rem' }}></Column>
                     <Column body={actionBodyTemplate} exportable={false} style={{ minWidth: '12rem' }}></Column>
 

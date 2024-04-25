@@ -11,12 +11,11 @@ export default function page() {
   const {token} = useTokenContext()
   const [customers,setCustomers] = React.useState()
 
-  
 
   useEffect(()=>{
     getCustomer(token)
     .then(res=>setCustomers(res.results))
-  },[])
+  },[token])
 
   
   return (

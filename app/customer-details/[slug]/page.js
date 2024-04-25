@@ -15,7 +15,6 @@ import { useTokenContext } from '../../../context/TokenContext'
 
 export default function page({params}) {
 
-
   const [isEmployeeAdd,setIsEmployee] = useState(false)
   const [isAttachment,setAttachment] = useState(false)
   const [isBusinessAdd,setIsBusiness] = useState(false)

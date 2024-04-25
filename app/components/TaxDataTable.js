@@ -306,7 +306,7 @@ export default function TaxDataTable(props) {
                         header={header}>
 
                     <Column selectionMode="false" exportable={false}></Column>
-                    <Column field="name" header="Name"  style={{ minWidth: '200px' }} frozen sortable style={{ minWidth: '12rem' }}></Column>
+                    <Column field="name" header="Name" frozen sortable style={{ minWidth: '12rem' }}></Column>
                     <Column field="percentage" header="Percentage" frozen sortable style={{ minWidth: '16rem' }}></Column>
                     <Column body={actionBodyTemplate} exportable={false} style={{ minWidth: '12rem' }}></Column>
 

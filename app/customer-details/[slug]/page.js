@@ -53,7 +53,6 @@ export default function CustomerDetailspage({params}) {
                 </div>
 
 
-
               </div>
             </div>
 

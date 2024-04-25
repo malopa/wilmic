@@ -337,7 +337,7 @@ export default function CustomDatatable(props) {
                         header={header}>
 
                     <Column selectionMode="false" exportable={false}></Column>
-                    <Column field="first_name" header="Last Name"  style={{ minWidth: '200px' }} frozen sortable style={{ minWidth: '12rem' }}></Column>
+                    <Column field="first_name" header="Last Name"  frozen sortable style={{ minWidth: '12rem' }}></Column>
                     <Column field="last_name" header="First Name"   style={{ minWidth: '16rem' }}></Column>
                     <Column field="email" header="Email" ></Column>
                     <Column body={actionBodyTemplate} exportable={false} style={{ minWidth: '12rem' }}></Column>

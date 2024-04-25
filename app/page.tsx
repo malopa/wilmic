@@ -22,7 +22,7 @@ const [isMenu,setIsMenu] = useState(false)
       <header className={styles.header}>
         <div className={styles.sectionTop}>
 
-            <div className="">
+            <div>
                 <img src='./logo.jpeg'  style={{width:50,height:50,borderRadius:25}} />
             </div>
 
@@ -92,7 +92,7 @@ const [isMenu,setIsMenu] = useState(false)
 
         At Wilmic Microfinance, we believe in the power of financial inclusion to transform lives and communities. Our mission is to provide accessible financial services to individuals and small businesses who are traditionally underserved by mainstream banks.
 
-Through our range of loan products, we support aspiring entrepreneurs and existing businesses alike, helping them realize their dreams and achieve financial stability. Whether you need capital to start a new venture, expand an existing business, or meet unexpected expenses, we're here to help.
+        Through our range of loan products, we support aspiring entrepreneurs and existing businesses alike, helping them realize their dreams and achieve financial stability. Whether you need capital to start a new venture, expand an existing business, or meet unexpected expenses, we're here to help.
 
     </div>
     </div>
@@ -100,10 +100,10 @@ Through our range of loan products, we support aspiring entrepreneurs and existi
 
     <div className={styles.serviceTitle} id="service">
        
-    <i 
-     className="pi pi-cog fa-check hover:text-white" 
-                  style={{ color: "orange",fontSize:24,marginRight:4 }} ></i>
-prerequest to loan</div>
+    <i className="pi pi-cog fa-check hover:text-white" 
+        style={{ color: "orange",fontSize:24,marginRight:4 }} ></i>
+            Prerequest to loan
+    </div>
 
     <div className={styles.service}>
 
@@ -152,7 +152,7 @@ prerequest to loan</div>
         <div className={styles.usContent}>
         We understand that every financial need is unique. That's why we offer personalized loan products and flexible repayment plans to suit your specific circumstances and goals.
         <br />
-        We know your time is valuable. Our streamlined application process ensures quick approval and disbursement of funds, so you can focus on what matters most – growing your business.
+        We know your time is valuable. Our streamlined application process ensures quick approval and disbursement of funds, so you can focus on what matters most  growing your business.
         </div>
    
     </div>
@@ -175,17 +175,16 @@ prerequest to loan</div>
         <div>
             <div className={styles.footerTitle}>Get in Touch</div>
             <div>
-            WILMIC GENERAL & MICROFINANCE <br/>
-TIN 109-745-367<br />
-VRN 40-046815-I<br /><br />
-Office <br />
-TOGO TOWER KINONDONI MANYANYA NEAR TIGER TOWER ALONG KINONDONI ROAD.
-<br />
-<br />
+                WILMIC GENERAL & MICROFINANCE <br/>
+                TIN 109-745-367<br />
+                VRN 40-046815-I<br /><br />
+                Office <br />
+                TOGO TOWER KINONDONI MANYANYA NEAR TIGER TOWER ALONG KINONDONI ROAD.
+            <br />
+            <br />
             </div>
             <div>
-Call 0715467827/0762707670
-
+                Call 0715467827/0762707670
             </div>
         </div>
     </div>

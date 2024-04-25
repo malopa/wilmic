@@ -36,20 +36,20 @@ export default function CustomerDetailspage({params}) {
               <div className='font-bold text-xl py-2 px-2'>Client Information</div>
               <div className='p-4 border-1 rounded-md flex justify-between' >
                 <div >
-                  <div><span className='w-[14rem]'>Name:</span> <span className='p-4 text-gray-600'>{data?.first_name}</span></div>
-                  <div><span className='w-[14rem]'>Middle Name:</span> <span className='p-4 text-gray-600'>{data?.middle_name}</span></div>
-                  <div><span className='w-[14rem]'>Last Name:</span> <span className='p-4 text-gray-600'>{data?.last_name}</span></div>
+                  <div><span  className='w-[8rem] inline-block' >First Name:</span> <span className='p-4 text-gray-600'>{data?.first_name}</span></div>
+                  <div><span className='w-[8rem] inline-block'>Middle Name:</span> <span className='p-4 text-gray-600'>{data?.middle_name}</span></div>
+                  <div><span className='w-[8rem] inline-block'>Last Name:</span> <span className='p-4 text-gray-600'>{data?.last_name}</span></div>
                 </div>
 
                 <div >
-                  <div>Phone Number: <span className='p-4 text-gray-600'>{data?.phone_number}</span></div>
-                  <div>Gender: <span className='p-4 text-gray-600'>{data?.gender}</span></div>
-                  <div>Region: <span className='p-4 text-gray-600'>{data?.address}</span></div>
+                  <div><span  className='w-[8rem] inline-block' >Phone Number:</span> <span className='p-4 text-gray-600'>{data?.phone_number}</span></div>
+                  <div><span  className='w-[8rem] inline-block' >Gender:</span> <span className='p-4 text-gray-600'>{data?.gender}</span></div>
+                  <div><span  className='w-[8rem] inline-block' >Region:</span> <span className='p-4 text-gray-600'>{data?.address}</span></div>
                 </div>
 
                 <div >
-                  <div>Nida: <span className='p-4 text-gray-600'>{data?.nida}</span></div>
-                  <div>house Number: <span className='p-4 text-gray-600'>{data?.house}</span></div>
+                  <div><span  className='w-[8rem] inline-block' >Nida: </span><span className='p-4 text-gray-600'>{data?.nida}</span></div>
+                  <div><span  className='w-[8rem] inline-block' >house Number:</span> <span className='p-4 text-gray-600'>{data?.house}</span></div>
                 </div>
 
 
@@ -61,15 +61,15 @@ export default function CustomerDetailspage({params}) {
               <div className='font-bold text-xl py-2 px-2'>Client Guarantor</div>
               <div className='p-4 border-1 rounded-md flex justify-between' >
                 <div >
-                  <div><span className='w-[12rem]'>Sponsor Name:</span> {sponsor?.name}</div>
-                  <div>Phone number: {sponsor?.phone_number}</div>
-                  <div>Relation: {sponsor?.relation}</div>
+                  <div><span  className='w-[8rem] inline-block' >Sponsor Name:</span> {sponsor?.name}</div>
+                  <div> <span  className='w-[8rem] inline-block' >Phone number:</span> {sponsor?.phone_number}</div>
+                  <div><span  className='w-[8rem] inline-block' >Relation:</span> {sponsor?.relation}</div>
                 </div>
 
                 <div >
-                  <div>Sponsor Name: {sponsor?.name}</div>
-                  <div>Phone number: {sponsor?.phone_number}</div>
-                  <div>Relation: {sponsor?.relation}</div>
+                  <div><span  className='w-[8rem] inline-block' >Sponsor Name:</span> {sponsor?.name}</div>
+                  <div><span  className='w-[8rem] inline-block' >Phone number:</span> {sponsor?.phone_number}</div>
+                  <div><span  className='w-[8rem] inline-block' >Relation:</span> {sponsor?.relation}</div>
                 </div>
 
                 <div >

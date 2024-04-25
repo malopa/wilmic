@@ -88,7 +88,7 @@ export default function CustomerDetailspage({params}) {
               </div>
 
               {employee?.results?.map(r=>{
-                return <div className='p-4 border-1 rounded-md flex justify-between' >
+                return <div key={r.id} className='p-4 border-1 rounded-md flex justify-between' >
                 <div >
                   <div>Employee name:<span className='p-4 text-gray-600'>{r.employee}</span>
                   </div>

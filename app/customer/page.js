@@ -6,7 +6,8 @@ import Container from '../components/Container'
 import CustomDatatable from '../components/CustomDatatable'
 import { useTokenContext } from '../../context/TokenContext'
 import { getCustomer } from '../api/customer/api'
-export default function page() {
+
+export default function CustomerPage() {
 
   const {token} = useTokenContext()
   const [customers,setCustomers] = React.useState()

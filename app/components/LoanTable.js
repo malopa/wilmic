@@ -20,7 +20,7 @@ import RoleDialog from './RoleDialog.js';
 import Input from './Input.js';
 import { getSession } from '../api/lib.js';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
-import {addLoanType, deleteLoanType, updateLoanType} from '../api/loan/api.js'
+import {addLoanType, deleteLoanType} from '../api/loan/api.js'
 import { revalidateTag } from 'next/cache'
         
 
@@ -108,13 +108,13 @@ export default function LoanTable(props) {
     };
 
 
-    const updateMutation = useMutation({mutationFn:updateLoanType,onSuccess:(data)=>{
-        alert(JSON.stringify(data))
-    }})
+    // const updateMutation = useMutation({mutationFn:updateLoanType,onSuccess:(data)=>{
+    //     alert(JSON.stringify(data))
+    // }})
 
     const updateProduct = () =>{
         let data = {id:product.id,loan_type,min_amount,max_amount,interest,token}
-        updateMutation.mutate(data)
+        // updateMutation.mutate(data)
         setEditProduct(false);
 
     }

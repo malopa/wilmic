@@ -12,7 +12,7 @@ export default function Page() {
   
   const {token} = useTokenContext()
 
-  const {isLoading,data} = getLoanData()
+  const {isLoading,data} = getLoanData(token)
 
   useEffect(()=>{
     // window.location.reload()

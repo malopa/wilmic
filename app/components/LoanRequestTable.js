@@ -87,7 +87,6 @@ export default function LoanRequestTable(props) {
         mutationFn:addLoanType,
         onSuccess:(data)=>{
             toast.current.show({ severity: 'success', summary: 'Successful', detail: 'Loan added successfully', life: 3000 });
-            // client.invalidateQueries("loans-types")
         }
     })
 

@@ -20,7 +20,7 @@ export default function page() {
   
   return (
     <PageCover >
-            <Title title="Customers"/>
+            <Title title="Clients"/>
             <Container>
                 <CustomDatatable  customers={customers}/> 
             </Container>

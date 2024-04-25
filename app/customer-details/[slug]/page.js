@@ -36,20 +36,20 @@ export default function page({params}) {
               <div className='font-bold text-xl px-2'>Customer Information</div>
               <div className='p-4 border-1 rounded-md flex justify-between' >
                 <div >
-                  <div>Name: {data?.name}</div>
-                  <div>Middle Name: {data?.phone_number}</div>
-                  <div>Last Name: {data?.relation}</div>
+                  <div><span className='w-[14rem]'>Name:</span> <span className='p-4 text-gray-600'>{data?.first_name}</span></div>
+                  <div><span className='w-[14rem]'>Middle Name:</span> <span className='p-4 text-gray-600'>{data?.middle_name}</span></div>
+                  <div><span className='w-[14rem]'>Last Name:</span> <span className='p-4 text-gray-600'>{data?.last_name}</span></div>
                 </div>
 
                 <div >
-                  <div>Phone Number: {data?.phone_number}</div>
-                  <div>Gender: {data?.gender}</div>
-                  <div>Region: {data?.address}</div>
+                  <div>Phone Number: <span className='p-4 text-gray-600'>{data?.phone_number}</span></div>
+                  <div>Gender: <span className='p-4 text-gray-600'>{data?.gender}</span></div>
+                  <div>Region: <span className='p-4 text-gray-600'>{data?.address}</span></div>
                 </div>
 
                 <div >
-                  <div>Nida: {data?.nida}</div>
-                  <div>house Number: {data?.house}</div>
+                  <div>Nida: <span className='p-4 text-gray-600'>{data?.nida}</span></div>
+                  <div>house Number: <span className='p-4 text-gray-600'>{data?.house}</span></div>
                 </div>
 
 
@@ -59,10 +59,10 @@ export default function page({params}) {
 
           
             <div className='mt-4'>
-              <div className='font-bold text-xl px-2'>Customer Sponsor</div>
+              <div className='font-bold text-xl px-2'>Customer Guarantor</div>
               <div className='p-4 border-1 rounded-md flex justify-between' >
                 <div >
-                  <div>Sponsor Name: {sponsor?.name}</div>
+                  <div><span className='w-[12rem]'>Sponsor Name:</span> {sponsor?.name}</div>
                   <div>Phone number: {sponsor?.phone_number}</div>
                   <div>Relation: {sponsor?.relation}</div>
                 </div>
@@ -105,15 +105,18 @@ export default function page({params}) {
 
                 <div >
                  
-                  <div>Contract start at:<span className='p-4 text-gray-600'>{r.start_at}</span>
+                  <div>Contract start at:<span className='p-4 text-gray-600'>{r.start_at.substring(0,10)}</span>
                   </div>
                   <div>
-                  Contact end at:<span className='p-4 text-gray-600'>{r.end_at}</span>
+                  Contact end at:<span className='p-4 text-gray-600'>{r.end_at.substring(0,10)}</span>
                   </div>
                   <div>
                   Supervisor name:<span className='p-4 text-gray-600'>{r.supervisor_name}</span>
                   </div>
 
+                  <div>
+                  Contract type:<span className='p-4 text-gray-600'>{r.contract_type}</span>
+                  </div>
                 </div>
 
                 <div >

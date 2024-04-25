@@ -2,11 +2,12 @@
 import React, { useRef } from 'react'
 import Navigation from '../components/Navigation'
 import Header from '../components/Header'
-import { TokeContext, TokeContextProvider } from '../../context/TokenContext'
+import { useTokenContext } from '../../context/TokenContext'
 
 
 export default function PageCover(props) {
-  
+
+  const {token} = useTokenContext()
 
   return (
     <div className="flex">

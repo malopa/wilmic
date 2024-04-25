@@ -6,13 +6,17 @@ import { getLoanData } from '../api/data/getdata'
 import Spinner from '../components/Spinner'
 import { useTokenContext } from '../../context/TokenContext'
 import { useEffect } from 'react'
+import { useQuery } from '@tanstack/react-query'
 
 
 export default function Page() {
   
   const {token} = useTokenContext()
 
-  const {isLoading,data} = getLoanData(token)
+  // const {isLoading,data} = getLoanData(token)
+
+  const {isLoading,data} = useQuery({queryKey:['loans'],queryFn:async ()=> await getLoan(token)})
+
 
   useEffect(()=>{
     // window.location.reload()
@@ -25,9 +29,9 @@ export default function Page() {
             <div className='pl-28'>
               <Title title="Dashboard" />
             </div>
+          {isLoading && <Spinner />}
             
             <div className='flex justify-center'>
-          {isLoading && <Spinner />}
 
               <DashboardCard data={data?.results} number={data?.results?.length} icon='users' title="Total Customers" path='/customer'/>
               <DashboardCard  data={data?.results} number={data?.results?.filter(p=>p.status=='pending').length} icon='dollar'  path='/loan' title="Loan Pending"/>

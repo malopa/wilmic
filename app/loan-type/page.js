@@ -8,7 +8,7 @@ import { useTokenContext } from '../../context/TokenContext'
 import { useQuery } from '@tanstack/react-query'
 import { useEffect, useState } from 'react'
 
-export default  function page() {
+export default  function LoanTypePage() {
   const [loans,setLoans] = useState()
   const {token} = useTokenContext()
   

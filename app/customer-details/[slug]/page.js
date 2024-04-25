@@ -13,7 +13,7 @@ import { getAssets, getCustomerEmployee, getCustomerInfo, getCustomerSponsor } f
 import { useTokenContext } from '../../../context/TokenContext'
 
 
-export default function page({params}) {
+export default function CustomerDetailspage({params}) {
 
   const [isEmployeeAdd,setIsEmployee] = useState(false)
   const [isAttachment,setAttachment] = useState(false)

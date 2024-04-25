@@ -7,16 +7,9 @@ import LoanRequestTable from '../components/LoanRequestTable'
 import { getLoan } from '../api/loan-request/api'
 import { useTokenContext } from '../../context/TokenContext'
 
-export default function page() {
+export default function Loanpage() {
   const {token} = useTokenContext()
   const [loans,setLoans] = useState()
-
-  // useEffect(()=>{
-  //   getLoan(token)
-  //   .then(res=>{
-  //     setLoans(res.results)
-  //   })
-  // },[])
 
   return (
     <PageCover>

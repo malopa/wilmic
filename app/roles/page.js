@@ -7,7 +7,7 @@ import RoleDataTable from '../components/RoleDataTable'
 import { useTokenContext } from '../../context/TokenContext'
 import { getRoles } from '../api/role/role'
 
-export default function page() {
+export default function RolePage() {
   const {token} = useTokenContext()
   const [roles,setRoles] = React.useState([])
 

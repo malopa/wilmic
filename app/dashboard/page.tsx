@@ -17,11 +17,6 @@ export default function DashboardPage() {
 
   const {isLoading,data} = useQuery({queryKey:['loans'],queryFn:async ()=> await getLoan(token)})
 
-
-  useEffect(()=>{
-    // window.location.reload()
-  },[])
-
   return (
       <div>
           <Container>
@@ -30,7 +25,6 @@ export default function DashboardPage() {
               <Title title="Dashboard" />
             </div>
           {isLoading && <Spinner />}
-            
             <div className='flex justify-center'>
 
               <DashboardCard data={data?.results} number={data?.results?.length} icon='users' title="Total Customers" path='/customer'/>

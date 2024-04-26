@@ -89,48 +89,50 @@ export default function CustomerDetailspage({params}) {
               {employee?.results?.map(r=>{
                 return <div key={r.id} className='p-4 border-1 rounded-md flex justify-between' >
                 <div >
-                  <div>Employee name:<span className='p-4 text-gray-600'>{r.employee}</span>
+                  <div>
+                    <span  className='w-[10rem] inline-block' >Employee name:</span><span className='p-4 text-gray-600'>{r.employee}</span>
+                  </div>
+
+                  <div>
+                  <span  className='w-[10rem] inline-block' >Institution Type:</span><span className='p-4 text-gray-600'>{r.institition_type}</span>
                   </div>
                   <div>
-                  Institution Type:<span className='p-4 text-gray-600'>{r.institition_type}</span>
+                  <span  className='w-[10rem] inline-block' >Work place:</span><span className='p-4 text-gray-600'>{r.work_place}</span>
                   </div>
                   <div>
-                  Work place:<span className='p-4 text-gray-600'>{r.work_place}</span>
-                  </div>
-                  <div>
-                  Work position::<span className='p-4 text-gray-600'>{r.work_position}</span>
+                  <span  className='w-[10rem] inline-block' >Work position::</span><span className='p-4 text-gray-600'>{r.work_position}</span>
                   </div>
                 </div>
 
                 <div >
                  
-                  <div>Contract start at:<span className='p-4 text-gray-600'>{r.start_at.substring(0,10)}</span>
+                  <div><span  className='w-[10rem] inline-block' >Contract start at:</span><span className='p-4 text-gray-600'>{r.start_at.substring(0,10)}</span>
                   </div>
                   <div>
-                  Contact end at:<span className='p-4 text-gray-600'>{r.end_at.substring(0,10)}</span>
+                  <span  className='w-[10rem] inline-block' >Contact end at:</span><span className='p-4 text-gray-600'>{r.end_at.substring(0,10)}</span>
                   </div>
                   <div>
-                  Supervisor name:<span className='p-4 text-gray-600'>{r.supervisor_name}</span>
+                  <span  className='w-[10rem] inline-block' >Supervisor name:</span><span className='p-4 text-gray-600'>{r.supervisor_name}</span>
                   </div>
 
                   <div>
-                  Contract type:<span className='p-4 text-gray-600'>{r.contract_type}</span>
+                  <span  className='w-[10rem] inline-block' >Contract type:</span><span className='p-4 text-gray-600'>{r.contract_type}</span>
                   </div>
                 </div>
 
                 <div >
                   <div>
-                    Supervisor email:<span className='p-4 text-gray-600'>{r.supervisor_email}</span>
+                  <span  className='w-[10rem] inline-block' >Supervisor email:</span><span className='p-4 text-gray-600'>{r.supervisor_email}</span>
                   </div>
 
                   <div>
-                    Supervisor phone:<span className='p-4 text-gray-600'>{r.super_phone}</span>
+                  <span  className='w-[10rem] inline-block' >Supervisor phone:</span><span className='p-4 text-gray-600'>{r.super_phone}</span>
                   </div>
 
-                  <div>Salary before tax:<span className='p-4 text-gray-600'>{r.salary_before_tax}</span>
+                  <div><span  className='w-[10rem] inline-block' >Salary before tax:</span><span className='p-4 text-gray-600'>{r.salary_before_tax}</span>
                   </div>
                   <div>
-                    Salary after tax:<span className='p-4 text-gray-600'>{r.salary_after_tax}</span>
+                  <span  className='w-[10rem] inline-block' >Salary after tax:</span><span className='p-4 text-gray-600'>{r.salary_after_tax}</span>
                   </div>
                 </div>
 
@@ -171,7 +173,7 @@ export default function CustomerDetailspage({params}) {
 
             <div className='mt-4'>
               <div className='font-bold text-xl px-2 flex justify-between items-center my-2'>
-                <div>Customer Business Details</div>
+                <div>Client Business Details</div>
                 <button 
                 onClick={()=>setIsBusiness(true)}
                 className=' p-2 bg-blue-800 rounded-md text-white text-sm'><i className='pi pi-plus me-1'></i>Add Business</button>
@@ -197,7 +199,7 @@ export default function CustomerDetailspage({params}) {
 
             <div className='mt-4'>
               <div className='font-bold text-xl px-2 flex justify-between items-center my-2'>
-                <div>Customer Assets</div>
+                <div>Client Assets</div>
                 <button 
                 onClick={()=>setIsAsset(true)}
                 className=' p-2 bg-blue-800 rounded-md text-white text-sm'><i className='pi pi-plus me-1'></i>Add assets</button>
@@ -225,7 +227,7 @@ export default function CustomerDetailspage({params}) {
 
             <div className='mt-4'>
               <div className='font-bold text-xl px-2 flex justify-between items-center my-2'>
-                <div>Attachments</div>
+                <div>Client Attachments</div>
                 <button 
                 onClick={()=>setAttachment(true)}
                 className=' p-2 bg-blue-800 rounded-md text-white text-sm'><i className='pi pi-plus me-1'></i>Add Attachment</button>

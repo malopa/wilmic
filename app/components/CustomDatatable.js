@@ -18,7 +18,7 @@ import { Tag } from 'primereact/tag';
 import { Tooltip } from 'primereact/tooltip';
 import LoanDialog from './LoanDialog.js';
 import Stepper from '../components/steps/index.js';
-import { useMutation } from '@tanstack/react-query';
+import { useMutation, useQueryClient } from '@tanstack/react-query';
 import {addCustomer, deleteCustomers} from '../api/customer/api.js'
 import { useTokenContext } from '../../context/TokenContext.js';
 import { Dropdown } from 'primereact/dropdown';
@@ -119,9 +119,9 @@ export default function CustomDatatable(props) {
     const toast = useRef(null);
     const dt = useRef(null);
 
-    useEffect(() => {
-        ProductService.getProducts().then((data) => setProducts(data));
-    }, []);
+    // useEffect(() => {
+    //     ProductService.getProducts().then((data) => setProducts(data));
+    // }, []);
 
     const formatCurrency = (value) => {
         return value.toLocaleString('en-US', { style: 'currency', currency: 'USD' });
@@ -146,10 +146,14 @@ export default function CustomDatatable(props) {
         setDeleteProductsDialog(false);
     };
 
+
+    const queryClient = useQueryClient()
+
     const mutation  = useMutation({mutationFn:addCustomer,onSuccess:(data)=>{
         setDeleteProductsDialog(false);
         hideDialog()
         setCurrentStep(0)
+        queryClient.invalidateQueries("customers")
         toast.current.show({ severity: 'success', summary: 'Successful', detail: 'Customer added successfully', life: 3000 });
 
     }})
@@ -333,13 +337,14 @@ export default function CustomDatatable(props) {
 
     const header = (
         <div className="flex flex-wrap gap-2 align-items-center justify-content-between">
-            <h4 className="m-0">Manage Products</h4>
+            <h4 className="m-0">Manage Clients</h4>
             <span className="p-input-icon-left">
                 <i className="pi pi-search" />
                 <InputText type="search" onInput={(e) => setGlobalFilter(e.target.value)} placeholder="Search..." />
             </span>
         </div>
-    );
+    )
+
     const productDialogFooter = (
         <React.Fragment>
             {
@@ -347,7 +352,6 @@ export default function CustomDatatable(props) {
             }
 
             {(currentStep == 0 || currentStep == 1 || currentStep == 2) && <Button label="Next" icon="pi pi-arrow-right"  onClick={()=>onClickNext()} />}
-
            
             {(currentStep == 3 )&& <>
             <Button label="Cancel" icon="pi pi-times" outlined onClick={hideDialog} />
@@ -420,7 +424,6 @@ export default function CustomDatatable(props) {
                     <Column field="gender" header="Gender" sortable style={{ minWidth: '10rem' }}></Column>
                     <Column field="phone_number" header="phone_number" sortable style={{ minWidth: '10rem' }}></Column>
                     <Column field="region" header="Region" sortable style={{ minWidth: '10rem' }}></Column>
-                    <Column body={sponsorBodyTemplate} header="Sponsors"  style={{ minWidth: '10rem' }}></Column>
                     <Column field="address" header="Address"  style={{ minWidth: '10rem' }}></Column>
                     <Column field="house" header="House Number"  style={{ minWidth: '10rem' }}></Column>
                     <Column body={actionBodyTemplate} exportable={false} style={{ minWidth: '18rem' }}></Column>

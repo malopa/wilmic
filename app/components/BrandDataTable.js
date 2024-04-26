@@ -314,16 +314,39 @@ export default function BrandDatatable(props) {
           then(data => {
             console.log("---------------xxx---------",data.secure_url)
             // setPhoto(data.secure_url)
-            setImages(p=>[...p,data.secure_url]);
+            // setImages(p=>[...p,data.secure_url]);
+            let _product = { ...product };
+
+            _product[`logo`] = data.secure_url;
   
           }).catch(err => {
-            Alert.alert("An Error Occured While Uploading",err)
+            console.log("An Error Occured While Uploading",err)
           })
       }
 
 
+      const customBase64Uploader = async (event) => {
+        // convert file to base64 encoded
+        const file = event.files[0];
+
+        console.log("files--",file) 
+        const reader = new FileReader();
+        let blob = await fetch(file.objectURL).then((r) => r.blob()); //blob:url
+
+        reader.readAsDataURL(blob);
+
+        reader.onloadend = function () {
+            const base64data = reader.result;
+            cloudinaryUpload(file)
+
+        };
+    };
+
+    const onImageSet = (e)=>{
+        console.log("image changes ---",e.target.file)
+    }
+
     const onUpload = () => {
-        
         toast.current.show({ severity: 'info', summary: 'Success', detail: 'File Uploaded' });
     };
 
@@ -380,8 +403,8 @@ export default function BrandDatatable(props) {
                 </div>
 
                 <div className="field">
-                    <label>Upload Image</label>
-                    <FileUpload name="logo[]" url="/api/upload" accept="image/*" maxFileSize={1000000} onUpload={onUpload} />
+                    <label>Upload Image</label> 
+                    <FileUpload name="logo"  accept="image/*" maxFileSize={1000000} onUpload={onUpload} customUpload uploadHandler={customBase64Uploader} />
                 </div>
 
 

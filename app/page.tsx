@@ -1,203 +1,88 @@
+
 "use client"
-import Image from "next/image";
-import Link from "next/link";
-import styles from '../styles/dashboard.module.css'
-import { useContext, useRef, useState } from "react";
+import { Toast } from 'primereact/toast';
+import Input from './components/Input'
+import PrimaryButton from './components/PrimatuButton'
+import {login} from './api/lib'
+import {SubmitButton} from './components/SubmitButton'
+import { useFormState } from 'react-dom'
 
-export default function Page() {
-
-
-const [isMenu,setIsMenu] = useState(false)
-  
-
-
-
-
-  const openMenu = () =>{
-    setIsMenu(!isMenu)
-  }
-
-  return (
-<div className={styles.dashboard}>
-      <header className={styles.header}>
-        <div className={styles.sectionTop}>
-
-            <div>
-                <img src='./logo.jpeg'  style={{width:50,height:50,borderRadius:25}} />
-            </div>
-
-            <div  className='absolute right-10 cursor-pointer lg:hidden  justify-center gap-x-1.5 rounded-md  px-3 py-2 text-sm font-semibold text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 hover:bg-gray-50'
-            id="menu-button" aria-expanded="true" aria-haspopup="true" onClick={()=>openMenu()}>
-                <i  
-                  className="pi pi-bars hover:text-white" 
-                  style={{ color: "orange",fontSize:24,marginRight:4 }}>
-                  </i>
-
-            </div>
-
-
-            {isMenu && 
-            <div className="absolute right-0 top-14 z-10 mt-2 w-56  divide-y divide-gray-100 rounded-md bg-white shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none" role="menu" aria-orientation="vertical" aria-labelledby="menu-button" >
-                <div className="py-1" role="none">
-                </div>
-                <div className="py-1" role="none">
-                </div>
-                
-            </div>
-            }
-
-            <ul className={styles.nav}>
-                <li><Link className="a" href="#home">Home</Link></li>
-                <li ><Link className="a" href="#service">Prerequest</Link></li>
-                <li><Link className="a"  href="#about">About us</Link></li>
-                <li><Link className="a"  href="#contact">Contact us</Link></li>
-            </ul>
-
-        </div>
-
-
-        <div className={styles.headerContent} id="home">
-            <div className={styles.leftContent}>
-                <div className={styles.headerTitle}>Wilmic Microfinance: Small Loans, Big Dreams.</div>
-                    <div style={{color:'#FFF'}}>
-                        Wilmic Microfinance: Empowering communities through accessible financial services tailored to small businesses, fostering economic growth and financial inclusion
-                    </div>
-
-                    <div className={styles.phone1}>
-                        <img src="./slog.jpeg"  />
-                    </div>
-
-
-                <div className={styles.auth}>
-                    <Link href="/login" className={`${styles.btn} ${styles.login}`}>Log In <i className="pi pi-sign-in gray-400"></i> 
-                    {/* <i className="fa fa-sign-in" aria-required="false" style="color:#777"></i> */}
-                    </Link>
-                </div>
-            </div>
-
-            <div>
-                <img className={styles.phone} src="./slog.jpeg"  style={{width:250,borderRadius:10}} />
-            </div>
-
-        </div>
-    </header>  
- 
-
-    <div className={styles.about} id="about">
-        <div className={styles.aboutTitle} >About us</div>
-        <div className={styles.aboutContent}>
-        <div className={styles.aboutImage}>
-            {/* <img src='logo.jpeg' className={styles.weImage} width="400px" /> */}
-        </div>
-
-        At Wilmic Microfinance, we believe in the power of financial inclusion to transform lives and communities. Our mission is to provide accessible financial services to individuals and small businesses who are traditionally underserved by mainstream banks.
-
-        Through our range of loan products, we support aspiring entrepreneurs and existing businesses alike, helping them realize their dreams and achieve financial stability. Whether you need capital to start a new venture, expand an existing business, or meet unexpected expenses, we're here to help.
-
-    </div>
-    </div>
-
-
-    <div className={styles.serviceTitle} id="service">
+import {
+    useQuery,
+    useMutation,
+    useQueryClient,
+    QueryClient,
+    QueryClientProvider,
+  } from '@tanstack/react-query'
+import { redirect, useRouter } from 'next/navigation';
+import Link from 'next/link';
+// import { useRouter } from 'next/router'
        
-    <i className="pi pi-cog fa-check hover:text-white" 
-        style={{ color: "orange",fontSize:24,marginRight:4 }} ></i>
-            Prerequest to loan
-    </div>
+  // Create a client
 
-    <div className={styles.service}>
+const queryClient = new QueryClient()
 
-        <div className={styles.serviceVard}>
-            <div className={styles.serviceHeader}> 
-            Valid identification documents</div>
-        </div>
-
-        <div className={styles.serviceVard}>
-
-            <div className={styles.serviceHeader}> 
-
-            Clear understanding of loan terms and repayment schedule</div>
-        </div>
-
-
-      <div className={styles.serviceVard}>
-          <div className={styles.serviceHeader}>
-              <span>Business plan or purpose for the loan.</span></div>
-          </div>
-
-      <div className={styles.serviceVard}>
-
-          <div className={styles.serviceHeader}> 
-          Good credit history, if applicable</div>
-
-      </div>
-
-      <div className={styles.serviceVard}>
-
-          <div className={styles.serviceHeader}> 
-          Collateral, if required for the type of loan.
-          </div>   
-      </div>
-
-
-
-
-
-      </div>
-
-
-    <div className={`${styles.us} ${styles.reveal}`}>
-        <div>
-        <div className={styles.title}>Why Choose us?</div>
-        <div className={styles.usContent}>
-        We understand that every financial need is unique. That's why we offer personalized loan products and flexible repayment plans to suit your specific circumstances and goals.
-        <br />
-        We know your time is valuable. Our streamlined application process ensures quick approval and disbursement of funds, so you can focus on what matters most  growing your business.
-        </div>
-   
-    </div>
-        <div className={styles.auth}>
-            <Link href="/signup">
-                <button className={`${styles.btn} ${styles.signup}`}>Sign Up</button>
-            </Link>
-            <Link href="/login">
-                <button className={`${styles.btn} ${styles.login}`}>Log In 
-                    <i className="pi pi-sign-in"></i>
-                    </button>
-            </Link>
-        </div>
-
-        <div>Start for free, no obligations. Sign up today and revolutionize the way you connect with your audience.</div>
-    </div>
-
-
-    <div className={styles.footer} id="contact">
-        <div>
-            <div className={styles.footerTitle}>Get in Touch</div>
-            <div>
-                WILMIC GENERAL & MICROFINANCE <br/>
-                TIN 109-745-367<br />
-                VRN 40-046815-I<br /><br />
-                Office <br />
-                TOGO TOWER KINONDONI MANYANYA NEAR TIGER TOWER ALONG KINONDONI ROAD.
-            <br />
-            <br />
-            </div>
-            <div>
-                Call 0715467827/0762707670
-            </div>
-        </div>
-    </div>
-
-    <div className={styles.copyright}>
-        <p className={styles.copy}>&copy; 2024 wilmic.co.tz</p>
-    </div>
-
-
-
-</div>
-  )
+const initialState = {
+    "username":"",
+    "password":''
 }
+export default async function Page() {
+    const [state, formAction] = useFormState(login, initialState)
 
 
 
+    const saveData = ()=>{
+
+    }
+    
+    return <div className="flex flex-col items-center justify-between p-24
+    ">
+        <div className='w-[400px]'>
+
+            
+            <form action={login} className='border-1 rounded-lg px-4 py-4'>
+
+
+                <center>
+                    <img src='logo.jpeg' className='w-[140px]' alt="image"/>
+                </center>
+
+            <div className='font-bold text-center p-2 text-xl'>Log In</div>
+
+                <div className="flex flex-column gap-2">
+                    <label htmlFor="username" className='text-black'>Username</label>
+                    <Input 
+                        name="username"
+                        required
+                        // onChange={(e)=>setUsername(e.target.value)}
+                    />
+                    <p aria-live="polite" className="sr-only">
+                        {state?.message}
+                    </p>
+                </div>
+
+                <div className='flex justify-end my-2'>
+                    <Link className='mt-4 underline text-blue-400' href="/">Forget password?</Link>
+                </div>
+
+                <div className="flex flex-column mt-0">
+                    <label htmlFor="password">Password</label>
+                    <Input 
+                        name="password"
+                        type="password"
+                        // onChange={(e)=>setPassword(e.target.value)}
+                    />
+
+                </div>
+
+               
+
+                <SubmitButton label="Log In" onClick={()=>saveData()}/>
+
+                
+
+            </form>
+        </div>
+
+        </div>
+  }

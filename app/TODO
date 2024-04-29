@@ -15,6 +15,14 @@ tawiriDB@2023
 export postgres db
 pg_dump -U tawiri -h localhost -d tawiriis_live_db > ./cmsdump.sql
 
+pg_dump -h localhost -U tawiridbuser -d tawiriis_live_db --data-only > data_dump.sql
+
+
+import
+ psql -U tawiridbuser -d tawiri_live_db1 -h localhost -f data_dump.sql
+
+
+
 Transfer file from remote to local machine current director
 scp twr@192.168.4.2:/var/www/tawiriis/cmsdump.sql .
 

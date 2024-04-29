@@ -18,59 +18,32 @@ import { Tag } from 'primereact/tag';
 import { Tooltip } from 'primereact/tooltip';
 import LoanDialog from './LoanDialog.js';
 import Stepper from './steps/index.js';
-import { useMutation } from '@tanstack/react-query';
+import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import {addCustomer, deleteCustomers} from '../api/customer/api.js'
 import { useTokenContext } from '../../context/TokenContext.js';
+import { Dropdown } from 'primereact/dropdown';
+import { create, deleteData, getData, update } from '../api/tku/app.js';
+import { BASE_URL } from '../api/base.js';
+import Link from 'next/link.js';
         
 
-const _steps =[
-    {
-    title: 'Basic Info',
-    href: 'http://example1.com',
-    onClick: (e) => {
-      e.preventDefault()
-      console.log('onClick', 1)
-    }
-  }, {
-    title: 'Address',
-    href: 'http://example2.com',
-    onClick: (e) => {
-      e.preventDefault()
-      console.log('onClick', 2)
-    }
-  }, {
-    title: 'Sponsors',
-    href: 'http://example3.com',
-    onClick: (e) => {
-      e.preventDefault()
-      console.log('onClick', 3)
-    }
-  
-  }]
-  
 
 export default function CarDatatable(props) {
 
     let emptyProduct = {
         id: null,
-        fist_name: '',
-        middle_name: '',
-        last_name: '',
-        phone_number: '',
-        nida: '',
-        gender: '',
-        region: '',
-        address: '',
-        house: '',
-        sponsor_name_1: '',
-        sponsor_phone_1: '',
-        sponsor_relation_1: '',
-        sponsor_name_2:'',
-        sponsor_phone_2:'',
-        sponsor_relation_2:'',
-        
+        name: '',
+        model: '',
+        brand: '',
+        engine: '',
+        miles: '',
+        price: '',
+        condition: '',
     };
 
+    const _state = [
+        {name:"new",code:'new'}
+    ]
     const {token} = useTokenContext()
     const [products, setProducts] = useState(null);
     const [productDialog, setProductDialog] = useState(false);
@@ -81,11 +54,56 @@ export default function CarDatatable(props) {
     const [submitted, setSubmitted] = useState(false);
     const [globalFilter, setGlobalFilter] = useState(null);
     const [loanVisible, setLoanVisible] = useState(false);
-    const [steps, setSteps] = useState(_steps);
     const [currentStep,setCurrentStep] = useState(0)
+    const [conditions,setCondition] = useState(_state)
+    const [brands,setBrands] = useState([])
+    const [models,setModels] = useState([])
+    const [edit,setIsEdit] = useState()
 
     const toast = useRef(null);
     const dt = useRef(null);
+
+    const {isLoading:isCarLoading,data:cars} = useQuery({queryKey:['cars'],queryFn:async ()=>getData({token,url:`${BASE_URL}api/v1/car-data/`})})
+    const {isLoading,data:brand} = useQuery({queryKey:['brands'],queryFn:async ()=>getData({token,url:`${BASE_URL}api/v1/brand/`})})
+    const {isLoading:isModel,data:model} = useQuery({queryKey:['models'],queryFn:async ()=>getData({token,url:`${BASE_URL}api/v1/model/`})})
+    const {isLoading:isCondition,data:condition} = useQuery({queryKey:['conditions'],queryFn:async ()=>getData({token,url:`${BASE_URL}api/v1/condition/`})})
+
+    useEffect(()=>{
+
+        setBrands([])
+        if(brand?.results){
+            brand?.results.map(d=>{
+             setBrands(p=>[...p,{name:d.name,code:d.id}])   
+            })
+        }
+
+    },[brand])
+
+
+    useEffect(()=>{
+
+        setModels([])
+        if(model?.results){
+            model?.results.map(d=>{
+             setModels(p=>[...p,{name:d.name,code:d.id}])   
+            })
+        }
+
+    },[model])
+
+
+    useEffect(()=>{
+
+        setCondition([])
+        if(condition?.results){
+            condition?.results.map(d=>{
+             setCondition(p=>[...p,{name:d.name,code:d.id}])   
+            })
+        }
+
+    },[condition])
+
+
 
     useEffect(() => {
         ProductService.getProducts().then((data) => setProducts(data));
@@ -103,6 +121,7 @@ export default function CarDatatable(props) {
 
     const hideDialog = () => {
         setSubmitted(false);
+        setIsEdit(false)
         setProductDialog(false);
     };
 
@@ -114,26 +133,52 @@ export default function CarDatatable(props) {
         setDeleteProductsDialog(false);
     };
 
-    const mutation  = useMutation({mutationFn:addCustomer,onSuccess:(data)=>{
+    const queryClient = useQueryClient()
+    const mutation  = useMutation({mutationFn:create,onSuccess:(data)=>{
         setDeleteProductsDialog(false);
         hideDialog()
+        queryClient.invalidateQueries("cars")
         toast.current.show({ severity: 'success', summary: 'Successful', detail: 'Customer added successfully', life: 3000 });
 
     }})
     const saveProduct = () => {
-        
-        const data = {...product,token,sponsor:[
-            {name:product.sponsor_name_1,phone_number:product.sponsor_phone_1,relation:product.sponsor_relation_1},
-            {name:product.sponsor_name_2,phone_number:product.sponsor_phone_2,relation:product.sponsor_relation_2}]
-        }
+
+        const data = {...product,brand:product.brand.code,
+            model:product.model.code,condition:product.condition.code,
+            
+            token,url:`${BASE_URL}api/v1/car/`}
+
+        setSubmitted(true);
+
 
         mutation.mutate(data)
 
        
     };
 
+
+
+    const updateMutation  = useMutation({mutationFn:update,onSuccess:(data)=>{
+        setDeleteProductsDialog(false);
+        hideDialog()
+        setIsEdit(false)
+        queryClient.invalidateQueries("countries")
+        toast.current.show({ severity: 'success', summary: 'Successful', detail: 'Customer added successfully', life: 3000 });
+
+    }})
+
+    const updateProduct  = ()=>{
+        const url = `${BASE_URL}api/v1/car/${product.id}/`
+        const data = {...product,token,url
+        }
+
+        updateMutation.mutate(data)
+    }
+
+
     const editProduct = (product) => {
         setProduct({ ...product });
+        setIsEdit(true)
         setProductDialog(true);
     };
 
@@ -142,7 +187,7 @@ export default function CarDatatable(props) {
         setDeleteProductDialog(true);
     };
 
-    const delMutation = useMutation({mutationFn:deleteCustomers,onSuccess:(data)=>{
+    const delMutation = useMutation({mutationFn:deleteData,onSuccess:(data)=>{
         toast.current.show({ severity: 'success', summary: 'Successful', detail: 'Customer deleted successfully', life: 3000 });
         setProduct(emptyProduct)
     }})
@@ -249,17 +294,10 @@ export default function CarDatatable(props) {
         return formatCurrency(rowData.price);
     };
 
-    const ratingBodyTemplate = (rowData) => {
-        return <Rating value={rowData.rating} readOnly cancel={false} />;
-    };
 
-    const statusBodyTemplate = (rowData) => {
-        return <Tag value={rowData.inventoryStatus} severity={getSeverity(rowData)}></Tag>;
-    };
+    
+   
 
-    const sponsorBodyTemplate = (rowData)=>{
-        return (<div>{"sponsor-"+JSON.stringify(rowData.sponsor)}</div>)
-    }
     const actionBodyTemplate = (rowData) => {
         return (
             <div className='flex'>
@@ -268,13 +306,9 @@ export default function CarDatatable(props) {
                 tooltipOptions={{ position: 'top' }}
                 onClick={() => editProduct(rowData)} />
                 <Button icon="pi pi-trash" rounded outlined severity="danger" onClick={() => confirmDeleteProduct(rowData)} />
-                {"--d--"+JSON.stringify(rowData.loan_status)}
-                <Button label="Request Loan"  className='ml-2' rounded outlined 
-                severity="success" 
-                tooltip="Assign user role" 
-                tooltipOptions={{ position: 'top' }} 
-                onClick={() => {setLoanVisible(!loanVisible);setProduct(rowData)}} />
-                
+                <Link href={`/car-details/${rowData.id}`}>
+                    <Button icon="pi pi-eye" className='mx-2' rounded outlined severity="success" />
+                </Link>
             </div>
         );
     };
@@ -306,17 +340,12 @@ export default function CarDatatable(props) {
     );
     const productDialogFooter = (
         <React.Fragment>
-            {
-                currentStep > 0 && <Button label="Back" icon="pi pi-arrow-left" onClick={()=>onClickPrevious()} />
+            <Button label="Cancel" icon="pi pi-times" outlined onClick={hideDialog} />
+            {edit?<Button label="Update" icon={`pi pi-check`} 
+            onClick={updateProduct} />:
+            <Button label="Save" icon={`pi ${mutation.isLoading?'pi-spin pi-spinner':'pi-check'}`} onClick={saveProduct} />
             }
 
-            {(currentStep == 0 || currentStep == 1) && <Button label="Next" icon="pi pi-arrow-right"  onClick={()=>onClickNext()} />}
-
-           
-            {currentStep == 2 && <>
-            <Button label="Cancel" icon="pi pi-times" outlined onClick={hideDialog} />
-            <Button label="Save" icon="pi pi-check" onClick={saveProduct} />
-            </>}
         </React.Fragment>
     );
     const deleteProductDialogFooter = (
@@ -346,7 +375,7 @@ export default function CarDatatable(props) {
             <Toast ref={toast} />
             <div className="card">
                 <Toolbar className="mb-4" left={leftToolbarTemplate} right={rightToolbarTemplate}></Toolbar>
-                <DataTable ref={dt} value={props?.customers} 
+                <DataTable ref={dt} value={cars?.results} 
                         selection={selectedProducts} 
                         onSelectionChange={(e) => setSelectedProducts(e.value)}
                         dataKey="id" 
@@ -360,7 +389,12 @@ export default function CarDatatable(props) {
 
                     <Column selectionMode="false" exportable={false}></Column>
                     <Column field="name" header="Name"  style={{ minWidth: '200px' }} frozen sortable ></Column>
-                    <Column field="name" header="Logo"  style={{ minWidth: '200px' }} frozen sortable ></Column>
+                    <Column field="price" header="Price"  style={{ minWidth: '200px' }}  sortable ></Column>
+                    <Column field="brand.name" header="Brand"  style={{ minWidth: '200px' }}  sortable ></Column>
+                    <Column field="condition.name" header="Brand"  style={{ minWidth: '200px' }}  sortable ></Column>
+                    <Column field="model.name" header="Model"  style={{ minWidth: '200px' }}  sortable ></Column>
+                    <Column field="miles" header="Miles"  style={{ minWidth: '200px' }}  ></Column>
+                    <Column field="condition.name" header="Condition"  style={{ minWidth: '200px' }} frozen sortable ></Column>
                     <Column body={actionBodyTemplate} exportable={false} style={{ minWidth: '18rem' }}></Column>
 
                 </DataTable>
@@ -376,65 +410,81 @@ export default function CarDatatable(props) {
                 onHide={hideDialog}
                 >
 
-                <Stepper steps={ steps } activeStep={ currentStep }  />
-                {currentStep == 0 && <>
                 <div className="field mt-4">
                     <label htmlFor="name" className="font-bold">
-                        First Name
+                        Name
                     </label>
-                    <InputText p={12} id="name" value={product.first_name} onChange={(e) => onInputChange(e, 'first_name')} required autoFocus className={classNames({ 'p-invalid': submitted && !product.first_name })} />
+                    <InputText p={12} id="name" value={product.name} onChange={(e) => onInputChange(e, 'name')} required autoFocus className={classNames({ 'p-invalid': submitted && !product.name })} />
                     {submitted && !product.name && <small className="p-error">Name is required.</small>}
                 </div>
 
                 <div className="field">
-                    <label htmlFor="name" className="font-bold">
-                        Middle Name
+                    <label htmlFor="price" className="font-bold">
+                        Price
                     </label>
-                    <InputText id="name" value={product.middle_name} onChange={(e) => onInputChange(e, 'middle_name')} required autoFocus className={classNames({ 'p-invalid': submitted && !product.middle_name })} />
-                    {submitted && !product.name && <small className="p-error">Middle Name is required.</small>}
+                    <InputNumber id="price" value={product.price} onChange={(e) => onInputNumberChange(e, 'price')} required autoFocus className={classNames({ 'p-invalid': submitted && !product.price })} />
+                    {submitted && !product.price && <small className="p-error">Middle Name is required.</small>}
+                </div>
+
+                <div className="field">
+                    <label htmlFor="engine" className="font-bold">
+                        Engine
+                    </label>
+                    <InputText id="engine" value={product.engine} onChange={(e) => onInputChange(e, 'engine')} required autoFocus className={classNames({ 'p-invalid': submitted && !product.engine })} />
+                    {submitted && !product.engine && <small className="p-error">engine is required.</small>}
+                </div>
+
+                <div className="field">
+                    <label htmlFor="engine" className="font-bold">
+                        Mileage
+                    </label>
+                    <InputText id="miles" value={product.miles} onChange={(e) => onInputChange(e, 'miles')} required autoFocus className={classNames({ 'p-invalid': submitted && !product.miles })} />
+                    {submitted && !product.engine && <small className="p-error">Miles is required.</small>}
+                </div>
+
+
+                <div className="field">
+                    <label htmlFor="brand" className="font-bold">
+                        Brand
+                    </label>
+                    <Dropdown value={product.brand} onChange={(e) => onInputChange(e,"brand")} 
+                        options={brands} 
+                        optionLabel="name" 
+                        placeholder="Select" 
+                        className="w-full md:w-14rem" 
+                        checkmark={true}  highlightOnSelect={false} />
+         
+                    {submitted && !product.brand && <small className="p-error">Brand is required.</small>}
+                </div>
+
+                <div className="field">
+                    <label htmlFor="model" className="font-bold">
+                        Model
+                    </label>
+                    <Dropdown value={product.model} onChange={(e) => onInputChange(e,"model")} 
+                        options={models} 
+                        optionLabel="name" 
+                        placeholder="Select" 
+                        className="w-full md:w-14rem" 
+                        checkmark={true}  highlightOnSelect={false} />
+         
+                    {submitted && !product.model && <small className="p-error">Model is required.</small>}
                 </div>
 
                 <div className="field">
                     <label htmlFor="name" className="font-bold">
-                        Last Name
+                        Condition
                     </label>
-                    <InputText id="name" value={product.last_name} onChange={(e) => onInputChange(e, 'last_name')} required autoFocus className={classNames({ 'p-invalid': submitted && !product.last_name })} />
-                    {submitted && !product.name && <small className="p-error">Last Name is required.</small>}
+                    <Dropdown value={product.condition} onChange={(e) => onInputChange(e,"condition")} 
+                        options={conditions} 
+                        optionLabel="name" 
+                        placeholder="Select" 
+                        className="w-full md:w-14rem" 
+                        checkmark={true}  highlightOnSelect={false} />
+         
+                    {submitted && !product.condition && <small className="p-error">Condition is required.</small>}
                 </div>
 
-                <div className="field">
-                    <label htmlFor="name" className="font-bold">
-                        Nida Namba
-                    </label>
-                    <InputText id="name" value={product.nida} onChange={(e) => onInputChange(e, 'nida')} required autoFocus className={classNames({ 'p-invalid': submitted && !product.nida })} />
-                    {submitted && !product.name && <small className="p-error">Name is required.</small>}
-                </div>
-
-                <div className="field">
-                    <label htmlFor="name" className="font-bold">
-                        Phone Number
-                    </label>
-                    <InputText id="name" value={product.phone_number} onChange={(e) => onInputChange(e, 'phone_number')} required autoFocus className={classNames({ 'p-invalid': submitted && !product.phone_number })} />
-                    {submitted && !product.name && <small className="p-error">Name is required.</small>}
-                </div>
-
-
-
-                <div className="field">
-                    <label className="mb-3 font-bold">Gender</label>
-                    <div className="formgrid grid">
-                        <div className="field-radiobutton col-6">
-                            <RadioButton inputId="category1" name="gender" value="Male" onChange={onCategoryChange} checked={product.gender === 'Male'} />
-                            <label htmlFor="category1">Male</label>
-                        </div>
-                        <div className="field-radiobutton col-6">
-                            <RadioButton inputId="category2" name="gender" value="Female" onChange={onCategoryChange} checked={product.gender === 'Female'} />
-                            <label htmlFor="category2">Female</label>
-                        </div>
-                    </div>
-                </div>
-
-                </>}
 
                 {currentStep == 1 && <>
                     <div className="field mt-4">

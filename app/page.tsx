@@ -29,10 +29,8 @@ const initialState = {
 export default async function Page() {
     const [state, formAction] = useFormState(login, initialState)
 
-
-
     const saveData = ()=>{
-
+        
     }
     
     return <div className="flex flex-col items-center justify-between p-24
@@ -75,7 +73,6 @@ export default async function Page() {
 
                 </div>
 
-               
 
                 <SubmitButton label="Log In" onClick={()=>saveData()}/>
 

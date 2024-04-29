@@ -1,17 +1,17 @@
+"use client"
 import React from 'react'
 import PageCover from '../components/PageCover'
 import Title from '../components/Title'
-import { Contrail_One } from 'next/font/google'
 import Container from '../components/Container'
-import CountryDataTable from '../components/CountryDataTable'
+import FeatureDatatable from '../components/FeatureDatatable'
 
 
-export default function page() {
+export default function FeaturePage() {
   return (
     <PageCover>
         <Container>
-            <Title title="Country" />
-            <CountryDataTable />
+            <Title title="Features" />
+            <FeatureDatatable />
         </Container>
     </PageCover>
   )

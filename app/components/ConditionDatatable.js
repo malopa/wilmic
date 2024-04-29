@@ -18,56 +18,21 @@ import { Tag } from 'primereact/tag';
 import { Tooltip } from 'primereact/tooltip';
 import LoanDialog from './LoanDialog.js';
 import Stepper from './steps/index.js';
-import { useMutation } from '@tanstack/react-query';
+import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import {addCustomer, deleteCustomers} from '../api/customer/api.js'
 import { useTokenContext } from '../../context/TokenContext.js';
+import { create, deleteData, getData, update } from '../api/tku/app.js';
+import { BASE_URL } from '../api/base.js';
         
 
-const _steps =[
-    {
-    title: 'Basic Info',
-    href: 'http://example1.com',
-    onClick: (e) => {
-      e.preventDefault()
-      console.log('onClick', 1)
-    }
-  }, {
-    title: 'Address',
-    href: 'http://example2.com',
-    onClick: (e) => {
-      e.preventDefault()
-      console.log('onClick', 2)
-    }
-  }, {
-    title: 'Sponsors',
-    href: 'http://example3.com',
-    onClick: (e) => {
-      e.preventDefault()
-      console.log('onClick', 3)
-    }
-  
-  }]
   
 
 export default function ConditionDatatable(props) {
 
     let emptyProduct = {
         id: null,
-        fist_name: '',
-        middle_name: '',
-        last_name: '',
-        phone_number: '',
-        nida: '',
-        gender: '',
-        region: '',
-        address: '',
-        house: '',
-        sponsor_name_1: '',
-        sponsor_phone_1: '',
-        sponsor_relation_1: '',
-        sponsor_name_2:'',
-        sponsor_phone_2:'',
-        sponsor_relation_2:'',
+        name: '',
+        description: '',
         
     };
 
@@ -81,15 +46,15 @@ export default function ConditionDatatable(props) {
     const [submitted, setSubmitted] = useState(false);
     const [globalFilter, setGlobalFilter] = useState(null);
     const [loanVisible, setLoanVisible] = useState(false);
-    const [steps, setSteps] = useState(_steps);
     const [currentStep,setCurrentStep] = useState(0)
+    const [edit,setIsEdit] = useState(false)
+
 
     const toast = useRef(null);
     const dt = useRef(null);
 
-    useEffect(() => {
-        ProductService.getProducts().then((data) => setProducts(data));
-    }, []);
+    const {isLoading,data} = useQuery({queryKey:['conditions'],queryFn:async ()=>getData({token,url:`${BASE_URL}api/v1/condition/`})})
+
 
     const formatCurrency = (value) => {
         return value.toLocaleString('en-US', { style: 'currency', currency: 'USD' });
@@ -103,6 +68,7 @@ export default function ConditionDatatable(props) {
 
     const hideDialog = () => {
         setSubmitted(false);
+        setIsEdit(false)
         setProductDialog(false);
     };
 
@@ -114,26 +80,45 @@ export default function ConditionDatatable(props) {
         setDeleteProductsDialog(false);
     };
 
-    const mutation  = useMutation({mutationFn:addCustomer,onSuccess:(data)=>{
+    const queryClient =useQueryClient()
+    const mutation  = useMutation({mutationFn:create,onSuccess:(data)=>{
         setDeleteProductsDialog(false);
         hideDialog()
+        queryClient.invalidateQueries("conditions")
         toast.current.show({ severity: 'success', summary: 'Successful', detail: 'Customer added successfully', life: 3000 });
 
     }})
     const saveProduct = () => {
         
-        const data = {...product,token,sponsor:[
-            {name:product.sponsor_name_1,phone_number:product.sponsor_phone_1,relation:product.sponsor_relation_1},
-            {name:product.sponsor_name_2,phone_number:product.sponsor_phone_2,relation:product.sponsor_relation_2}]
-        }
+        const data = {...product,token,url:`${BASE_URL}api/v1/condition/`}
 
         mutation.mutate(data)
 
        
     };
 
+
+    const updateMutation  = useMutation({mutationFn:update,onSuccess:(data)=>{
+        setDeleteProductsDialog(false);
+        hideDialog()
+        setIsEdit(false)
+        queryClient.invalidateQueries("conditions")
+        toast.current.show({ severity: 'success', summary: 'Successful', detail: 'Customer added successfully', life: 3000 });
+
+    }})
+
+    const updateProduct  = ()=>{
+        const url = `${BASE_URL}api/v1/condition/${product.id}/`
+        const data = {...product,token,url
+        }
+
+        updateMutation.mutate(data)
+    }
+
+
     const editProduct = (product) => {
         setProduct({ ...product });
+        setIsEdit(true)
         setProductDialog(true);
     };
 
@@ -142,20 +127,17 @@ export default function ConditionDatatable(props) {
         setDeleteProductDialog(true);
     };
 
-    const delMutation = useMutation({mutationFn:deleteCustomers,onSuccess:(data)=>{
+    const delMutation = useMutation({mutationFn:deleteData,onSuccess:(data)=>{
         toast.current.show({ severity: 'success', summary: 'Successful', detail: 'Customer deleted successfully', life: 3000 });
+        queryClient.invalidateQueries("conditions")
+        setDeleteProductDialog(false);
+
         setProduct(emptyProduct)
     }})
 
     const deleteProduct = () => {
-        // let _products = products.filter((val) => val.id !== product.id);
-        const data = {id:product.id,token}
+        const data = {id:product.id,token,url:`${BASE_URL}api/v1/condition/${product.id}/`}
         delMutation.mutate(data)
-        // setProducts(_products);
-        setDeleteProductDialog(false);
-        // setProduct(emptyProduct);
-
-        // toast.current.show({ severity: 'success', summary: 'Successful', detail: 'Product Deleted', life: 3000 });
     };
 
     const findIndexById = (id) => {
@@ -268,12 +250,6 @@ export default function ConditionDatatable(props) {
                 tooltipOptions={{ position: 'top' }}
                 onClick={() => editProduct(rowData)} />
                 <Button icon="pi pi-trash" rounded outlined severity="danger" onClick={() => confirmDeleteProduct(rowData)} />
-                {"--d--"+JSON.stringify(rowData.loan_status)}
-                <Button label="Request Loan"  className='ml-2' rounded outlined 
-                severity="success" 
-                tooltip="Assign user role" 
-                tooltipOptions={{ position: 'top' }} 
-                onClick={() => {setLoanVisible(!loanVisible);setProduct(rowData)}} />
                 
             </div>
         );
@@ -306,17 +282,10 @@ export default function ConditionDatatable(props) {
     );
     const productDialogFooter = (
         <React.Fragment>
-            {
-                currentStep > 0 && <Button label="Back" icon="pi pi-arrow-left" onClick={()=>onClickPrevious()} />
+           <Button label="Cancel" icon="pi pi-times" outlined onClick={hideDialog} />
+            {edit?<Button label="Update" icon={`pi pi-check`} onClick={updateProduct} />:
+            <Button label="Save" icon={`pi ${mutation.isLoading?'pi-spin pi-spinner':'pi-check'}`} onClick={saveProduct} />
             }
-
-            {(currentStep == 0 || currentStep == 1) && <Button label="Next" icon="pi pi-arrow-right"  onClick={()=>onClickNext()} />}
-
-           
-            {currentStep == 2 && <>
-            <Button label="Cancel" icon="pi pi-times" outlined onClick={hideDialog} />
-            <Button label="Save" icon="pi pi-check" onClick={saveProduct} />
-            </>}
         </React.Fragment>
     );
     const deleteProductDialogFooter = (
@@ -346,7 +315,7 @@ export default function ConditionDatatable(props) {
             <Toast ref={toast} />
             <div className="card">
                 <Toolbar className="mb-4" left={leftToolbarTemplate} right={rightToolbarTemplate}></Toolbar>
-                <DataTable ref={dt} value={props?.customers} 
+                <DataTable ref={dt} value={data?.results} 
                         selection={selectedProducts} 
                         onSelectionChange={(e) => setSelectedProducts(e.value)}
                         dataKey="id" 
@@ -360,7 +329,7 @@ export default function ConditionDatatable(props) {
 
                     <Column selectionMode="false" exportable={false}></Column>
                     <Column field="name" header="Name"  style={{ minWidth: '200px' }} frozen sortable ></Column>
-                    <Column field="name" header="Logo"  style={{ minWidth: '200px' }} frozen sortable ></Column>
+                    <Column field="description" header="Description"  style={{ minWidth: '200px' }} frozen sortable ></Column>
                     <Column body={actionBodyTemplate} exportable={false} style={{ minWidth: '18rem' }}></Column>
 
                 </DataTable>
@@ -376,153 +345,24 @@ export default function ConditionDatatable(props) {
                 onHide={hideDialog}
                 >
 
-                <Stepper steps={ steps } activeStep={ currentStep }  />
-                {currentStep == 0 && <>
                 <div className="field mt-4">
                     <label htmlFor="name" className="font-bold">
-                        First Name
+                        Name
                     </label>
-                    <InputText p={12} id="name" value={product.first_name} onChange={(e) => onInputChange(e, 'first_name')} required autoFocus className={classNames({ 'p-invalid': submitted && !product.first_name })} />
+                    <InputText p={12} id="name" value={product.name} onChange={(e) => onInputChange(e, 'name')} required autoFocus className={classNames({ 'p-invalid': submitted && !product.name })} />
                     {submitted && !product.name && <small className="p-error">Name is required.</small>}
                 </div>
 
                 <div className="field">
-                    <label htmlFor="name" className="font-bold">
-                        Middle Name
+                    <label htmlFor="description" className="font-bold">
+                        Description
                     </label>
-                    <InputText id="name" value={product.middle_name} onChange={(e) => onInputChange(e, 'middle_name')} required autoFocus className={classNames({ 'p-invalid': submitted && !product.middle_name })} />
-                    {submitted && !product.name && <small className="p-error">Middle Name is required.</small>}
+                    <InputText id="description" value={product.description} onChange={(e) => onInputChange(e, 'description')} required autoFocus className={classNames({ 'p-invalid': submitted && !product.description })} />
+                    {submitted && !product.description && <small className="p-error">description Name is required.</small>}
                 </div>
 
-                <div className="field">
-                    <label htmlFor="name" className="font-bold">
-                        Last Name
-                    </label>
-                    <InputText id="name" value={product.last_name} onChange={(e) => onInputChange(e, 'last_name')} required autoFocus className={classNames({ 'p-invalid': submitted && !product.last_name })} />
-                    {submitted && !product.name && <small className="p-error">Last Name is required.</small>}
-                </div>
-
-                <div className="field">
-                    <label htmlFor="name" className="font-bold">
-                        Nida Namba
-                    </label>
-                    <InputText id="name" value={product.nida} onChange={(e) => onInputChange(e, 'nida')} required autoFocus className={classNames({ 'p-invalid': submitted && !product.nida })} />
-                    {submitted && !product.name && <small className="p-error">Name is required.</small>}
-                </div>
-
-                <div className="field">
-                    <label htmlFor="name" className="font-bold">
-                        Phone Number
-                    </label>
-                    <InputText id="name" value={product.phone_number} onChange={(e) => onInputChange(e, 'phone_number')} required autoFocus className={classNames({ 'p-invalid': submitted && !product.phone_number })} />
-                    {submitted && !product.name && <small className="p-error">Name is required.</small>}
-                </div>
-
-
-
-                <div className="field">
-                    <label className="mb-3 font-bold">Gender</label>
-                    <div className="formgrid grid">
-                        <div className="field-radiobutton col-6">
-                            <RadioButton inputId="category1" name="gender" value="Male" onChange={onCategoryChange} checked={product.gender === 'Male'} />
-                            <label htmlFor="category1">Male</label>
-                        </div>
-                        <div className="field-radiobutton col-6">
-                            <RadioButton inputId="category2" name="gender" value="Female" onChange={onCategoryChange} checked={product.gender === 'Female'} />
-                            <label htmlFor="category2">Female</label>
-                        </div>
-                    </div>
-                </div>
-
-                </>}
-
-                {currentStep == 1 && <>
-                    <div className="field mt-4">
-                        <label htmlFor="name" className="font-bold">
-                            Region
-                        </label>
-                        <InputText id="name" value={product.region} onChange={(e) => onInputChange(e, 'region')} required autoFocus className={classNames({ 'p-invalid': submitted && !product.region })} />
-                    </div>
-
-                    <div className="field">
-                        <label htmlFor="name" className="font-bold">
-                            Home address
-                        </label>
-                        <InputText id="name" value={product.address} onChange={(e) => onInputChange(e, 'address')} required autoFocus className={classNames({ 'p-invalid': submitted && !product.address })} />
-                    </div>
-
-                    <div className="field">
-                        <label htmlFor="name" className="font-bold">
-                            House Number
-                        </label>
-                        <InputText id="name" value={product.house} onChange={(e) => onInputChange(e, 'house')} required autoFocus className={classNames({ 'p-invalid': submitted && !product.house })} />
-                    </div>
-
-                    <div className="field">
-                        <label htmlFor="name" className="font-bold">
-                            Ownership
-                        </label>
-                        <InputText id="name" value={product.name} onChange={(e) => onInputChange(e, 'name')} required autoFocus className={classNames({ 'p-invalid': submitted && !product.name })} />
-                    </div>
-
-                    </>}
-
-
-                {currentStep == 2 && <>
-                    <div className='mt-4'> Sponsor 1</div>
-                    <div className="field">
-                        <label htmlFor="sponsor_name_1" className="font-bold">
-                            Name 
-                        </label>
-                        <InputText  id="sponsor_name_1" value={product.sponsor_name_1} onChange={(e) => onInputChange(e, 'sponsor_name_1')} required autoFocus className={classNames({ 'p-invalid': submitted && !product.sponsor_name_1 })} />
-                    </div>
-
-
-                    <div className="field">
-                        <label htmlFor="sponsor_phone_1" className="font-bold">
-                            Phone Number
-                        </label>
-                        <InputText id="sponsor_phone_1" value={product.sponsor_phone_1} onChange={(e) => onInputChange(e, 'sponsor_phone_1')} required autoFocus className={classNames({ 'p-invalid': submitted && !product.sponsor_phone_1 })} />
-                    </div>
-
-
-                    <div className="field">
-                        <label htmlFor="sponsor_relation_1" className="font-bold">
-                            Relationship
-                        </label>
-                        <InputText id="sponsor_relation_1" value={product.sponsor_relation_1} onChange={(e) => onInputChange(e, 'sponsor_relation_1')} required autoFocus className={classNames({ 'p-invalid': submitted && !product.relation_1 })} />
-                    </div>
-
-                    <div className='mt-4'> Sponsor 2</div>
-                    <div className="field">
-                        <label htmlFor="sponsor_name_2" className="font-bold">
-                            Name 
-                        </label>
-                        <InputText id="sponsor_name_2" value={product.sponsor_name_2} onChange={(e) => onInputChange(e, 'sponsor_name_2')} required autoFocus className={classNames({ 'p-invalid': submitted && !product.sponsor_name_2 })} />
-                    </div>
-
-
-                    <div className="field">
-                        <label htmlFor="sponsor_phone_2" className="font-bold">
-                            Phone Number
-                        </label>
-                        <InputText id="sponsor_phone_2" value={product.sponsor_phone_2} onChange={(e) => onInputChange(e, 'sponsor_phone_2')} required autoFocus className={classNames({ 'p-invalid': submitted && !product.sponsor_phone_2 })} />
-                    </div>
-
-
-                    <div className="field">
-                        <label htmlFor="name" className="font-bold">
-                            Relationship
-                        </label>
-                        <InputText id="sponsor_relation_2" value={product.sponsor_relation_2} onChange={(e) => onInputChange(e, 'sponsor_relation_2')} required autoFocus className={classNames({ 'p-invalid': submitted && !product.sponsor_relation_2 })} />
-                    </div>
-
-                </>}
             </Dialog>
 
-        {loanVisible && 
-            <LoanDialog customer_id={product.id}  loanVisible={loanVisible} setLoanVisible={setLoanVisible} />
-        } 
 
             <Dialog visible={deleteProductDialog} style={{ width: '32rem' }} 
                 breakpoints={{ '960px': '75vw', '641px': '90vw' }} 

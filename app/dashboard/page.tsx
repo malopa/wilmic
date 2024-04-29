@@ -7,13 +7,25 @@ import Spinner from '../components/Spinner'
 import { useTokenContext } from '../../context/TokenContext'
 import { useEffect } from 'react'
 import { useQuery } from '@tanstack/react-query'
+import { getSession } from '../api/lib'
+import { getLoan } from '../api/loan-request/api'
 
 
 export default function DashboardPage() {
   
-  const {token} = useTokenContext()
+  const {token,setToken} = useTokenContext()
 
   // const {isLoading,data} = getLoanData(token)
+
+  useEffect(() => {
+
+    async function getToken(){
+        let to = await getSession()
+        setToken(to?.access)
+    }
+
+    getToken()
+    }, []);
 
   const {isLoading,data} = useQuery({queryKey:['loans'],queryFn:async ()=> await getLoan(token)})
 

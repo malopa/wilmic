@@ -78,6 +78,7 @@ export default function CustomDatatable(props) {
         region: '',
         address: '',
         house: '',
+        client_type:'',
         sponsor_name_1: '',
         sponsor_phone_1: '',
         sponsor_relation_1: '',
@@ -243,6 +244,14 @@ export default function CustomDatatable(props) {
         let _product = { ...product };
 
         _product['gender'] = e.value;
+        setProduct(_product);
+    };
+
+
+    const onCategoryClientType = (e) => {
+        let _product = { ...product };
+
+        _product['client_type'] = e.value;
         setProduct(_product);
     };
 
@@ -543,7 +552,22 @@ export default function CustomDatatable(props) {
                         <Dropdown value={product.owner} onChange={(e) => onInputChange(e, 'owner')} options={owenership} optionLabel="name" 
                         placeholder="Select" className="w-full" />
 
-                        {/* <InputText id="name" value={product.name} onChange={(e) => onInputChange(e, 'name')} required autoFocus className={classNames({ 'p-invalid': submitted && !product.name })} /> */}
+                    </div>
+
+
+
+                    <div className="field">
+                        <label className="mb-3 font-bold">Client Type</label>
+                        <div className="formgrid grid">
+                            <div className="field-radiobutton col-6">
+                                <RadioButton inputId="category11" name="client_type" value="busines" onChange={onCategoryClientType} checked={product.client_type === 'busines'} />
+                                <label htmlFor="category11">Busines</label>
+                            </div>
+                            <div className="field-radiobutton col-6">
+                                <RadioButton inputId="category12" name="client_type" value="employee" onChange={onCategoryClientType} checked={product.client_type === 'employee'} />
+                                <label htmlFor="category12">Employee</label>
+                            </div>
+                        </div>
                     </div>
 
 
@@ -565,20 +589,19 @@ export default function CustomDatatable(props) {
                     </div>
 
 
-
                     <div className="field">
-                    <label className="mb-3 font-bold">Marital Status</label>
-                    <div className="formgrid grid">
-                        <div className="field-radiobutton col-6">
-                            <RadioButton inputId="category1" name="gender" value="Male" onChange={onCategoryChange} checked={product.gender === 'Male'} />
-                            <label htmlFor="category1">Married</label>
-                        </div>
-                        <div className="field-radiobutton col-6">
-                            <RadioButton inputId="category2" name="gender" value="Female" onChange={onCategoryChange} checked={product.gender === 'Female'} />
-                            <label htmlFor="category2">Not Married</label>
+                        <label className="mb-3 font-bold">Marital Status</label>
+                        <div className="formgrid grid">
+                            <div className="field-radiobutton col-6">
+                                <RadioButton inputId="category1" name="gender" value="Male" onChange={onCategoryChange} checked={product.gender === 'Male'} />
+                                <label htmlFor="category1">Married</label>
+                            </div>
+                            <div className="field-radiobutton col-6">
+                                <RadioButton inputId="category2" name="gender" value="Female" onChange={onCategoryChange} checked={product.gender === 'Female'} />
+                                <label htmlFor="category2">Not Married</label>
+                            </div>
                         </div>
                     </div>
-                </div>
 
                     </>}
 

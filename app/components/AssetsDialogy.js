@@ -40,6 +40,17 @@ export default function AssetsDialogy(props) {
         setProduct(_product);
     };
 
+
+    const onInputNumberChange = (e, name) => {
+        const val = e.value || 0;
+        let _product = { ...product };
+
+        _product[`${name}`] = val;
+
+        setProduct(_product);
+    };
+
+
     const queryClient = useQueryClient()
 
     const mutation  = useMutation({mutationFn:addAsset,
@@ -92,7 +103,7 @@ export default function AssetsDialogy(props) {
                             <label htmlFor="asset_value" className="font-bold">
                                 Asset Value
                             </label>
-                            <InputText id="asset_value" value={product.asset_value} onChange={(e) => onInputChange(e, 'asset_value')} required autoFocus className={classNames({ 'p-invalid': submitted && !product.asset_value })} />
+                            <InputNumber id="asset_value" value={product.asset_value} onChange={(e) => onInputNumberChange(e, 'asset_value')} required autoFocus className={classNames({ 'p-invalid': submitted && !product.asset_value })} />
                         </div>
 
 

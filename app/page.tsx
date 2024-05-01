@@ -42,7 +42,7 @@ export default async function Page() {
 
 
                 <center>
-                    <img src='logo.jpeg' className='w-[140px]' alt="image"/>
+                    <img src='logo.jpg' className='w-[140px]' alt="image"/>
                 </center>
 
             <div className='font-bold text-center p-2 text-xl'>Log In</div>

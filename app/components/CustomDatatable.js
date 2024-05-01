@@ -555,7 +555,6 @@ export default function CustomDatatable(props) {
                     </div>
 
 
-
                     <div className="field">
                         <label className="mb-3 font-bold">Client Type</label>
                         <div className="formgrid grid">

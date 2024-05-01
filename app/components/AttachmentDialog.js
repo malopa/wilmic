@@ -4,7 +4,7 @@ import { Dialog } from 'primereact/dialog';
 import { InputText } from 'primereact/inputtext';
 import { classNames } from 'primereact/utils';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
-import { addAsset, addLoan } from '../api/loan-request/api'
+import { addAsset, addAttachment, addLoan } from '../api/loan-request/api'
 import { InputNumber } from 'primereact/inputnumber';
 import { Calendar } from 'primereact/calendar';
 import { useTokenContext } from '../../context/TokenContext';
@@ -30,6 +30,9 @@ export default function AttachmentDialog(props) {
     const [submitted, setSubmitted] = useState(false);
     const [product, setProduct] = useState(emptyProduct);
     const toast = useRef()
+    const formData = new FormData()
+    // const [options,setOptions] = useState()
+    let options;
  
     const onInputChange = (e, name) => {
         const val = (e.target && e.target.value) || '';
@@ -43,17 +46,22 @@ export default function AttachmentDialog(props) {
 
     const queryClient = useQueryClient()
 
-    const mutation  = useMutation({mutationFn:addAsset,
+    const mutation  = useMutation({mutationFn:addAttachment,
         onSuccess:(data)=>{
         props.setAttachment(false)
-        queryClient.invalidateQueries('assets'+props.id)
+        queryClient.invalidateQueries('attachments'+props.id)
         toast.current.show({ severity: 'success', summary: 'Successful', detail: 'Customer added successfully', life: 3000 });
     }})
 
 
     const saveProduct = () => {
+
         const data = {...product,customer:+props.id,token}
-        mutation.mutate(data)
+        formData.append("name",product.name)
+        formData.append("token",token)
+        formData.append("customer",props.id)
+
+        mutation.mutate(formData)
        
     };
 
@@ -80,6 +88,7 @@ export default function AttachmentDialog(props) {
     // Picha ya mazingira ya biashara
     // Picha ya dhamana
     // certificate of incoparation
+    
 
     const employee_attachment_options = [
         { name: 'Kadi ya gari', code: 'primary level' },
@@ -112,6 +121,30 @@ export default function AttachmentDialog(props) {
     ];
     
 
+    if(props.type === "busines"){
+        options = busness_attachment_options
+    }else{
+        options = employee_attachment_options
+
+    }
+
+    const customBase64Uploader = async (event) => {
+        // convert file to base64 encoded
+        const file = event.files[0];
+        formData.append("image",file)
+        console.log(file,"-----customer----files----")
+        const reader = new FileReader();
+        let blob = await fetch(file.objectURL).then((r) => r.blob()); //blob:url
+
+        reader.readAsDataURL(blob);
+
+        reader.onloadend = function () {
+            const base64data = reader.result;
+        };
+
+    };
+
+
 
 
     const productDialogFooter = (
@@ -137,15 +170,24 @@ export default function AttachmentDialog(props) {
                         Attachment Name 
                         </label>
 
-                        <Dropdown value={product.owner} onChange={(e) => onInputChange(e, 'owner')} options={employee_attachment_options} optionLabel="name" 
-                        placeholder="Select" className="w-full" />
+                        <Dropdown value={product.name} 
+                        onChange={(e) => onInputChange(e, 'name')} 
+                        options={options} 
+                        optionLabel="name" 
+                        placeholder="Select" className="w-full"
+                        
+                        />
                     </div>
 
                         <div className="field">
                             <label htmlFor="asset_value" className="font-bold">
                                 Asset Value
                             </label>
-                            <FileUpload mode="basic" />
+                            <FileUpload
+                             mode="basic" 
+                            customUpload 
+                            uploadHandler={customBase64Uploader}
+                            />
                         </div>
 
 

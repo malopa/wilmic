@@ -36,6 +36,27 @@ export const addAsset = async (data)=>{
 }
 
 
+export const addAttachment = async (data)=>{
+
+    let token  = data.get("name")
+    alert( JSON.stringify(token.name) )
+    return;
+
+    const res = await fetch(`${BASE_URL}api/v1/attachment/`,{
+        method:"POST",
+        headers:{
+            "Authorization":'Bearer '+ token
+        },
+        body:(data)
+    })
+
+    const body = await res.json()
+    console.log("---loan---test----{body--",body)
+
+    return body;
+}
+
+
 export const addEmployee = async (data)=>{
     const res = await fetch(`${BASE_URL}api/v1/employee/`,{
         method:"POST",

@@ -26,6 +26,7 @@ export default function CustomerDetailspage({params}) {
   const {isLoading:isEmployee,data:employee} = useQuery({queryKey:['employee'+params.slug],queryFn:async ()=>getCustomerEmployee({token,id:params?.slug})})
   const {isLoading:isAssets,data:assets} = useQuery({queryKey:['assets'+params.slug],queryFn:async ()=>getAssets({token,id:params?.slug})})
 
+
   return (
     <PageCover>
         <Container>
@@ -36,20 +37,22 @@ export default function CustomerDetailspage({params}) {
               <div className='font-bold text-xl py-2 px-2'>Client Information</div>
               <div className='p-4 border-1 rounded-md flex justify-between' >
                 <div >
-                  <div><span  className='w-[8rem] inline-block' >First Name:</span> <span className='p-4 text-gray-600'>{data?.first_name}</span></div>
-                  <div><span className='w-[8rem] inline-block'>Middle Name:</span> <span className='p-4 text-gray-600'>{data?.middle_name}</span></div>
-                  <div><span className='w-[8rem] inline-block'>Last Name:</span> <span className='p-4 text-gray-600'>{data?.last_name}</span></div>
+                  <div><span  className='w-[8rem] inline-block' >First Name:</span> <span className='p-4 text-gray-700'>{data?.first_name}</span></div>
+                  <div><span className='w-[8rem] inline-block'>Middle Name:</span> <span className='p-4 text-gray-700'>{data?.middle_name}</span></div>
+                  <div><span className='w-[8rem] inline-block'>Last Name:</span> <span className='p-4 text-gray-700'>{data?.last_name}</span></div>
                 </div>
 
                 <div >
-                  <div><span  className='w-[8rem] inline-block' >Phone Number:</span> <span className='p-4 text-gray-600'>{data?.phone_number}</span></div>
-                  <div><span  className='w-[8rem] inline-block' >Gender:</span> <span className='p-4 text-gray-600'>{data?.gender}</span></div>
-                  <div><span  className='w-[8rem] inline-block' >Region:</span> <span className='p-4 text-gray-600'>{data?.address}</span></div>
+                  <div><span  className='w-[8rem] inline-block' >Phone Number:</span> <span className='p-4 text-gray-700'>{data?.phone_number}</span></div>
+                  <div><span  className='w-[8rem] inline-block' >Gender:</span> <span className='p-4 text-gray-700'>{data?.gender}</span></div>
+                  <div><span  className='w-[8rem] inline-block' >Region:</span> <span className='p-4 text-gray-700'>{data?.address}</span></div>
                 </div>
 
                 <div >
                   <div><span  className='w-[8rem] inline-block' >Nida: </span><span className='p-4 text-gray-600'>{data?.nida}</span></div>
                   <div><span  className='w-[8rem] inline-block' >house Number:</span> <span className='p-4 text-gray-600'>{data?.house}</span></div>
+                  <div><span  className='w-[8rem] inline-block' >Client Type:</span> <span className='p-4 text-gray-600'>{data?.client_type}</span></div>
+                  {/* <div><span  className='w-[8rem] inline-block' >Marital Status:</span> <span className='p-4 text-gray-600'>{data?.client_type}</span></div> */}
                 </div>
 
 
@@ -61,15 +64,15 @@ export default function CustomerDetailspage({params}) {
               <div className='font-bold text-xl py-2 px-2'>Client Guarantor</div>
               <div className='p-4 border-1 rounded-md flex justify-between' >
                 <div >
-                  <div><span  className='w-[8rem] inline-block' >Sponsor Name:</span> {sponsor?.name}</div>
-                  <div> <span  className='w-[8rem] inline-block' >Phone number:</span> {sponsor?.phone_number}</div>
-                  <div><span  className='w-[8rem] inline-block' >Relation:</span> {sponsor?.relation}</div>
+                  <div><span  className='w-[8rem] inline-block' >Sponsor Name:</span> <span className='text-gray-700'>{sponsor?.name}</span></div>
+                  <div> <span  className='w-[8rem] inline-block' >Phone number:</span> <span className='text-gray-700'>{sponsor?.phone_number}</span></div>
+                  <div><span  className='w-[8rem] inline-block' >Relation:</span> <span className='text-gray-700'>{sponsor?.relation}</span></div>
                 </div>
 
                 <div >
-                  <div><span  className='w-[8rem] inline-block' >Sponsor Name:</span> {sponsor?.name}</div>
-                  <div><span  className='w-[8rem] inline-block' >Phone number:</span> {sponsor?.phone_number}</div>
-                  <div><span  className='w-[8rem] inline-block' >Relation:</span> {sponsor?.relation}</div>
+                  <div><span  className='w-[8rem] inline-block' >Sponsor Name:</span> <span className='text-gray-700'>{sponsor?.name}</span></div>
+                  <div><span  className='w-[8rem] inline-block' >Phone number:</span> <span className='text-gray-700'>{sponsor?.phone_number}</span></div>
+                  <div><span  className='w-[8rem] inline-block' >Relation:</span> <span className='text-gray-700'>{sponsor?.relation}</span></div>
                 </div>
 
                 <div >
@@ -79,6 +82,7 @@ export default function CustomerDetailspage({params}) {
             </div>
 
 
+            {data?.client_type == 'employee' && <>
 
             <div className='mt-4'>
               <div className='font-bold text-xl px-2 flex justify-between items-center my-2'>
@@ -90,49 +94,49 @@ export default function CustomerDetailspage({params}) {
                 return <div key={r.id} className='p-4 border-1 rounded-md flex justify-between' >
                 <div >
                   <div>
-                    <span  className='w-[10rem] inline-block' >Employee name:</span><span className='p-4 text-gray-600'>{r.employee}</span>
+                    <span  className='w-[10rem] inline-block' >Employee name:</span><span className='p-4 text-gray-700'>{r.employee}</span>
                   </div>
 
                   <div>
-                  <span  className='w-[10rem] inline-block' >Institution Type:</span><span className='p-4 text-gray-600'>{r.institition_type}</span>
+                  <span  className='w-[10rem] inline-block' >Institution Type:</span><span className='p-4 text-gray-700'>{r.institition_type}</span>
                   </div>
                   <div>
-                  <span  className='w-[10rem] inline-block' >Work place:</span><span className='p-4 text-gray-600'>{r.work_place}</span>
+                  <span  className='w-[10rem] inline-block' >Work place:</span><span className='p-4 text-gray-700'>{r.work_place}</span>
                   </div>
                   <div>
-                  <span  className='w-[10rem] inline-block' >Work position::</span><span className='p-4 text-gray-600'>{r.work_position}</span>
+                  <span  className='w-[10rem] inline-block' >Work position::</span><span className='p-4 text-gray-700'>{r.work_position}</span>
                   </div>
                 </div>
 
                 <div >
                  
-                  <div><span  className='w-[10rem] inline-block' >Contract start at:</span><span className='p-4 text-gray-600'>{r.start_at.substring(0,10)}</span>
+                  <div><span  className='w-[10rem] inline-block' >Contract start at:</span><span className='p-4 text-gray-700'>{r.start_at.substring(0,10)}</span>
                   </div>
                   <div>
-                  <span  className='w-[10rem] inline-block' >Contact end at:</span><span className='p-4 text-gray-600'>{r.end_at.substring(0,10)}</span>
+                  <span  className='w-[10rem] inline-block' >Contact end at:</span><span className='p-4 text-gray-700'>{r.end_at.substring(0,10)}</span>
                   </div>
                   <div>
-                  <span  className='w-[10rem] inline-block' >Supervisor name:</span><span className='p-4 text-gray-600'>{r.supervisor_name}</span>
+                  <span  className='w-[10rem] inline-block' >Supervisor name:</span><span className='p-4 text-gray-700'>{r.supervisor_name}</span>
                   </div>
 
                   <div>
-                  <span  className='w-[10rem] inline-block' >Contract type:</span><span className='p-4 text-gray-600'>{r.contract_type}</span>
+                  <span  className='w-[10rem] inline-block' >Contract type:</span><span className='p-4 text-gray-700'>{r.contract_type}</span>
                   </div>
                 </div>
 
                 <div >
                   <div>
-                  <span  className='w-[10rem] inline-block' >Supervisor email:</span><span className='p-4 text-gray-600'>{r.supervisor_email}</span>
+                  <span  className='w-[10rem] inline-block' >Supervisor email:</span><span className='p-4 text-gray-700'>{r.supervisor_email}</span>
                   </div>
 
                   <div>
-                  <span  className='w-[10rem] inline-block' >Supervisor phone:</span><span className='p-4 text-gray-600'>{r.super_phone}</span>
+                  <span  className='w-[10rem] inline-block' >Supervisor phone:</span><span className='p-4 text-gray-700'>{r.super_phone}</span>
                   </div>
 
-                  <div><span  className='w-[10rem] inline-block' >Salary before tax:</span><span className='p-4 text-gray-600'>{r.salary_before_tax}</span>
+                  <div><span  className='w-[10rem] inline-block' >Salary before tax:</span><span className='p-4 text-gray-700'>{r.salary_before_tax}</span>
                   </div>
                   <div>
-                  <span  className='w-[10rem] inline-block' >Salary after tax:</span><span className='p-4 text-gray-600'>{r.salary_after_tax}</span>
+                  <span  className='w-[10rem] inline-block' >Salary after tax:</span><span className='p-4 text-gray-700'>{r.salary_after_tax}</span>
                   </div>
                 </div>
 
@@ -142,6 +146,7 @@ export default function CustomerDetailspage({params}) {
               })}
               
             </div>
+            </>}
 
 
 
@@ -153,7 +158,7 @@ export default function CustomerDetailspage({params}) {
 
         {isAttachment && 
           <AttachmentDialog  id={params.slug}
-          isAttachment={isAttachment} setAttachment={setAttachment} />
+          isAttachment={isAttachment} type={data.client_type} setAttachment={setAttachment} />
         }
 
 
@@ -171,6 +176,7 @@ export default function CustomerDetailspage({params}) {
         }
 
 
+      {data?.client_type == 'busines' && <>
             <div className='mt-4'>
               <div className='font-bold text-xl px-2 flex justify-between items-center my-2'>
                 <div>Client Business Details</div>
@@ -196,6 +202,8 @@ export default function CustomerDetailspage({params}) {
               </div>
             </div>
 
+          </>}
+
 
             <div className='mt-4'>
               <div className='font-bold text-xl px-2 flex justify-between items-center my-2'>
@@ -212,7 +220,7 @@ export default function CustomerDetailspage({params}) {
                   {assets?.results?.map(r=>{
                     return <div key={r.id} className='flex justify-between items-center border-b-1 border-gray-400 py-2 w-full'>
                       <div> {r.name}</div>
-                      <div>{r.asset_value}</div>
+                      <div >{r.asset_value}</div>
                     </div>
                   })}
                 </div>

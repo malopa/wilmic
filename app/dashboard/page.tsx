@@ -40,12 +40,13 @@ export default function DashboardPage() {
             <div className='flex justify-center'>
 
               <DashboardCard data={data?.results} number={data?.results?.length} icon='users' title="Total Customers" path='/customer'/>
-              <DashboardCard  data={data?.results} number={data?.results?.filter(p=>p.status=='pending').length} icon='dollar'  path='/loan' title="Loan Pending"/>
+              <DashboardCard  data={data?.results} number={data?.results?.length} icon='dollar'  path='/loan' title="Loan Cars"/>
+
             </div>
 
             <div className='flex justify-center mt-4'>
-                <DashboardCard  data={data?.results} number={data?.results?.filter(p=>p.status=='Approved').length} icon='dollar' title="Total Loans Disbursed "/>
-                <DashboardCard  data={data?.results} sign="TSH" number={20} icon="dollar" title="Total Cash Disbursed"/>
+                {/* <DashboardCard  data={data?.results} number={data?.results?.filter(p=>p.status=='Approved').length} icon='dollar' title="Total Loans Disbursed "/> */}
+                {/* <DashboardCard  data={data?.results} sign="TSH" number={20} icon="dollar" title="Total Cash Disbursed"/> */}
             </div>
 
           </Container>

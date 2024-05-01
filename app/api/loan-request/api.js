@@ -94,7 +94,7 @@ export const updateLoanType = async (data)=>{
 
 export const getLoan = async (data)=>{
     console.log("---token---",data)
-    const res = await fetch(`${BASE_URL}api/v1/request-loan-read/`,{
+    const res = await fetch(`${BASE_URL}api/v1/car/`,{
         next: { tags: ['loans'] },
         headers:{
             'Content-Type':'application/json',

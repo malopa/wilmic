@@ -61,7 +61,7 @@ export default function Navigation(props) {
     };
 
   return (
-    <nav className='flex flex-col'>
+    <nav className='hidden block flex flex-col'>
         <Link className='p-2 text-white no-underline w-full my-0' href="/dashboard"> <i className='pi pi-home m-2 text-lg'></i>Dashboard</Link>
         <Link className='p-2 text-white no-underline w-full my-0' href="/user"> <i className='pi pi-user m-2 text-lg'></i> Users</Link>
         {/* <Link className='p-2 text-white no-underline w-full my-0' href="/customer"><i className='pi pi-users m-2 text-lg'></i> Customers</Link> 

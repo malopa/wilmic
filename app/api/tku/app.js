@@ -9,7 +9,7 @@ export const create = async (data)=>{
         body:JSON.stringify(data)
     })
     const body = await res.text()
-    console.log(body)
+    console.log("feed back",body)
     return body
 }
 

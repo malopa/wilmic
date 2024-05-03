@@ -24,7 +24,7 @@ export default function CarDetailspage({params}) {
 
   const {isLoading,data:features} = useQuery({queryKey:['features'],queryFn:async ()=>getData({token,id:params?.slug})})
   const {isLoading:isSponsor,data:overviewies} = useQuery({queryKey:['overview'+params.slug],queryFn:async ()=>getData({token,id:params?.slug})})
-  const {isLoading:isEmployee,data:images} = useQuery({queryKey:['images'+params.slug],queryFn:async ()=>getData({token,url:`${BASE_URL}api/v1/car-image/`})})
+  const {isLoading:isEmployee,data:images} = useQuery({queryKey:['images'+params.slug],queryFn:async ()=>getData({token,url:`${BASE_URL}api/v1/car-image/?id=${params?.slug}`})})
 
   return (
     <PageCover>
@@ -70,66 +70,7 @@ export default function CarDetailspage({params}) {
                 <button onClick={()=>setIsImage(true)} className=' p-2 bg-blue-800 rounded-md text-white text-sm'><i className='pi pi-plus me-1'></i>Add Images</button>
               </div>
 
-              {images?.results?.map(r=>{
-                return <div key={r.id} className='p-4 border-1 rounded-md flex justify-between' >
-                <div >
-                  <div>
-                    <span  className='w-[10rem] inline-block' >Employee name:</span><span className='p-4 text-gray-600'>{r.employee}</span>
-                  </div>
-
-                  <div>
-                  <span  className='w-[10rem] inline-block' >Institution Type:</span><span className='p-4 text-gray-600'>{r.institition_type}</span>
-                  </div>
-                  <div>
-                  <span  className='w-[10rem] inline-block' >Work place:</span><span className='p-4 text-gray-600'>{r.work_place}</span>
-                  </div>
-                  <div>
-                  <span  className='w-[10rem] inline-block' >Work position::</span><span className='p-4 text-gray-600'>{r.work_position}</span>
-                  </div>
-                </div>
-
-                <div >
-                 
-                  <div>
-                      <span  className='w-[10rem] inline-block' >Contract start at:</span><span className='p-4 text-gray-600'>{r.start_at.substring(0,10)}</span>
-                  </div>
-
-                  <div>
-                    <span  className='w-[10rem] inline-block' >Contact end at:</span><span className='p-4 text-gray-600'>{r.end_at.substring(0,10)}</span>
-                  </div>
-
-                  <div>
-                    <span  className='w-[10rem] inline-block' >Supervisor name:</span><span className='p-4 text-gray-600'>{r.supervisor_name}</span>
-                  </div>
-
-                  <div>
-                    <span className='w-[10rem] inline-block' >Contract type:</span><span className='p-4 text-gray-600'>{r.contract_type}</span>
-                  </div>
-
-                </div>
-
-                <div>
-
-                  <div>
-                  <span  className='w-[10rem] inline-block' >Supervisor email:</span><span className='p-4 text-gray-600'>{r.supervisor_email}</span>
-                  </div>
-
-                  <div>
-                  <span  className='w-[10rem] inline-block' >Supervisor phone:</span><span className='p-4 text-gray-600'>{r.super_phone}</span>
-                  </div>
-
-                  <div><span  className='w-[10rem] inline-block' >Salary before tax:</span><span className='p-4 text-gray-600'>{r.salary_before_tax}</span>
-                  </div>
-                  <div>
-                    <span  className='w-[10rem] inline-block' >Salary after tax:</span><span className='p-4 text-gray-600'>{r.salary_after_tax}</span>
-                  </div>
-
-                </div>
-
-
-              </div>
-
-              })}
+              
               
             </div>
 
@@ -151,7 +92,28 @@ export default function CarDetailspage({params}) {
         }
 
 
-          {JSON.stringify(images)}
+
+
+          <div className='flex flex-wrap'>
+              {images?.results?.map(r=>{
+                return r.images.map(p=>{
+                  return <div key={r.id} className='p-4 border-1 rounded-md flex justify-between' >
+                 
+                  <div><img style={{width:200}} src={`${p.url}`} /></div>
+                 
+               </div>
+                })
+
+              })}
+              </div>
+
+          {/* {images?.results?.map(p=>{
+            return <div>
+              <div>{p.url}</div>
+              <img src={p.url}  style={{width:100}}/>
+            </div>
+          })} */}
+
         </div>
 
 

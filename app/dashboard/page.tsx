@@ -37,10 +37,10 @@ export default function DashboardPage() {
               <Title title="Dashboard" />
             </div>
           {isLoading && <Spinner />}
-            <div className='flex justify-center'>
+            <div className='flex justify-center flex-wrap'>
 
               <DashboardCard data={data?.results} number={data?.results?.length} icon='users' title="Total Customers" path='/customer'/>
-              <DashboardCard  data={data?.results} number={data?.results?.filter(p=>p.status=='pending').length} icon='dollar'  path='/loan' title="Loan Pending"/>
+              <DashboardCard  data={data?.results} number={data?.results?.length} icon='dollar'  path='/loan' title="Total Vehicles"/>
             </div>
 
             <div className='flex justify-center mt-4'>

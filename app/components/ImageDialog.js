@@ -55,7 +55,7 @@ export default function ImageDialog(props) {
 
     const saveProduct = () => {
 
-        const data = {...product,car:props.id,token,url:`${BASE_URL}api/v1/car-image/` }
+        const data = {images:product,car:props.id,token,url:`${BASE_URL}api/v1/car-image/` }
         mutation.mutate(data)
 
     };

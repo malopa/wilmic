@@ -14,12 +14,12 @@ export default function PageCover(props) {
             <section className="w-[20vw] bg-blue-900 min-h-screen px-4 pt-4 position-fixed">
             <div className='flex items-center text-left font-bold text-white mb-4'> 
             
-            <img src='logo.jpg' className='w-[100px] h-[40px]  mx-2 rounded-full' alt="image"/>
+            <img src='logo.jpg' className='lg:w-[100px] h-[40px]  mx-2 rounded-full' alt="image"/>
             T.K.U</div>
-             <Navigation />
+             <Navigation className="hidden" />
 
             </section>
-            <section className="w-[80vw]">
+            <section className="w[100%] md:w-[80vw] lg:w-[80vw]">
                   <Header />
                     {props.children}
               </section>

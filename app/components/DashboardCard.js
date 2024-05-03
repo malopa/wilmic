@@ -3,7 +3,7 @@ import Link from "next/link"
 export default function DashboardCard(props) {
 
   return (
-    <div className='border w-[500px] items-center rounded-md border-1 mx-4 border-gray-200 rounded-sm 
+    <div className='border w-[100%] lg:w-[500px] items-center rounded-md border-1 mx-4 border-gray-200 rounded-sm 
     bg-gradient-to-r from-blue-900 to-green-500
     '>
         <div className='p-4 h-[120px] flex items-center' > <i className={`pi pi-${props.icon} border-1 border-gray-300 p-3 text-orange-600 text-xl m-2`}></i> <div>

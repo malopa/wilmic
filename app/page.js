@@ -16,7 +16,8 @@ import {
   } from '@tanstack/react-query'
 import { redirect, useRouter } from 'next/navigation';
 import Link from 'next/link';
-// import { useRouter } from 'next/router'
+import { useState } from 'react';
+import { useTokenContext } from '../context/TokenContext';
        
   // Create a client
 
@@ -26,11 +27,29 @@ const initialState = {
     "username":"",
     "password":''
 }
-export default async function Page() {
-    const [state, formAction] = useFormState(login, initialState)
+export default function PageLogin() {
+    // const [state, formAction] = useFormState(login, initialState)
+    const [username,setUsername] = useState('')
+    const [password,setPassword] = useState('')
+
+    const {setToken} = useTokenContext()
+
+    const router = useRouter()
+
+    const mutation = useMutation({mutationFn:login,
+        onSuccess:(data)=>{
+            setToken(data.access)
+           router.push('/dashboard')
+        },
+        onError:(e)=>{
+            alert(JSON.stringify(e))
+        }
+    })
 
     const saveData = ()=>{
-        
+        if(!username || !password)return
+        let data = {username,password}
+        mutation.mutate(data)
     }
     
     return <div className="flex flex-col items-center justify-between p-24
@@ -38,11 +57,11 @@ export default async function Page() {
         <div className='w-[400px]'>
 
             
-            <form action={login} className='border-1 rounded-lg px-4 py-4'>
+            <div className='border-1 rounded-lg px-4 py-4'>
 
 
                 <center>
-                    <img src='logo.jpg' className='w-[140px]' alt="image"/>
+                    <img src='logo.jpeg' className='w-[100px]' alt="image"/>
                 </center>
 
             <div className='font-bold text-center p-2 mt-[40px] text-xl'>Log In</div>
@@ -52,11 +71,9 @@ export default async function Page() {
                     <Input 
                         name="username"
                         required
-                        // onChange={(e)=>setUsername(e.target.value)}
+                        value={username}
+                        onChange={(e)=>setUsername(e.target.value)}
                     />
-                    <p aria-live="polite" className="sr-only">
-                        {state?.message}
-                    </p>
                 </div>
 
                 <div className='flex justify-end my-2'>
@@ -68,17 +85,18 @@ export default async function Page() {
                     <Input 
                         name="password"
                         type="password"
-                        // onChange={(e)=>setPassword(e.target.value)}
+                        value={password}
+                        onChange={(e)=>setPassword(e.target.value)}
                     />
 
                 </div>
 
 
-                <SubmitButton label="Log In" onClick={()=>saveData()}/>
+                <SubmitButton label="Log In" onClick={saveData}/>
 
                 
 
-            </form>
+            </div>
         </div>
 
         </div>

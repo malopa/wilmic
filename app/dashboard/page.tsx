@@ -9,6 +9,7 @@ import { useEffect } from 'react'
 import { useQuery } from '@tanstack/react-query'
 import { getSession } from '../api/lib'
 import { getLoan } from '../api/loan-request/api'
+import { getCustomer } from '../api/customer/api'
 
 
 export default function DashboardPage() {
@@ -17,17 +18,11 @@ export default function DashboardPage() {
 
   // const {isLoading,data} = getLoanData(token)
 
-  useEffect(() => {
-
-    async function getToken(){
-        let to = await getSession()
-        setToken(to?.access)
-    }
-
-    getToken()
-    }, []);
+  
 
   const {isLoading,data} = useQuery({queryKey:['loans'],queryFn:async ()=> await getLoan(token)})
+  const {isLoading:isCustomer,data:customers} = useQuery({queryKey:['customers'],queryFn:async ()=>getCustomer(token)})
+
 
   return (
       <div>
@@ -39,14 +34,14 @@ export default function DashboardPage() {
           {isLoading && <Spinner />}
             <div className='flex justify-center'>
 
-              <DashboardCard data={data?.results} number={data?.results?.length} icon='users' title="Total Customers" path='/customer'/>
-              <DashboardCard  data={data?.results} number={data?.results?.length} icon='dollar'  path='/loan' title="Loan Cars"/>
+              <DashboardCard data={data?.results} number={customers?.results?.length} icon='users' title="Total Customers" path='/customer'/>
+              <DashboardCard  data={data?.results} number={data?.results?.length} icon='dollar'  path='/loan' title="Pending Loans"/>
 
             </div>
 
             <div className='flex justify-center mt-4'>
-                {/* <DashboardCard  data={data?.results} number={data?.results?.filter(p=>p.status=='Approved').length} icon='dollar' title="Total Loans Disbursed "/> */}
-                {/* <DashboardCard  data={data?.results} sign="TSH" number={20} icon="dollar" title="Total Cash Disbursed"/> */}
+                <DashboardCard  data={data?.results} number={data?.results?.filter(p=>p.status=='Approved').length} icon='dollar' title="Total Loans Disbursed "/>
+                <DashboardCard  data={data?.results} sign="TSH" number={20} icon="dollar" title="Total Cash Disbursed"/>
             </div>
 
           </Container>

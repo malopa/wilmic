@@ -19,15 +19,17 @@ import { Tooltip } from 'primereact/tooltip';
 import RoleDialog from './RoleDialog.js';
 import Input from './Input.js';
 import { getSession } from '../api/lib.js';
-import { useMutation } from '@tanstack/react-query';
+import { useMutation, useQueryClient } from '@tanstack/react-query';
 import {addUser, deleteUser, updateUser} from '../api/user/api.js';
 import { deleteLoanType } from '../api/loan/api.js';
 import { revalidatePath } from 'next/cache.js';
+import { useTokenContext } from '../../context/TokenContext.js';
         
 
 export default function CustomDatatable(props) {
 
-    const [token,setToken] = useState()
+
+    const {token} = useTokenContext()
     let emptyProduct = {
         id: null,
         name: '',
@@ -60,15 +62,7 @@ export default function CustomDatatable(props) {
     const dt = useRef(null);
 
 
-    useEffect(()=>{
-        async function getToken(){
-            let _token = await getSession()
-            setToken(_token.access)
-            return token
-        }
-
-        getToken()
-    },[])
+    
 
     useEffect(()=>{
             setFirstName(product?.first_name)
@@ -87,9 +81,13 @@ export default function CustomDatatable(props) {
         return value.toLocaleString('en-US', { style: 'currency', currency: 'USD' });
     };
 
+
+    const queryClient = useQueryClient()
+
     const mutation = useMutation({mutationFn:addUser,onSuccess:(data)=>{
         setProductDialog(false)
         toast.current.show({ severity: 'success', summary: 'Successful', detail: 'User added successfully', life: 3000 });
+        queryClient.invalidateQueries("users")
         setEmail("")
         setLastName("")
         setPhoneNumber("")
@@ -324,7 +322,7 @@ export default function CustomDatatable(props) {
             <Toast ref={toast} />
             <div className="card">
                 <Toolbar className="mb-4" left={leftToolbarTemplate} right={rightToolbarTemplate}></Toolbar>
-                <DataTable ref={dt} value={props?.product?.results} 
+                <DataTable ref={dt} value={props?.users} 
                         selection={selectedProducts} 
                         onSelectionChange={(e) => setSelectedProducts(e.value)}
                         dataKey="id" 

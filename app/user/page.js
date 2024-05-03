@@ -1,12 +1,12 @@
+"use client"
 import React from 'react'
 import PageCover from '../components/PageCover'
 import Title from '../components/Title'
 import Container from '../components/Container'
 import UserDatatable from '../components/UserDatatable'
 import { BASE_URL } from '../api/base'
-import { getSession } from '../api/lib'
-import { redirect } from 'next/navigation'
 import { useQuery } from '@tanstack/react-query'
+import { useTokenContext } from '../../context/TokenContext'
 
 
 
@@ -22,15 +22,12 @@ async function getUser(token) {
   return await res.json()
 }
 
-export default async function page() {
+export default function UserPage() {
 
-  const token = await getSession()
+  const {token} = useTokenContext()
 
-  if(!token?.access){
-    return redirect("/")
-  }
 
-  const users = await getUser(token.access)
+  const {isLoading,data:users} = useQuery({queryKey:'users',queryFn:async ()=> await getUser(token)})
 
 
 
@@ -39,7 +36,8 @@ export default async function page() {
 
             <Title title="User Configuration" />
             <Container>
-                <UserDatatable product={users} /> 
+
+                <UserDatatable users={users?.results} /> 
             </Container>
 
     </PageCover>

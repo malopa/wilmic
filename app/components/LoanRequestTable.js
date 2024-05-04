@@ -14,9 +14,11 @@ import RoleDialog from './RoleDialog.js';
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import {addLoanType, returnLoan, updateLoan} from '../api/loan/api.js'
 import { useTokenContext } from '../../context/TokenContext.js';
-import { getLoan } from '../api/loan-request/api.js';
+import { getCustomerLoan, getLoan } from '../api/loan-request/api.js';
 import Spinner from './Spinner.js'
 import Link from 'next/link.js';
+import { InputTextarea } from 'primereact/inputtextarea';
+import { InputNumber } from 'primereact/inputnumber';
         
 
 export default function LoanRequestTable(props) {
@@ -24,13 +26,15 @@ export default function LoanRequestTable(props) {
     const {token} = useTokenContext()
     
     const {isLoading,data} = useQuery({
-        queryKey:['loans'],queryFn:async ()=> await getLoan(token)
+        queryKey:['loans'],queryFn:async ()=> await getCustomerLoan(token)
       })
 
     let emptyProduct = {
         id: null,
         amount: '',
+        amount_disbursed: '',
         customer_id: null,
+        reason:''
     };
 
     const [products, setProducts] = useState(null);
@@ -47,6 +51,8 @@ export default function LoanRequestTable(props) {
     const [loan_type,setLoanType] = useState("one")
     const [min_amount,setMinAmount] = useState()
     const [max_amount,setMaxAmount] = useState()
+    const [disburseProductDialog,setDisturbsedDialog] = useState(false)
+    
     const [isEditProduct,setEditProduct] = useState(false)
 
     const toast = useRef(null);
@@ -73,6 +79,7 @@ export default function LoanRequestTable(props) {
 
     const hideDeleteProductDialog = () => {
         setDeleteProductDialog(false);
+        setDisturbsedDialog(false);
     };
 
     const hideDeleteProductsDialog = () => {
@@ -121,26 +128,53 @@ export default function LoanRequestTable(props) {
     };
 
     const confirmDeleteProduct = (product) => {
-
         setProduct(product);
         setDeleteProductDialog(true);
     };
 
 
+    const confirmDisburseProduct = (product) => {
+        setProduct(product);
+        setDisturbsedDialog(true);
+    };
+
+
+
     const deleteMutation = useMutation({mutationFn:updateLoan,
-    onSuccess:(data)=>{
+        onSuccess:(data)=>{
         client.invalidateQueries("loans")
 
         toast.current.show({ severity: 'success', summary: 'Successful', detail: 'Loan Updated sucessfully', life: 3000 });
     }})
 
+    const disburseMutation = useMutation({mutationFn:updateLoan,
+        onSuccess:(data)=>{
+            client.invalidateQueries("loans")
+    
+            toast.current.show({ severity: 'success', summary: 'Successful', detail: 'Loan Updated sucessfully', life: 3000 });
+        }})
+
     const deleteProduct = () => {
         const data ={...product,customer:product.customer.id,status,token}
-        // alert(JSON.stringify(data))
-        // return;
+        if(!product.reason){
+            return;
+        }
         deleteMutation.mutate(data)
         setDeleteProductDialog(false);
     };
+
+
+    const disburseProduct = () => {
+        const data ={...product,customer:product.customer.id,status,token}
+
+       if(!product.amount_disbursed){
+            return;
+       }
+
+        disburseMutation.mutate(data)
+        setDisturbsedDialog(false);
+    };
+
 
     const findIndexById = (id) => {
         let index = -1;
@@ -211,8 +245,8 @@ export default function LoanRequestTable(props) {
     const leftToolbarTemplate = () => {
         return (
             <div className="flex flex-wrap gap-2">
-                {/* <Button label="New" icon="pi pi-plus" severity="success" onClick={openNew} /> */}
-                {/* <Button label="Delete" icon="pi pi-trash" severity="danger" onClick={confirmDeleteSelected} disabled={!selectedProducts || !selectedProducts.length} /> */}
+                <Button label="New" icon="pi pi-plus" severity="success" onClick={openNew} />
+                <Button label="Delete" icon="pi pi-trash" severity="danger" onClick={confirmDeleteSelected} disabled={!selectedProducts || !selectedProducts.length} />
             </div>
         );
     };
@@ -258,7 +292,7 @@ export default function LoanRequestTable(props) {
                 onClick={() => editProduct(rowData)} /> */}
 
                 <Button icon="pi pi-times-circle" disabled={rowData.status=='Canceled'?true:false} tooltip="Cancel Loan" tooltipOptions={{ position: 'top' }} rounded outlined severity="danger" onClick={() => {setProduct(rowData),setStatus("Canceled"),confirmDeleteProduct(rowData)}} />
-                <Button icon="pi pi-check-circle"  className="mx-2" disabled={rowData.status=='Canceled'?true:false} tooltip="Approve Loan" tooltipOptions={{ position: 'top' }}  rounded outlined severity="success" onClick={() => {setProduct(rowData),setStatus("Approved"),confirmDeleteProduct(rowData)}} />
+                <Button icon="pi pi-check-circle"  className="mx-2" disabled={rowData.status=='Canceled'?true:false} tooltip="Approve Loan" tooltipOptions={{ position: 'top' }}  rounded outlined severity="success" onClick={() => {setProduct(rowData),setStatus("Approved"),confirmDisburseProduct(rowData)}} />
                 {rowData.status=='Approved' && 
                     <Button label='Deposit' className='ml-2' tooltip="Deposit Return" tooltipOptions={{ position: 'top' }} rounded outlined severity="success" onClick={() => {setProduct(rowData),setProductDialog(true)}} />
                 }
@@ -314,9 +348,18 @@ export default function LoanRequestTable(props) {
     const deleteProductDialogFooter = (
         <React.Fragment>
             <Button label="No" icon="pi pi-times" outlined onClick={hideDeleteProductDialog} />
-            <Button label="Disburse" icon="pi pi-check" severity="success" onClick={deleteProduct} />
+            <Button label="Reject" icon="pi pi-check" severity="danger" onClick={deleteProduct} />
         </React.Fragment>
     );
+
+
+    const disburseProductDialogFooter = (
+        <React.Fragment>
+            <Button label="No" icon="pi pi-times" outlined onClick={hideDeleteProductDialog} />
+            <Button label="Disburse" icon="pi pi-check" severity="success" onClick={disburseProduct} />
+        </React.Fragment>
+    );
+
     const deleteProductsDialogFooter = (
         <React.Fragment>
             <Button label="No" icon="pi pi-times" outlined onClick={hideDeleteProductsDialog} />
@@ -391,12 +434,43 @@ export default function LoanRequestTable(props) {
                 footer={deleteProductDialogFooter} 
                 onHide={hideDeleteProductDialog}>
                 <div className="confirmation-content">
-                    <i className="pi pi-exclamation-triangle mr-3" style={{ fontSize: '2rem' }} />
-                    {product && (
-                        <span>
-                            Are you sure you want to change loan status <b>{product.name}</b>?
-                        </span>
-                    )}
+
+                    <div className='py-2 font-bold'>Enter reason for rejecting loan</div>
+                    <InputTextarea
+                        name="reason"
+                        className='w-full'
+                        value={product?.reason}
+                        onChange={(e) => onInputChange(e,'reason')} 
+                        placeholder='Enter reject reason'
+                    />
+                    <div>                    
+                    </div>
+
+                </div>
+            </Dialog>
+
+
+
+            <Dialog visible={disburseProductDialog} style={{ width: '32rem' }} 
+                breakpoints={{ '960px': '75vw', '641px': '90vw' }} 
+                header="Confirm" modal 
+                footer={disburseProductDialogFooter} 
+                onHide={hideDeleteProductDialog}>
+                <div className="confirmation-content">
+                    <div className='py-2 font-bold'>Amount Requested --- {formatCurrency(product?.amount)}</div>
+                    <div className='font-bold py-2'>Enter amount to disburse</div>
+                    <InputNumber
+                        name="amount_disburse"
+                        className='w-full'
+                        value={product?.amount_disbursed}
+
+                        onChange={(e) => onInputNumberChange(e,'amount_disbursed')} 
+                        placeholder='Enter Amount to disburse'
+
+                    />
+                    <div>                    
+                    </div>
+
                 </div>
             </Dialog>
 

@@ -92,7 +92,7 @@ export default function PageLogin() {
                 </div>
 
 
-                <SubmitButton label="Log In" onClick={saveData}/>
+                <SubmitButton label="Log In" isLoading={mutation.isLoading} onClick={saveData}/>
 
                 
 

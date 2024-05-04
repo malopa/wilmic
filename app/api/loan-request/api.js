@@ -38,16 +38,13 @@ export const addAsset = async (data)=>{
 
 export const addAttachment = async (data)=>{
 
-    let token  = data.get("name")
-    alert( JSON.stringify(token.name) )
-    return;
-
     const res = await fetch(`${BASE_URL}api/v1/attachment/`,{
         method:"POST",
         headers:{
-            "Authorization":'Bearer '+ token
+            'Content-Type':'application/json',
+            "Authorization":'Bearer '+ data.token
         },
-        body:(data)
+        body:JSON.stringify(data)
     })
 
     const body = await res.json()
@@ -92,10 +89,9 @@ export const updateLoanType = async (data)=>{
 }
 
 
-export const getLoan = async (data)=>{
+export const getCustomerLoan = async (data)=>{
     console.log("---token---",data)
-    const res = await fetch(`${BASE_URL}api/v1/loans/`,{
-        next: { tags: ['loans'] },
+    const res = await fetch(`${BASE_URL}api/v1/request-loan-read/`,{
         headers:{
             'Content-Type':'application/json',
             "Authorization":'Bearer '+ data
@@ -103,7 +99,22 @@ export const getLoan = async (data)=>{
     })
 
     const body = await res.json()
-    console.log("----get--all--data",body)
+    console.log("--people of coloe ---",body)
+
+    return body;
+}
+
+export const getLoan = async (data)=>{
+    console.log("---token---",data)
+    const res = await fetch(`${BASE_URL}api/v1/loans/`,{
+        headers:{
+            'Content-Type':'application/json',
+            "Authorization":'Bearer '+ data
+        },
+    })
+
+    const body = await res.json()
+    console.log("--people of coloe ---",body)
 
     return body;
 }

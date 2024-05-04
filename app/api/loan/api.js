@@ -36,6 +36,23 @@ export const updateLoan = async (data)=>{
 }
 
 
+export const disburseLoan = async (data)=>{
+    const res = await fetch(`${BASE_URL}api/v1/request-loan/${data.id}/`,{
+        method:"PUT",
+        headers:{
+            'Content-Type':'application/json',
+            "Authorization":'Bearer '+ data.token
+        },
+        body:JSON.stringify(data)
+    })
+
+    const body = await res.json()
+    console.log("---body0---",body)
+
+    return body;
+}
+
+
 
 
 export const returnLoan = async (data)=>{

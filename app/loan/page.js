@@ -10,10 +10,11 @@ import { useTokenContext } from '../../context/TokenContext'
 export default function Loanpage() {
   const {token} = useTokenContext()
   const [loans,setLoans] = useState()
+  
 
   return (
     <PageCover>
-        <Title title="Loans" />
+        <Title title="Clients Loans" />
         <Container>
             <LoanRequestTable  loans={loans}/> 
         </Container>

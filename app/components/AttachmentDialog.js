@@ -29,6 +29,7 @@ export default function AttachmentDialog(props) {
     const {token} = useTokenContext()
     const [submitted, setSubmitted] = useState(false);
     const [product, setProduct] = useState(emptyProduct);
+    const [isLoading, setIsLoading] = useState(false);
     const toast = useRef()
     const formData = new FormData()
     // const [options,setOptions] = useState()
@@ -44,10 +45,12 @@ export default function AttachmentDialog(props) {
         setProduct(_product);
     };
 
+
     const queryClient = useQueryClient()
 
     const mutation  = useMutation({mutationFn:addAttachment,
         onSuccess:(data)=>{
+            alert(JSON.stringify(data))
         props.setAttachment(false)
         queryClient.invalidateQueries('attachments'+props.id)
         toast.current.show({ severity: 'success', summary: 'Successful', detail: 'Customer added successfully', life: 3000 });
@@ -56,12 +59,11 @@ export default function AttachmentDialog(props) {
 
     const saveProduct = () => {
 
-        const data = {...product,customer:+props.id,token}
-        formData.append("name",product.name)
-        formData.append("token",token)
-        formData.append("customer",props.id)
-
-        mutation.mutate(formData)
+        const data = {...product,name:product.name.name,customer:+props.id,token}
+        // formData.append("name",product.name)
+        // formData.append("token",token)
+        // formData.append("customer",props.id)
+        mutation.mutate(data)
        
     };
 
@@ -92,10 +94,10 @@ export default function AttachmentDialog(props) {
 
     const employee_attachment_options = [
         { name: 'Kadi ya gari', code: 'primary level' },
-        { name: 'Home chattle', code: 'Secondary' },
-        { name: 'Nyumba', code: 'University' },
-        { name: 'Bank statment', code: 'University' },
-        { name: 'Nida', code: 'University' },
+        { name: 'Home chattle', code: 'Home chattle' },
+        { name: 'Nyumba', code: 'Nyumba' },
+        { name: 'Bank statment', code: 'Bank statment' },
+        { name: 'Nida', code: 'Nida' },
         { name: 'work id', code: 'work id' },
         { name: 'Employement Contract', code: 'Employemnt Contract' },
         
@@ -117,7 +119,6 @@ export default function AttachmentDialog(props) {
         { name: 'Picha ya dhamana', code: 'Picha ya dhamana' },
         { name: 'certificate of incoparation', code: 'certificate of incoparation' },
         
-        
     ];
     
 
@@ -131,8 +132,9 @@ export default function AttachmentDialog(props) {
     const customBase64Uploader = async (event) => {
         // convert file to base64 encoded
         const file = event.files[0];
-        formData.append("image",file)
-        console.log(file,"-----customer----files----")
+        // formData.append("attachment",file)
+        cloudinaryUpload(file);
+
         const reader = new FileReader();
         let blob = await fetch(file.objectURL).then((r) => r.blob()); //blob:url
 
@@ -146,11 +148,43 @@ export default function AttachmentDialog(props) {
 
 
 
+    const cloudinaryUpload = (photo) => {
+
+        setIsLoading(true)
+        const data = new FormData()
+        data.append('file', photo)
+        data.append('upload_preset', 'mjnbiwoy')
+        data.append("cloud_name", "dgba3tcha")
+        
+        fetch("https://api.cloudinary.com/v1_1/dgba3tcha/upload", {
+          method: "post",
+          body: data
+        }).then(res => res.json()).
+          then(data => {
+
+            console.log("----data----got",data.secure_url)
+
+            setIsLoading(false)
+
+
+            let _product = { ...product };
+
+            _product[`attachment`] = data.secure_url;
+
+            setProduct(_product)
+
+  
+          }).catch(err => {
+            console.log("An Error Occured While Uploading",err)
+          })
+      }
+
+
 
     const productDialogFooter = (
         <React.Fragment>
             <Button label="Cancel" icon="pi pi-times" outlined onClick={hideDialog} />
-            <Button label="Save" icon="pi pi-check" onClick={saveProduct} />
+            <Button label="Save" icon={`pi ${isLoading?'pi-spin pi-spinner':'pi-check'}`} onClick={saveProduct} />
         </React.Fragment>
     );
 
@@ -183,12 +217,23 @@ export default function AttachmentDialog(props) {
                             <label htmlFor="asset_value" className="font-bold">
                                 Asset Value
                             </label>
-                            <FileUpload
+                            {/* <FileUpload
                              mode="basic" 
                             customUpload 
                             uploadHandler={customBase64Uploader}
+                            /> */}
+
+
+
+                        <FileUpload 
+                        name="demo[]" url="/api/upload" 
+                        multiple accept="image/*" maxFileSize={1000000}
+                            customUpload 
+                            uploadHandler={customBase64Uploader}
                             />
-                        </div>
+                                
+
+        </div>
 
 
                         {/* <div className="field">

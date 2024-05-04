@@ -9,7 +9,7 @@ import BusinessDialog from '../../components/BusinessDialog'
 
 import Title from '../../components/Title'
 import { useQuery } from '@tanstack/react-query'
-import { getAssets, getCustomerEmployee, getCustomerInfo, getCustomerSponsor } from '../../api/customer/api'
+import { getAssets, getAttachment, getCustomerEmployee, getCustomerInfo, getCustomerSponsor } from '../../api/customer/api'
 import { useTokenContext } from '../../../context/TokenContext'
 
 
@@ -25,6 +25,7 @@ export default function CustomerDetailspage({params}) {
   const {isLoading:isSponsor,data:sponsor} = useQuery({queryKey:['sponsor'+params.slug],queryFn:async ()=>getCustomerSponsor({token,id:params?.slug})})
   const {isLoading:isEmployee,data:employee} = useQuery({queryKey:['employee'+params.slug],queryFn:async ()=>getCustomerEmployee({token,id:params?.slug})})
   const {isLoading:isAssets,data:assets} = useQuery({queryKey:['assets'+params.slug],queryFn:async ()=>getAssets({token,id:params?.slug})})
+  const {isLoading:isAttach,data:attachments} = useQuery({queryKey:['attachments'+params.slug],queryFn:async ()=>getAttachment({token,id:params?.slug})})
 
 
   return (
@@ -162,7 +163,6 @@ export default function CustomerDetailspage({params}) {
         }
 
 
-
         {isAssetAdd && 
           <AssetsDialogy 
           id={params.slug}
@@ -251,6 +251,12 @@ export default function CustomerDetailspage({params}) {
                       <div>{r.asset_value}</div>
                     </div>
                   })} */}
+                  {attachments?.results?.map(p=>{
+                    return <div key={p.id} className='flex w-full border-bottom-1 p-2 border-gray-200 justify-between'>
+                      <div>{p.name}</div>
+                      <div><a target='_blank' href={`${p.attachment}`}> <img src={`${p.attachment}`} className='w-[100px]' /></a></div>
+                      </div>
+                  })}
                 </div>
 
                 <div >

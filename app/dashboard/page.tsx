@@ -27,7 +27,6 @@ export default function DashboardPage() {
   return (
       <div>
           <Container>
-
             <div className='pl-28'>
               <Title title="Dashboard" />
             </div>

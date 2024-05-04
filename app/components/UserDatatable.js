@@ -19,11 +19,12 @@ import { Tooltip } from 'primereact/tooltip';
 import RoleDialog from './RoleDialog.js';
 import Input from './Input.js';
 import { getSession } from '../api/lib.js';
-import { useMutation, useQueryClient } from '@tanstack/react-query';
-import {addUser, deleteUser, updateUser} from '../api/user/api.js';
+import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
+import {addUser, deleteUser, getGroups, updateUser} from '../api/user/api.js';
 import { deleteLoanType } from '../api/loan/api.js';
 import { revalidatePath } from 'next/cache.js';
 import { useTokenContext } from '../../context/TokenContext.js';
+import { getgroups } from 'process';
         
 
 export default function CustomDatatable(props) {
@@ -52,6 +53,7 @@ export default function CustomDatatable(props) {
     const [submitted, setSubmitted] = useState(false);
     const [globalFilter, setGlobalFilter] = useState(null);
     const [visible, setVisible] = useState(false);
+    const [user, setUser] = useState({});
 
     const [first_name,setFirstName] = useState(product?.first_name)
     const [last_name,setLastName] = useState(product?.last_name)
@@ -61,8 +63,8 @@ export default function CustomDatatable(props) {
     const toast = useRef(null);
     const dt = useRef(null);
 
+    const {isLoading,data:groups} = useQuery({queryKey:['groups'],queryFn:async ()=> getGroups(token)})
 
-    
 
     useEffect(()=>{
             setFirstName(product?.first_name)
@@ -267,7 +269,7 @@ export default function CustomDatatable(props) {
                 severity="danger" 
                 tooltip="Assign user role" 
                 tooltipOptions={{ position: 'top' }} 
-                onClick={() => setVisible(!visible)} />
+                onClick={() => {setVisible(!visible),setUser(rowData)}} />
                 
             </React.Fragment>
         );
@@ -407,11 +409,9 @@ export default function CustomDatatable(props) {
                       />
                 </div>
 
-                
-
             </Dialog>
 
-            <RoleDialog visible={visible} setVisible={setVisible} />
+            <RoleDialog user={user} groups={groups}  visible={visible} setVisible={setVisible} />
 
             <Dialog visible={deleteProductDialog} style={{ width: '32rem' }} 
                 breakpoints={{ '960px': '75vw', '641px': '90vw' }} 

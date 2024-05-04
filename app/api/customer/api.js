@@ -83,6 +83,25 @@ export const getAssets = async (data)=>{
 }
 
 
+
+
+export const getAttachment = async (data)=>{
+
+    const res = await fetch(`${BASE_URL}api/v1/attachment/?id=${data.id}`,{
+        headers:{
+            'Content-Type':'application/json',
+            "Authorization":'Bearer '+ data.token
+        },
+    })
+
+    const body = await res.json()
+
+    console.log("result------------xxxxxxxxxx",body)
+
+    return body;
+}
+
+
 export const getCustomerEmployee = async (data)=>{
 
     const res = await fetch(`${BASE_URL}api/v1/employee/?id=${data.id}`,{

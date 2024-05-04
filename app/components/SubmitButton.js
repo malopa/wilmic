@@ -5,7 +5,7 @@ export function SubmitButton(props) {
  
   return (
     <button type="submit"  onClick={props.onClick} className='bg-blue-800 text-white w-full p-2 mt-4 rounded-md'  disabled={pending}>
-      {props.label}
+      {props.isLoading?<i className="pi pi-spin pi-spinner" style={{ fontSize: '2rem' }}></i>:''}{props.label}
     </button>
   )
 }

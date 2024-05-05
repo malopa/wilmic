@@ -22,7 +22,7 @@ export default function RoleDialog(props) {
         onHide={() => props.setVisible(false)}>
         <div className='flex justify-between p-4'>
           <div className='border-right-1 w-1/2 border-gray-300'>
-            {props?.groups?.results.map(p=>{
+            {props?.groups?.results?.map(p=>{
               return <div key={p.id}>  {p.name}</div>
             })}
           </div>

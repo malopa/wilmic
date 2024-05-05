@@ -119,6 +119,22 @@ export const getCustomerEmployee = async (data)=>{
 }
 
 
+export const getDates = async (data)=>{
+    
+    const res = await fetch(`${BASE_URL}api/v1/loan_return_dates/`,{
+        headers:{
+            'Content-Type':'application/json',
+            "Authorization":'Bearer '+ data
+        },
+    })
+
+    const body = await res.json()
+    console.log("---dates---return--- ",body)
+
+    return body;
+}
+
+
 export const getCustomer = async (data)=>{
     
     const res = await fetch(`${BASE_URL}api/v1/customers-data/`,{

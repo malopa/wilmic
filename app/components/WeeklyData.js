@@ -1,40 +1,36 @@
 "use client"
 import React, { useState, useEffect, useRef } from 'react';
+import { classNames } from 'primereact/utils';
 import { DataTable } from 'primereact/datatable';
 import { Column } from 'primereact/column';
 import { ProductService } from './service/ProductService.js';
 import { Toast } from 'primereact/toast';
 import { Button } from 'primereact/button';
+import { FileUpload } from 'primereact/fileupload';
 import { Rating } from 'primereact/rating';
 import { Toolbar } from 'primereact/toolbar';
+import { InputNumber } from 'primereact/inputnumber';
 import { Dialog } from 'primereact/dialog';
 import { InputText } from 'primereact/inputtext';
 import { Tag } from 'primereact/tag';
 import RoleDialog from './RoleDialog.js';
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
-import {addLoanType, returnLoan, updateLoan} from '../api/loan/api.js'
+import {addLoanType, deleteLoanType, readLogs, returnLoan, updateLoan, updateLoanType} from '../api/loan/api.js'
+import { revalidateTag } from 'next/cache'
 import { useTokenContext } from '../../context/TokenContext.js';
-import { getCustomerLoan, getLoan } from '../api/loan-request/api.js';
-import Spinner from './Spinner.js'
+import {getLoanData} from '../api/data/getdata.js'
 import Link from 'next/link.js';
-import { InputTextarea } from 'primereact/inputtextarea';
-import { InputNumber } from 'primereact/inputnumber';
         
 
-export default function LoanRequestTable(props) {
+export default function WeekDataTable(props) {
 
-    const {token} = useTokenContext()
-    
-    const {isLoading,data} = useQuery({
-        queryKey:['loans'],queryFn:async ()=> await getCustomerLoan(token)
-      })
+    const token = useTokenContext();
+    const {isLoading,data} = useQuery({queryKey:['report'],queryFn:async ()=> await readLogs(token)})
 
     let emptyProduct = {
         id: null,
         amount: '',
-        amount_disbursed: '',
         customer_id: null,
-        reason:''
     };
 
     const [products, setProducts] = useState(null);
@@ -51,8 +47,6 @@ export default function LoanRequestTable(props) {
     const [loan_type,setLoanType] = useState("one")
     const [min_amount,setMinAmount] = useState()
     const [max_amount,setMaxAmount] = useState()
-    const [disburseProductDialog,setDisturbsedDialog] = useState(false)
-    
     const [isEditProduct,setEditProduct] = useState(false)
 
     const toast = useRef(null);
@@ -79,7 +73,6 @@ export default function LoanRequestTable(props) {
 
     const hideDeleteProductDialog = () => {
         setDeleteProductDialog(false);
-        setDisturbsedDialog(false);
     };
 
     const hideDeleteProductsDialog = () => {
@@ -94,6 +87,7 @@ export default function LoanRequestTable(props) {
         mutationFn:addLoanType,
         onSuccess:(data)=>{
             toast.current.show({ severity: 'success', summary: 'Successful', detail: 'Loan added successfully', life: 3000 });
+            // client.invalidateQueries("loans-types")
         }
     })
 
@@ -104,12 +98,12 @@ export default function LoanRequestTable(props) {
 
 
     const updateMutation = useMutation({mutationFn:returnLoan,onSuccess:(data)=>{
-        toast.current.show({ severity: 'success', summary: 'Successful', detail: 'Deposited successfully successfully', life: 3000 });
-        client.invalidateQueries("report")
+        toast.current.show({ severity: 'success', summary: 'Successful', detail: 'Status updated successfully', life: 3000 });
+
     }})
 
     const updateProduct = () =>{
-        let data = {amount:product.amount,loan:product.id,customer:product.customer.id,token}
+        let data = {amount:product.amount,customer:product.customer.id,token}
         // alert(JSON.stringify(data))
         // return;
         updateMutation.mutate(data)
@@ -128,53 +122,26 @@ export default function LoanRequestTable(props) {
     };
 
     const confirmDeleteProduct = (product) => {
+
         setProduct(product);
         setDeleteProductDialog(true);
     };
 
 
-    const confirmDisburseProduct = (product) => {
-        setProduct(product);
-        setDisturbsedDialog(true);
-    };
-
-
-
     const deleteMutation = useMutation({mutationFn:updateLoan,
-        onSuccess:(data)=>{
+    onSuccess:(data)=>{
         client.invalidateQueries("loans")
 
         toast.current.show({ severity: 'success', summary: 'Successful', detail: 'Loan Updated sucessfully', life: 3000 });
     }})
 
-    const disburseMutation = useMutation({mutationFn:updateLoan,
-        onSuccess:(data)=>{
-            client.invalidateQueries("loans")
-    
-            toast.current.show({ severity: 'success', summary: 'Successful', detail: 'Loan Updated sucessfully', life: 3000 });
-        }})
-
     const deleteProduct = () => {
         const data ={...product,customer:product.customer.id,status,token}
-        if(!product.reason){
-            return;
-        }
+        // alert(JSON.stringify(data))
+        // return;
         deleteMutation.mutate(data)
         setDeleteProductDialog(false);
     };
-
-
-    const disburseProduct = () => {
-        const data ={...product,customer:product.customer.id,status,token}
-
-       if(!product.amount_disbursed){
-            return;
-       }
-
-        disburseMutation.mutate(data)
-        setDisturbsedDialog(false);
-    };
-
 
     const findIndexById = (id) => {
         let index = -1;
@@ -245,8 +212,8 @@ export default function LoanRequestTable(props) {
     const leftToolbarTemplate = () => {
         return (
             <div className="flex flex-wrap gap-2">
-                <Button label="New" icon="pi pi-plus" severity="success" onClick={openNew} />
-                <Button label="Delete" icon="pi pi-trash" severity="danger" onClick={confirmDeleteSelected} disabled={!selectedProducts || !selectedProducts.length} />
+                {/* <Button label="New" icon="pi pi-plus" severity="success" onClick={openNew} /> */}
+                {/* <Button label="Delete" icon="pi pi-trash" severity="danger" onClick={confirmDeleteSelected} disabled={!selectedProducts || !selectedProducts.length} /> */}
             </div>
         );
     };
@@ -265,11 +232,11 @@ export default function LoanRequestTable(props) {
     };
 
     const maxBodyTemplate = (rowData) => {
-        return formatCurrency(rowData.amount);
+        return formatCurrency(rowData.debit);
     };
 
-    const minBodyTemplate = (rowData) => {
-        return formatCurrency(rowData.min_amount);
+    const creditBodyTemplate = (rowData) => {
+        return formatCurrency(rowData.amount);
     };
 
     const ratingBodyTemplate = (rowData) => {
@@ -280,35 +247,17 @@ export default function LoanRequestTable(props) {
         return <Tag value={rowData.inventoryStatus} severity={rowData.status=='pending'?'warning':rowData.status=='Canceled'?'danger':'success'}>{rowData.status}</Tag>;
     };
 
-
-    // 
-
     const actionBodyTemplate = (rowData) => {
         return (
             <React.Fragment>
-                {/* <Button icon="pi pi-pencil" rounded outlined className="mr-2" 
-                tooltip="Edit user" 
-                tooltipOptions={{ position: 'top' }}
-                onClick={() => editProduct(rowData)} /> */}
-
-                <Button icon="pi pi-times-circle" disabled={rowData.status=='Canceled'?true:false} tooltip="Cancel Loan" tooltipOptions={{ position: 'top' }} rounded outlined severity="danger" onClick={() => {setProduct(rowData),setStatus("Canceled"),confirmDeleteProduct(rowData)}} />
-                <Button icon="pi pi-check-circle"  className="mx-2" disabled={rowData.status=='Canceled'?true:false} tooltip="Approve Loan" tooltipOptions={{ position: 'top' }}  rounded outlined severity="success" onClick={() => {setProduct(rowData),setStatus("Approved"),confirmDisburseProduct(rowData)}} />
-                {rowData.status=='Approved' && 
-                    <Button label='Deposit' className='ml-2' tooltip="Deposit Return" tooltipOptions={{ position: 'top' }} rounded outlined severity="success" onClick={() => {setProduct(rowData),setProductDialog(true)}} />
-                }
-                {rowData.status=='Approved' && 
-
-                    <Link  className='mx-2' href={`/client-loan/${rowData.customer.id}`}>
-                        <Button icon="pi pi-eye" tooltip="View client loans" tooltipOptions={{ position: 'top' }} className='ml-2' rounded outlined severity="success" />
-                    </Link>
-
-                }
-                {rowData.status !='Approved' && 
-                    <Link href={`/customer-details/${rowData.id}`}>
-                        <Button icon="pi pi-eye" rounded outlined severity="success" tooltip="View client details"  />
-                    </Link>
-                }
-
+                <Link href={`preview-loan/${rowData.loan.id}`}>
+                    <Button icon="pi pi-eye" 
+                        rounded outlined 
+                        className="mr-2" 
+                        tooltip="Edit user" 
+                        tooltipOptions={{ position: 'top' }}
+                        />
+                </Link>
             </React.Fragment>
         );
     };
@@ -331,7 +280,7 @@ export default function LoanRequestTable(props) {
 
     const header = (
         <div className="flex flex-wrap gap-2 align-items-center justify-content-between">
-            <h4 className="m-0">Manage Loans</h4>
+            <h4 className="m-0"></h4>
             <span className="p-input-icon-left">
                 <i className="pi pi-search" />
                 <InputText type="search" onInput={(e) => setGlobalFilter(e.target.value)} placeholder="Search..." />
@@ -340,26 +289,17 @@ export default function LoanRequestTable(props) {
     );
     const productDialogFooter = (
         <React.Fragment>
-            <Button label="Cancel" icon="pi pi-times" outlined onClick={hideDialog} />
-            <Button label="Submit" icon="pi pi-check" onClick={updateProduct} />
+            {/* <Button label="Cancel" icon="pi pi-times" outlined onClick={hideDialog} /> */}
+            {/* <Button label="Submit" icon="pi pi-check" onClick={updateProduct} /> */}
             
         </React.Fragment>
     );
     const deleteProductDialogFooter = (
         <React.Fragment>
             <Button label="No" icon="pi pi-times" outlined onClick={hideDeleteProductDialog} />
-            <Button label="Reject" icon="pi pi-check" severity="danger" onClick={deleteProduct} />
+            <Button label="Yes" icon="pi pi-check" severity="danger" onClick={deleteProduct} />
         </React.Fragment>
     );
-
-
-    const disburseProductDialogFooter = (
-        <React.Fragment>
-            <Button label="No" icon="pi pi-times" outlined onClick={hideDeleteProductDialog} />
-            <Button label="Disburse" icon="pi pi-check" severity="success" onClick={disburseProduct} />
-        </React.Fragment>
-    );
-
     const deleteProductsDialogFooter = (
         <React.Fragment>
             <Button label="No" icon="pi pi-times" outlined onClick={hideDeleteProductsDialog} />
@@ -373,10 +313,10 @@ export default function LoanRequestTable(props) {
             <div className="card">
                 <Toolbar className="mb-4" left={leftToolbarTemplate} right={rightToolbarTemplate}></Toolbar>
                 <center>
-                    {isLoading && <Spinner />}
+                    {/* {isLoading && <Spinner />} */}
                 </center>
 
-                <DataTable ref={dt} value={data?.results} 
+                <DataTable ref={dt} value={props.data} 
                         selection={selectedProducts} 
                         onSelectionChange={(e) => setSelectedProducts(e.value)}
                         dataKey="id" 
@@ -389,14 +329,14 @@ export default function LoanRequestTable(props) {
                         header={header}>
 
                     <Column selectionMode="false" exportable={false}></Column>
+                    <Column field="date" header="Date"  sortable style={{ minWidth: '8rem' }}></Column>
+
                     <Column field="customer.first_name" header="First Name" frozen sortable style={{ minWidth: '12rem' }}></Column>
-                    <Column field="customer.first_name" header="Middle Name"    style={{ minWidth: '16rem' }}></Column>
+                    <Column field="customer.middle_name" header="Middle Name"    style={{ minWidth: '16rem' }}></Column>
                     <Column field="customer.last_name" header="Last Name"    style={{ minWidth: '16rem' }}></Column>
-                    <Column field="customer.phone_number" header="Phone Number"    style={{ minWidth: '16rem' }}></Column>
-                    <Column field="amount" header="Amount" body={maxBodyTemplate}></Column>
-                    <Column field="return_date" header="Return Date"  sortable style={{ minWidth: '8rem' }}></Column>
-                    <Column field="status" header="Status"  body={statusBodyTemplate} sortable style={{ minWidth: '8rem' }}></Column>
-                    <Column body={actionBodyTemplate} exportable={false} style={{ minWidth: '20rem' }}></Column>
+                    <Column field="customer.phone_number" header="Phone number"    style={{ minWidth: '16rem' }}></Column>
+                    <Column field="amount" header="Amont"  body={creditBodyTemplate}    style={{ minWidth: '16rem' }}></Column>
+                    <Column body={actionBodyTemplate} exportable={false} style={{ minWidth: '16rem' }}></Column>
 
                 </DataTable>
             </div>
@@ -414,7 +354,7 @@ export default function LoanRequestTable(props) {
                     <label htmlFor="name" className="font-bold">
                         Amount
                     </label>
-                    <InputText id="loan_type" 
+                    <InputNumber id="loan_type" 
                     value={product?.amount} 
                     name="loan_type"
                     onChange={(e) => onInputChange(e,'amount')} 
@@ -433,43 +373,12 @@ export default function LoanRequestTable(props) {
                 footer={deleteProductDialogFooter} 
                 onHide={hideDeleteProductDialog}>
                 <div className="confirmation-content">
-
-                    <div className='py-2 font-bold'>Enter reason for rejecting loan</div>
-                    <InputTextarea
-                        name="reason"
-                        className='w-full'
-                        value={product?.reason}
-                        onChange={(e) => onInputChange(e,'reason')} 
-                        placeholder='Enter reject reason'
-                    />
-                    <div>                    
-                    </div>
-
-                </div>
-            </Dialog>
-
-
-
-            <Dialog visible={disburseProductDialog} style={{ width: '32rem' }} 
-                breakpoints={{ '960px': '75vw', '641px': '90vw' }} 
-                header="Confirm" modal 
-                footer={disburseProductDialogFooter} 
-                onHide={hideDeleteProductDialog}>
-                <div className="confirmation-content">
-                    <div className='py-2 font-bold'>Amount Requested --- {formatCurrency(product?.amount)}</div>
-                    <div className='font-bold py-2'>Enter amount to disburse</div>
-                    <InputNumber
-                        name="amount_disburse"
-                        className='w-full'
-                        value={product?.amount_disbursed}
-
-                        onChange={(e) => onInputNumberChange(e,'amount_disbursed')} 
-                        placeholder='Enter Amount to disburse'
-
-                    />
-                    <div>                    
-                    </div>
-
+                    <i className="pi pi-exclamation-triangle mr-3" style={{ fontSize: '2rem' }} />
+                    {product && (
+                        <span>
+                            Are you sure you want to change loan status <b>{product.name}</b>?
+                        </span>
+                    )}
                 </div>
             </Dialog>
 

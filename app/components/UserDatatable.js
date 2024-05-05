@@ -193,10 +193,11 @@ export default function CustomDatatable(props) {
         setDeleteProductsDialog(true);
     };
 
+    
     const deleteSelectedProducts = () => {
         // let _products = products.filter((val) => !selectedProducts.includes(val));
         delMutation.mutate(product.id,token)
-
+        queryClient.invalidateQueries("users")
         // setProducts(_products);
         setDeleteProductsDialog(false);
         setSelectedProducts(null);

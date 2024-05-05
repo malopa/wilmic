@@ -1,6 +1,7 @@
 "use client"
 import { createContext, useContext, useEffect, useState } from "react";
 import { getSession } from "../app/api/lib";
+import { redirect } from "next/navigation";
 
 export const TokeContext = createContext()
 
@@ -8,14 +9,10 @@ export const TokeContextProvider = ({children})=>{
     const [token, setToken] = useState(null);
     
     useEffect(() => {
-
-    async function getToken(){
-        let to = await getSession()
-        setToken(to?.access)
-    }
-
-    getToken()
-    }, []);
+        if(!token){
+            // return redirect("/")
+        }
+    }, [token]);
   
     return <TokeContext.Provider value={{token,setToken}}>
         {children}

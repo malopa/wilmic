@@ -5,11 +5,11 @@ import DashboardCard from '../components/DashboardCard'
 import { getLoanData } from '../api/data/getdata'
 import Spinner from '../components/Spinner'
 import { useTokenContext } from '../../context/TokenContext'
-import { useEffect } from 'react'
+import { useEffect, useState } from 'react'
 import { useQuery } from '@tanstack/react-query'
 import { getSession } from '../api/lib'
 import { getLoan } from '../api/loan-request/api'
-import { getCustomer } from '../api/customer/api'
+import { getCustomer, getDates } from '../api/customer/api'
 
 
 export default function DashboardPage() {
@@ -22,15 +22,57 @@ export default function DashboardPage() {
 
   const {isLoading,data} = useQuery({queryKey:['loans'],queryFn:async ()=> await getLoan(token)})
   const {isLoading:isCustomer,data:customers} = useQuery({queryKey:['customers'],queryFn:async ()=>getCustomer(token)})
+  const {isLoading:isDate,data:dates} = useQuery({queryKey:['dates'],queryFn:async ()=>getDates(token)})
+
+  const [weekData,setWeekData] = useState([])
+  const [monthData,setMonthData] = useState([])
+
+  useEffect(()=>{
+    var today = new Date();
+
+    // Calculate the start and end dates of the current week
+    var startOfWeek = new Date(today);
+    startOfWeek.setHours(0, 0, 0, 0 - today.getDay());
+    var endOfWeek = new Date(today);
+    endOfWeek.setHours(23, 59, 59, 999 + (6 - today.getDay()));
+    
+    // Filter dates that fall within the current week
+    var datesWithinWeek = dates?.results?.filter(function(item) {
+        var date = new Date(item.date);
+        console.log("----date---",date)
+        return date >= startOfWeek && date <= endOfWeek;
+    });
+    
+    setWeekData(datesWithinWeek)
+
+  },[dates])
+
+  
+
+  useEffect(()=>{
+    var today = new Date();
+    var currentMonth = today.getMonth() + 1; // Months are 0-based, so adding 1
+
+    // Filter dates that fall within the current month
+    var datesWithinMonth = dates?.results?.filter(function(item) {
+        var date = new Date(item.date);
+        return date.getMonth() + 1 === currentMonth; // Adding 1 as months are 0-based
+    });
+    
+    setMonthData(datesWithinMonth)
+
+  },[dates])
+
+
 
 
   return (
       <div>
           <Container>
             <div className='pl-28'>
-              <Title title="Dashboard" />
             </div>
           {isLoading && <Spinner />}
+          <div className='w-[80%] m-auto'>
             <div className='flex justify-center'>
 
               <DashboardCard data={data?.results} number={customers?.results?.length} icon='users' title="Total Customers" path='/customer'/>
@@ -40,9 +82,15 @@ export default function DashboardPage() {
 
             <div className='flex justify-center mt-4'>
                 <DashboardCard  data={data?.results} number={data?.results?.filter(p=>p.status=='Approved').length} icon='dollar' title="Total Loans Disbursed "/>
-                <DashboardCard  data={data?.results} sign="TSH" number={20} icon="dollar" title="Total Cash Disbursed"/>
+                <DashboardCard  data={monthData} sign="TSH" number={20} icon="dollar" title="Total Cash Disbursed"/>
             </div>
 
+            <div className='flex justify-between mt-4'>
+                <DashboardCard  data={weekData} number={weekData?.length} icon='users' title="This week return " path="/week" />
+                <DashboardCard  data={monthData}  number={monthData?.length} icon="users" title="This month return" path="/week?page=m" />
+            </div>
+
+        </div>
           </Container>
           
       </div>

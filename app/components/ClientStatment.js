@@ -238,7 +238,7 @@ export default function ClientStatment(props) {
     };
 
     const balanceBodyTemplate = (rowData) => {
-        return formatCurrency(props.loan - rowData.debit);
+        return formatCurrency(((5.5/100 * props.loan)+ +props.loan)-rowData.debit );
             
     };
 
@@ -311,7 +311,7 @@ export default function ClientStatment(props) {
         </React.Fragment>
     );
     const creditBodyTemplate = (rowData) => {
-        return <div>{formatCurrency(+rowData.credit)}</div>;
+        return <div>{formatCurrency(+rowData.credit + (5.5/100 *rowData.credit) )}</div>;
     };
 
   return (

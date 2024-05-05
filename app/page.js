@@ -18,6 +18,7 @@ import { redirect, useRouter } from 'next/navigation';
 import Link from 'next/link';
 import { useState } from 'react';
 import { useTokenContext } from '../context/TokenContext';
+import { Checkbox } from 'primereact/checkbox';
        
   // Create a client
 
@@ -31,6 +32,8 @@ export default function PageLogin() {
     // const [state, formAction] = useFormState(login, initialState)
     const [username,setUsername] = useState('')
     const [password,setPassword] = useState('')
+    const [msg,setMsg] = useState('')
+    const [checked,setChecked] = useState(false)
 
     const {setToken} = useTokenContext()
 
@@ -38,8 +41,12 @@ export default function PageLogin() {
 
     const mutation = useMutation({mutationFn:login,
         onSuccess:(data)=>{
-            setToken(data.access)
-           router.push('/dashboard')
+            if(data?.access){
+                setToken(data.access)
+                router.push('/dashboard')
+            }else{
+                setMsg("Wrong username/ password")
+            }
         },
         onError:(e)=>{
             alert(JSON.stringify(e))
@@ -65,6 +72,7 @@ export default function PageLogin() {
                 </center>
 
             <div className='font-bold text-center p-2 mt-[40px] text-xl'>Log In</div>
+                <div className='text-red-400'>{msg}</div>
 
                 <div className="flex flex-column gap-2">
                     <label htmlFor="username" className='text-black'>Username</label>
@@ -84,10 +92,15 @@ export default function PageLogin() {
                     <label htmlFor="password">Password</label>
                     <Input 
                         name="password"
-                        type="password"
+                        type={checked?'text':'password'}
                         value={password}
                         onChange={(e)=>setPassword(e.target.value)}
                     />
+
+                    <div  className='my-2 flex align-items-center'>
+                        <Checkbox inputId="show" id="show" className='show' name="show" checked={checked} onChange={()=>setChecked(!checked)}  />
+                        <label htmlFor="show" className="ml-2">Show password</label>
+                    </div >
 
                 </div>
 

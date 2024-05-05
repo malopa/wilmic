@@ -86,8 +86,8 @@ export default function DashboardPage() {
             </div>
 
             <div className='flex justify-between mt-4'>
-                <DashboardCard  data={weekData} number={weekData?.length} icon='users' title="This week return " path="/week" />
-                <DashboardCard  data={monthData}  number={monthData?.length} icon="users" title="This month return" path="/week?page=m" />
+                <DashboardCard  data={weekData} number={weekData?.length} icon='users' title="Loa  due this week " path="/week" />
+                <DashboardCard  data={monthData}  number={monthData?.length} icon="users" title="Loan due this month" path="/week?page=m" />
             </div>
 
         </div>

@@ -33,7 +33,7 @@ export default function PageLogin() {
     const [username,setUsername] = useState('')
     const [password,setPassword] = useState('')
     const [msg,setMsg] = useState('')
-    const [checked,setChecked] = useState(false)
+    const [show,setChecked] = useState(false)
 
     const {setToken} = useTokenContext()
 
@@ -92,13 +92,13 @@ export default function PageLogin() {
                     <label htmlFor="password">Password</label>
                     <Input 
                         name="password"
-                        type={checked?'text':'password'}
+                        type={show?'text':'password'}
                         value={password}
                         onChange={(e)=>setPassword(e.target.value)}
                     />
 
                     <div  className='my-2 flex align-items-center'>
-                        <Checkbox inputId="show" id="show" className='show' name="show" checked={checked} onChange={()=>setChecked(!checked)}  />
+                        <Checkbox inputId="show" id="show" className='show' value={show} name="show" checked={show} onChange={()=>setChecked(!show)}  />
                         <label htmlFor="show" className="ml-2">Show password</label>
                     </div >
 

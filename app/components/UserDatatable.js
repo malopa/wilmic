@@ -99,15 +99,18 @@ export default function CustomDatatable(props) {
     }})
 
     const updateMutation = useMutation({mutationFn:updateUser,onSuccess:(data)=>{
-        alert(JSON.stringify(data))
+        queryClient.invalidateQueries("users")
         toast.current.show({ severity: 'success', summary: 'Successful', detail: 'User updated successfully', life: 3000 });
 
     }})
 
-    const delMutation = useMutation({mutationFn:deleteLoanType,
+    const delMutation = useMutation({mutationFn:deleteUser,
         onSuccess:(data)=>{
-        // alert(JSON.stringify(data))
+        alert("deleted"+JSON.stringify(data))
+        queryClient.invalidateQueries("users")
+
         toast.current.show({ severity: 'success', summary: 'Successful', detail: 'User Deleted', life: 3000 });
+        
     }})
     
 
@@ -133,6 +136,8 @@ export default function CustomDatatable(props) {
     const saveProduct = () => {
 
         let data = {first_name,last_name,email,token,username:email};
+        // alert(JSON.stringify(data))
+        // return;
         mutation.mutate(data);
 
     };

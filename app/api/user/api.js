@@ -47,6 +47,7 @@ export const deleteUser = async (data)=>{
         }
     })
     const body = await res.json()
+    console.log("deleted--",body)
     return body
 }
 
@@ -65,6 +66,26 @@ export const updateUser = async (data)=>{
 
     const body = await res.text()
     console.log("---body0---",body)
+
+    return body;
+}
+
+
+
+export const changePassword = async (data)=>{
+    
+    const res = await fetch(`${BASE_URL}api/v1/change_password/`,{
+        
+        method:"POST",
+        headers:{
+            'Content-Type':'application/json',
+            "Authorization":'Bearer '+ (data.token)
+        },
+        body:data
+    })
+
+    const body = await res.json()
+    console.log("---body------",body)
 
     return body;
 }

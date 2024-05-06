@@ -27,7 +27,7 @@ export default function UserPage() {
   const {token} = useTokenContext()
 
 
-  const {isLoading,data:users} = useQuery({queryKey:'users',queryFn:async ()=> await getUser(token)})
+  const {isLoading,data:users} = useQuery({queryKey:['users'],queryFn:async ()=> await getUser(token)})
 
 
 

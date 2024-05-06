@@ -29,6 +29,18 @@ export default function RootLayout({ children }) {
             <head>
             <link rel="icon" type="image/jpeg" href="logo.jpeg" />
               <title>tku</title>
+
+              <script
+          dangerouslySetInnerHTML={{
+            __html: `
+              const style = document.createElement('style')
+              style.innerHTML = '@layer tailwind-base, primereact, tailwind-utilities;'
+              style.setAttribute('type', 'text/css')
+              document.querySelector('head').prepend(style)
+            `,
+          }}
+        />
+        
             </head>
             <body className={inter.className}>
               <TokeContextProvider>

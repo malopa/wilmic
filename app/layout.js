@@ -10,9 +10,6 @@ import '/node_modules/primeflex/primeflex.css'
 import { ReactQueryClientProvider } from "./components/ReactQueryClientProvider";
 import {TokeContextProvider} from '../context/TokenContext'
 
-// Create a client
-
-
 const inter = Poppins({ subsets: ["latin"],weight:'400' });
 
 export const metadata = {
@@ -27,9 +24,7 @@ export default function RootLayout({ children }) {
 
   return (
     <ReactQueryClientProvider>
-            <PrimeReactProvider value={value}>
-              
-
+        <PrimeReactProvider value={value}>
           <html lang="en">
             <head>
             <link rel="icon" type="image/jpeg" href="logo.jpeg" />
@@ -41,8 +36,7 @@ export default function RootLayout({ children }) {
               </TokeContextProvider>
             </body>
           </html>
-
-          </PrimeReactProvider>
+        </PrimeReactProvider>
 
     </ReactQueryClientProvider>
     

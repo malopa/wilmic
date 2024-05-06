@@ -33,7 +33,7 @@ export default function RootLayout({ children }) {
           <html lang="en">
             <head>
             <link rel="icon" type="image/jpeg" href="logo.jpeg" />
-              <title>wilmic</title>
+              <title>tku</title>
             </head>
             <body className={inter.className}>
               <TokeContextProvider>

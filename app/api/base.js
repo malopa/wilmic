@@ -1,3 +1,4 @@
 // export const BASE_URL = `http://127.0.0.1:8000/`
-export const BASE_URL = `https://micro.goldtz.co.tz/`
+// export const BASE_URL = `https://micro.goldtz.co.tz/`
+export const BASE_URL = `https://tku.goldtz.co.tz/`
 

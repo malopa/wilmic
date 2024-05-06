@@ -2,10 +2,15 @@ import { Poppins } from "next/font/google";
 import "./globals.css";
 import { PrimeReactProvider } from 'primereact/api';
 
-import "primereact/resources/themes/lara-light-cyan/theme.css";
-import 'primereact/resources/themes/saga-blue/theme.css';
+
+// import "primereact/resources/themes/lara-light-cyan/theme.css";
 import 'primeicons/primeicons.css';
 import '/node_modules/primeflex/primeflex.css'
+
+import 'primereact/resources/primereact.min.css';
+import 'primereact/resources/themes/mdc-light-indigo/theme.css';
+// import "primereact/resources/themes/lara-light-indigo/theme.css";
+
 
 import { ReactQueryClientProvider } from "./components/ReactQueryClientProvider";
 import {TokeContextProvider} from '../context/TokenContext'

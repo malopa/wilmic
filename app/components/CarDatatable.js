@@ -39,6 +39,7 @@ export default function CarDatatable(props) {
         miles: '',
         price: '',
         condition: '',
+        profile: '',
     };
 
     const _state = [
@@ -59,6 +60,8 @@ export default function CarDatatable(props) {
     const [brands,setBrands] = useState([])
     const [models,setModels] = useState([])
     const [edit,setIsEdit] = useState()
+    const [loading,setLoading] = useState(false)
+
 
     const toast = useRef(null);
     const dt = useRef(null);
@@ -145,14 +148,12 @@ export default function CarDatatable(props) {
 
         const data = {...product,brand:product.brand.code,
             model:product.model.code,condition:product.condition.code,
-            
             token,url:`${BASE_URL}api/v1/car/`}
 
-        setSubmitted(true);
+            setSubmitted(true);
 
 
         mutation.mutate(data)
-
        
     };
 
@@ -285,15 +286,15 @@ export default function CarDatatable(props) {
         return <Button label="Export" icon="pi pi-upload" className="p-button-help" onClick={exportCSV} />;
     };
 
-    const imageBodyTemplate = (rowData) => {
-        return <div></div>
-        // <img src={`https://primefaces.org/cdn/primereact/images/product/${rowData.image}`} alt={rowData.image} className="shadow-2 border-round" style={{ width: '64px' }} />;
-    };
+    
 
     const priceBodyTemplate = (rowData) => {
         return formatCurrency(rowData.price);
     };
 
+    const onUpload = () => {
+        toast.current.show({ severity: 'info', summary: 'Success', detail: 'File Uploaded' });
+    };
 
     
    
@@ -370,10 +371,68 @@ export default function CarDatatable(props) {
         setCurrentStep(p=>p-1)
     }
 
+
+
+    const cloudinaryUpload = (photo) => {
+        // alert(photo)
+        const data = new FormData()
+        data.append('file', photo)
+        data.append('upload_preset', 'mjnbiwoy')
+        data.append("cloud_name", "dgba3tcha")
+        console.log(photo)
+        fetch("https://api.cloudinary.com/v1_1/dgba3tcha/upload", {
+          method: "post",
+          body: data
+        }).then(res => res.json()).
+          then(data => {
+            console.log("---------------xxx---------",data.secure_url)
+            // setPhoto(data.secure_url)
+            // setImages(p=>[...p,data.secure_url]);
+            let _product = { ...product };
+
+            _product[`profile`] = data.secure_url;
+
+            setProduct(_product);
+
+  
+          }).catch(err => {
+            console.log("An Error Occured While Uploading",err)
+          })
+      }
+
+    const customBase64Uploader = async (event) => {
+        // convert file to base64 encoded
+        const file = event.files[0];
+        setLoading(true)
+
+        console.log("files--",file) 
+        const reader = new FileReader();
+        let blob = await fetch(file.objectURL).then((r) => r.blob()); //blob:url
+
+        reader.readAsDataURL(blob);
+
+        reader.onloadend = function () {
+            const base64data = reader.result;
+            cloudinaryUpload(file)
+            setLoading(false)
+
+        toast.current.show({ severity: 'info', summary: 'Success', detail: 'File Uploaded' });
+
+
+        };
+    };
+
+    const imageBodyTemplate = (rowData) => {
+        return <img src={`${rowData.profile}`} alt={rowData.profile} className="shadow-2 border-round" style={{ width: '64px' }} />;
+    };
+
+
+
   return (
      <div>
             <Toast ref={toast} />
             <div className="card">
+
                 <Toolbar className="mb-4" left={leftToolbarTemplate} right={rightToolbarTemplate}></Toolbar>
                 <DataTable ref={dt} value={cars?.results} 
                         selection={selectedProducts} 
@@ -395,6 +454,8 @@ export default function CarDatatable(props) {
                     <Column field="model.name" header="Model"  style={{ minWidth: '200px' }}  sortable ></Column>
                     <Column field="miles" header="Miles"  style={{ minWidth: '200px' }}  ></Column>
                     <Column field="condition.name" header="Condition"  style={{ minWidth: '200px' }} frozen sortable ></Column>
+                    <Column field="profile" header="Profile"  body={imageBodyTemplate} style={{ minWidth: '200px' }}  ></Column>
+
                     <Column body={actionBodyTemplate} exportable={false} style={{ minWidth: '18rem' }}></Column>
 
                 </DataTable>
@@ -409,6 +470,13 @@ export default function CarDatatable(props) {
                 footer={productDialogFooter} 
                 onHide={hideDialog}
                 >
+
+
+                <div className="field">
+                    <label className='font-bold'>Car profile image</label> 
+                    <FileUpload name="logo"  accept="image/*" maxFileSize={1000000} onUpload={onUpload} customUpload uploadHandler={customBase64Uploader} />
+                    <i className={`pi ${loading?'pi-spin pi-spinner':''}`} ></i>
+                </div>
 
                 <div className="field mt-4">
                     <label htmlFor="name" className="font-bold">

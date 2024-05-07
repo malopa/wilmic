@@ -44,8 +44,21 @@ let items2 = [
     router.push("/model")
   } },
   { label: 'Car', icon: 'pi pi-car',
-  command: () => {
+    command: () => {
     router.push("/car")
+  } 
+},
+{ label: 'Country', icon: 'pi pi-car',
+    command: () => {
+    router.push("/country")
+  } },
+  { label: 'State', icon: 'pi pi-car',
+    command: () => {
+    router.push("/state")
+  } },
+  { label: 'Destination', icon: 'pi pi-cog',
+    command: () => {
+    router.push("/destination")
   } }
 ];
 

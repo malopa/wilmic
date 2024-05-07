@@ -37,11 +37,11 @@ let items2 = [
   },
   { label:'Model', icon:'pi pi-unlock' ,
   command: () => {
-    router.push("/condition")
+    router.push("/model")
   }},
   { label: 'Condition', icon: 'pi pi-cog',
   command: () => {
-    router.push("/model")
+    router.push("/condition")
   } },
   { label: 'Car', icon: 'pi pi-car',
     command: () => {

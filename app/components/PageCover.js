@@ -11,7 +11,7 @@ export default function PageCover(props) {
 
   return (
     <div className="flex">
-            <section className="w-[0px] sm:hidden md:w-[20vw] lg:w-[20vw] 2xl:w-[20vw] xl:w-[20vw] sm:hidden lg:bg-red-300 bg-blue-900 min-h-screen px-4 pt-4 position-fixed">
+            <section className="w-[0px] md:w-[20vw] lg:w-[20vw] 2xl:w-[20vw] xl:w-[20vw] lg:bg-red-300 bg-blue-900 min-h-screen px-4 pt-4 position-fixed">
             <div className='flex items-center text-left font-bold text-white mb-4'> 
             
             <img src='logo.jpg' className='h-[40px]  mx-2 rounded-full' alt="image"/>

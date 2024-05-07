@@ -219,7 +219,7 @@ export default function ImageDialog(props) {
         onHide={hideDialog}
         >
             
-            {JSON.stringify(product)}
+            {"Total images uploaded-"+JSON.stringify(product.length)}
         <Toast ref={toast}></Toast>
 
         <Tooltip target=".custom-choose-btn" content="Choose" position="bottom" />

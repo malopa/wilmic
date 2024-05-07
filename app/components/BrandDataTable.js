@@ -182,7 +182,6 @@ export default function BrandDatatable(props) {
     const deleteSelectedProducts = () => {
         // let _products = products.filter((val) => !selectedProducts.includes(val));
 
-        alert("delte")
         // setProducts(_products);
         const data = {id:product.id,token,url:`${BASE_URL}api/v1/brand/${product.id}`}
         alert(JSON.stringify(data))

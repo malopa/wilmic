@@ -23,6 +23,7 @@ import {addCustomer, deleteCustomers} from '../api/customer/api.js'
 import { useTokenContext } from '../../context/TokenContext.js';
 import { create, deleteData, getData, update } from '../api/tku/app.js';
 import { BASE_URL } from '../api/base.js';
+import { Dropdown } from 'primereact/dropdown';
         
 
 const _steps =[
@@ -56,7 +57,7 @@ export default function ModelDatatable(props) {
         id: null,
         name: '',
         description: '',
-        
+        brand:''
     };
 
     const {token} = useTokenContext()
@@ -77,7 +78,8 @@ export default function ModelDatatable(props) {
     const toast = useRef(null);
     const dt = useRef(null);
 
-    const {isLoading,data} = useQuery({queryKey:['models'],queryFn:async ()=>getData({token,url:`${BASE_URL}api/v1/model/`})})
+    const {isLoading,data} = useQuery({queryKey:['models'],queryFn:async ()=>getData({token,url:`${BASE_URL}api/v1/read-model/`})})
+    const {isBrand,data:brands} = useQuery({queryKey:['brands'],queryFn:async ()=>getData({token,url:`${BASE_URL}api/v1/brand/`})})
 
 
     const formatCurrency = (value) => {
@@ -114,7 +116,7 @@ export default function ModelDatatable(props) {
     }})
     const saveProduct = () => {
         
-        const data = {...product,token,url:`${BASE_URL}api/v1/model/`}
+        const data = {...product,brand:product.brand.id,token,url:`${BASE_URL}api/v1/model/`}
 
         mutation.mutate(data)
 
@@ -353,6 +355,7 @@ export default function ModelDatatable(props) {
 
                     <Column selectionMode="false" exportable={false}></Column>
                     <Column field="name" header="Name"  style={{ minWidth: '200px' }} frozen sortable ></Column>
+                    <Column field="brand.name" header="Brand"  style={{ minWidth: '200px' }} frozen sortable ></Column>
                     <Column field="description" header="Description"  style={{ minWidth: '200px' }} frozen sortable ></Column>
                     <Column body={actionBodyTemplate} exportable={false} style={{ minWidth: '18rem' }}></Column>
 
@@ -369,6 +372,20 @@ export default function ModelDatatable(props) {
                 onHide={hideDialog}
                 >
 
+
+
+                <div className="field mt-4">
+                    <label htmlFor="brand" className="font-bold">
+                        Brand
+                    </label>
+
+                    <Dropdown value={product.brand} onChange={(e) => onInputChange(e, 'brand')} options={brands?.results} optionLabel="name" 
+                        placeholder="Select a brand" className="w-full" />
+                            
+                    {submitted && !product.brand && <small className="p-error">BrAnd is required.</small>}
+                </div>
+
+
                 <div className="field mt-4">
                     <label htmlFor="name" className="font-bold">
                         Name
@@ -376,6 +393,8 @@ export default function ModelDatatable(props) {
                     <InputText p={12} id="name" value={product.name} onChange={(e) => onInputChange(e, 'name')} required autoFocus className={classNames({ 'p-invalid': submitted && !product.name })} />
                     {submitted && !product.name && <small className="p-error">Name is required.</small>}
                 </div>
+
+
 
                 <div className="field">
                     <label htmlFor="description" className="font-bold">

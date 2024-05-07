@@ -23,7 +23,7 @@ export default function CarDetailspage({params}) {
   const {token} = useTokenContext()
 
   const {isLoading,data:features} = useQuery({queryKey:['features'],queryFn:async ()=>getData({token,id:params?.slug})})
-  const {isLoading:isSponsor,data:overviewies} = useQuery({queryKey:['overview'+params.slug],queryFn:async ()=>getData({token,id:params?.slug})})
+  const {isLoading:isSponsor,data:overviewies} = useQuery({queryKey:['overview'+params.slug],queryFn:async ()=>getData({token,id:params?.slug,url:`${BASE_URL}api/v1/overview-read/?id=${params?.slug}`})})
   const {isLoading:isEmployee,data:images} = useQuery({queryKey:['images'+params.slug],queryFn:async ()=>getData({token,url:`${BASE_URL}api/v1/car-image/?id=${params?.slug}`})})
 
   return (
@@ -54,10 +54,15 @@ export default function CarDetailspage({params}) {
               <button onClick={()=>setIsOverview(true)} className=' p-2 bg-blue-800 rounded-md text-white text-sm'><i className='pi pi-plus me-1'></i>Add Overview</button>
             </div>
 
-              <div className='p-4 border-1 rounded-md flex justify-between' >
+              <div className='p-4 border-1 w-[94%] m-4 rounded-md grid grid-cols-4 gap-4' >
+                {/* {JSON.stringify(overviewies?.results)} */}
 
-                <div >
-                </div>
+                {overviewies?.results.map(r=><div key={r.id} className='flex items-center'>
+                    <div className='text-black'>{r.name}:-</div>
+                    <div className='text-gray-600'>{r.value}</div>
+                  </div>
+                )}
+                
 
               </div>
             </div>
@@ -97,7 +102,7 @@ export default function CarDetailspage({params}) {
           <div className='flex flex-wrap'>
               {images?.results?.map(r=>{
                 return r.images.map(p=>{
-                  return <div key={r.id} className='p-4 border-1 rounded-md flex justify-between' >
+                  return <div key={p.id} className='p-4 border-1 rounded-md flex justify-between' >
                  
                   <div><img style={{width:200}} src={`${p.url}`} /></div>
                  

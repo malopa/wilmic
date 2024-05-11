@@ -367,12 +367,14 @@ export default function LoanTable(props) {
                 footer={deleteProductDialogFooter} 
                 onHide={hideDeleteProductDialog}>
                 <div className="confirmation-content">
+
                     <i className="pi pi-exclamation-triangle mr-3" style={{ fontSize: '2rem' }} />
                     {product && (
                         <span>
                             Are you sure you want to delete <b>{product.name}</b>?
                         </span>
                     )}
+                    
                 </div>
             </Dialog>
 

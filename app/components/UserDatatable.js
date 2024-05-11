@@ -33,14 +33,12 @@ export default function CustomDatatable(props) {
     const {token} = useTokenContext()
     let emptyProduct = {
         id: null,
-        name: '',
+        first_name: '',
+        last_name: '',
+        phone_number: '',
+        username: '',
+        email: '',
         image: null,
-        description: '',
-        category: null,
-        price: 0,
-        quantity: 0,
-        rating: 0,
-        inventoryStatus: 'INSTOCK'
     };
 
   
@@ -53,6 +51,7 @@ export default function CustomDatatable(props) {
     const [submitted, setSubmitted] = useState(false);
     const [globalFilter, setGlobalFilter] = useState(null);
     const [visible, setVisible] = useState(false);
+    const [isEdit, setIsEdit] = useState(false);
     const [user, setUser] = useState({});
 
     const [first_name,setFirstName] = useState(product?.first_name)
@@ -87,10 +86,10 @@ export default function CustomDatatable(props) {
     const queryClient = useQueryClient()
 
     const mutation = useMutation({mutationFn:addUser,onSuccess:(data)=>{
-        setProductDialog(false)
         toast.current.show({ severity: 'success', summary: 'Successful', detail: 'User added successfully', life: 3000 });
         queryClient.invalidateQueries("users")
         setEmail("")
+        hideDialog()
         setLastName("")
         setPhoneNumber("")
         setFirstName("")
@@ -100,18 +99,19 @@ export default function CustomDatatable(props) {
 
     const updateMutation = useMutation({mutationFn:updateUser,onSuccess:(data)=>{
         queryClient.invalidateQueries("users")
+        hideDialog()
         toast.current.show({ severity: 'success', summary: 'Successful', detail: 'User updated successfully', life: 3000 });
 
     }})
 
     const delMutation = useMutation({mutationFn:deleteUser,
         onSuccess:(data)=>{
-        alert("deleted"+JSON.stringify(data))
         queryClient.invalidateQueries("users")
-
         toast.current.show({ severity: 'success', summary: 'Successful', detail: 'User Deleted', life: 3000 });
         
     }})
+
+
     
 
     const openNew = () => {
@@ -123,6 +123,7 @@ export default function CustomDatatable(props) {
     const hideDialog = () => {
         setSubmitted(false);
         setProductDialog(false);
+
     };
 
     const hideDeleteProductDialog = () => {
@@ -141,6 +142,15 @@ export default function CustomDatatable(props) {
         mutation.mutate(data);
 
     };
+
+
+    const updateProduct = () => {
+
+        let data = {...product,token};
+        updateMutation.mutate(data);
+
+    };
+
 
     const editProduct = (product) => {
         setProduct(product)
@@ -269,7 +279,8 @@ export default function CustomDatatable(props) {
                 <Button icon="pi pi-pencil" rounded outlined className="mr-2" 
                 tooltip="Edit user" 
                 tooltipOptions={{ position: 'top' }}
-                onClick={() => {editProduct(rowData),setProduct(rowData)}} />
+                onClick={() => {setIsEdit(true),editProduct(rowData),setProduct(rowData)}} />
+
                 <Button icon="pi pi-trash" rounded outlined severity="danger" onClick={() => {confirmDeleteProduct(rowData),setProduct(rowData)}} />
                 <Button icon="pi pi-arrow-right-arrow-left" className='ml-2' rounded outlined 
                 severity="danger" 
@@ -309,13 +320,14 @@ export default function CustomDatatable(props) {
     const productDialogFooter = (
         <React.Fragment>
             <Button label="Cancel" icon="pi pi-times" outlined onClick={hideDialog} />
-            <Button label={`Save`} icon="pi pi-check" onClick={saveProduct} />
+            {!isEdit?<Button label={`Save`} icon={`pi ${mutation.isPending?'pi-spin pi-spinner':'pi-check'}`} onClick={saveProduct} />:
+            <Button label={`Update`} icon={`pi ${updateMutation.isPending?'pi-spin pi-spinner':'pi-check'}`} onClick={updateProduct} />}
         </React.Fragment>
     );
     const deleteProductDialogFooter = (
         <React.Fragment>
             <Button label="No" icon="pi pi-times" outlined onClick={hideDeleteProductDialog} />
-            <Button label="Yes" icon="pi pi-check" severity="danger" onClick={deleteProduct} />
+            <Button label="Yes" icon={`pi ${delMutation.isPending?'pi-spin pi-spinner':'pi-check'}`} severity="danger" onClick={deleteProduct} />
         </React.Fragment>
     );
     const deleteProductsDialogFooter = (
@@ -345,6 +357,7 @@ export default function CustomDatatable(props) {
                     <Column selectionMode="false" exportable={false}></Column>
                     <Column field="first_name" header="Last Name"  frozen sortable style={{ minWidth: '12rem' }}></Column>
                     <Column field="last_name" header="First Name"   style={{ minWidth: '16rem' }}></Column>
+                    <Column field="phone_number" header="Phone Number"   style={{ minWidth: '16rem' }}></Column>
                     <Column field="email" header="Email" ></Column>
                     <Column body={actionBodyTemplate} exportable={false} style={{ minWidth: '12rem' }}></Column>
 

@@ -14,7 +14,7 @@ export const login = async (data)=>{
     })
 
     const body  = await res.json()
-    console.log("---body response ",body)
+    // console.log("---body response ",body)
     return body
 }
 

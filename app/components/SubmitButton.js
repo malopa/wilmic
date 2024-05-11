@@ -1,11 +1,10 @@
-import { useFormStatus } from 'react-dom'
- 
+ "use client"
+
 export function SubmitButton(props) {
-  const { pending } = useFormStatus()
  
   return (
-    <button type="submit"  onClick={props.onClick} className='bg-blue-800 text-white w-full p-2 mt-4 rounded-md'  disabled={pending}>
-      {props.isLoading?<i className="pi pi-spin pi-spinner" style={{ fontSize: '2rem' }}></i>:''}{props.label}
+    <button type="submit"  onClick={props.onClick} className='flex items-center justify-center bg-blue-800 text-white w-full p-2 mt-4 rounded-md' disabled={props.isPending}>
+      {props.mutation.isPending?<i className="pi pi-spin pi-spinner me-2" style={{ fontSize: '1rem' }}></i>:props.label}
     </button>
   )
 }

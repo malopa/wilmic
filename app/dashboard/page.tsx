@@ -8,19 +8,17 @@ import { useTokenContext } from '../../context/TokenContext'
 import { useEffect, useState } from 'react'
 import { useQuery } from '@tanstack/react-query'
 import { getSession } from '../api/lib'
-import { getLoan } from '../api/loan-request/api'
+import { getLoan, getUser } from '../api/loan-request/api'
 import { getCustomer, getDates } from '../api/customer/api'
 
 
 export default function DashboardPage() {
   
-  const {token,setToken} = useTokenContext()
+  const {token,user_id,setFname} = useTokenContext()
 
   // const {isLoading,data} = getLoanData(token)
-
-  
-
   const {isLoading,data} = useQuery({queryKey:['loans'],queryFn:async ()=> await getLoan(token)})
+  const {isLoading:isUser,data:userInfo} = useQuery({queryKey:['user'],queryFn:async ()=> await getUser({token,id:user_id})})
   const {isLoading:isCustomer,data:customers} = useQuery({queryKey:['customers'],queryFn:async ()=>getCustomer(token)})
   const {isLoading:isDate,data:dates} = useQuery({queryKey:['dates'],queryFn:async ()=>getDates(token)})
 
@@ -28,6 +26,7 @@ export default function DashboardPage() {
   const [monthData,setMonthData] = useState([])
 
   useEffect(()=>{
+
     var today = new Date();
 
     // Calculate the start and end dates of the current week
@@ -39,7 +38,7 @@ export default function DashboardPage() {
     // Filter dates that fall within the current week
     var datesWithinWeek = dates?.results?.filter(function(item) {
         var date = new Date(item.date);
-        console.log("----date---",date)
+        // console.log("----date---",date)
         return date >= startOfWeek && date <= endOfWeek;
     });
     
@@ -63,6 +62,10 @@ export default function DashboardPage() {
 
   },[dates])
 
+
+  useEffect(()=>{
+    setFname(userInfo?.first_name)
+  },[userInfo])
 
 
 

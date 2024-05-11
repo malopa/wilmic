@@ -137,6 +137,8 @@ export default function CustomDatatable(props) {
     const hideDialog = () => {
         setSubmitted(false);
         setProductDialog(false);
+        setDeleteProductsDialog(false);
+
     };
 
     const hideDeleteProductDialog = () => {
@@ -151,10 +153,12 @@ export default function CustomDatatable(props) {
     const queryClient = useQueryClient()
 
     const mutation  = useMutation({mutationFn:addCustomer,onSuccess:(data)=>{
-        setDeleteProductsDialog(false);
         hideDialog()
-        setCurrentStep(0)
+
+        // setCurrentStep(0)
+
         queryClient.invalidateQueries("customers")
+        
         toast.current.show({ severity: 'success', summary: 'Successful', detail: 'Customer added successfully', life: 3000 });
 
     }})
@@ -364,7 +368,7 @@ export default function CustomDatatable(props) {
            
             {(currentStep == 3 )&& <>
             <Button label="Cancel" icon="pi pi-times" outlined onClick={hideDialog} />
-            <Button label="Save" icon="pi pi-check" onClick={saveProduct} />
+            <Button disabled={mutation.isPending} label="Save" icon={`pi ${mutation.isPending?'pi-spin pi-spinner':'pi-check'}`} onClick={saveProduct} />
             </>}
         </React.Fragment>
     );
@@ -525,7 +529,7 @@ export default function CustomDatatable(props) {
                         <label htmlFor="name" className="font-bold">
                             Street
                         </label>
-                        <InputText id="district" value={product.district} onChange={(e) => onInputChange(e, 'district')} required autoFocus className={classNames({ 'p-invalid': submitted && !product.district })} />
+                        <InputText id="district" value={product.district} onChange={(e) => onInputChange(e, 'district')} required  className={classNames({ 'p-invalid': submitted && !product.district })} />
                     </div>
 
                     </div>
@@ -534,14 +538,14 @@ export default function CustomDatatable(props) {
                         <label htmlFor="name" className="font-bold">
                             Home address
                         </label>
-                        <InputText id="name" value={product.address} onChange={(e) => onInputChange(e, 'address')} required autoFocus className={classNames({ 'p-invalid': submitted && !product.address })} />
+                        <InputText id="name" value={product.address} onChange={(e) => onInputChange(e, 'address')} required  className={classNames({ 'p-invalid': submitted && !product.address })} />
                     </div>
 
                     <div className="field">
                         <label htmlFor="name" className="font-bold">
                             House Number
                         </label>
-                        <InputText id="name" value={product.house} onChange={(e) => onInputChange(e, 'house')} required autoFocus className={classNames({ 'p-invalid': submitted && !product.house })} />
+                        <InputText id="name" value={product.house} onChange={(e) => onInputChange(e, 'house')} required  className={classNames({ 'p-invalid': submitted && !product.house })} />
                     </div>
 
                     <div className="field">

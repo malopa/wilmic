@@ -53,6 +53,15 @@ export default function EmployeeDialog(props) {
     };
 
 
+    const onInputNumberChange = (e, name) => {
+        const val = e.value || 0;
+        let _product = { ...product };
+
+        _product[`${name}`] = val;
+
+        setProduct(_product);
+    };
+
     let queryClient = useQueryClient()
 
     const mutation  = useMutation({mutationFn:addEmployee,
@@ -82,13 +91,13 @@ export default function EmployeeDialog(props) {
     ];
 
 
-
     const productDialogFooter = (
         <React.Fragment>
             <Button label="Cancel" icon="pi pi-times" outlined onClick={hideDialog} />
-            <Button label="Save" icon="pi pi-check" onClick={saveProduct} />
+            <Button disabled={mutation.isPending} label="Save" icon={`pi ${mutation.isPending?'pi-spin pi-spinner':'pi-check'}`} onClick={saveProduct} />
         </React.Fragment>
     );
+
 
   return (
     <Dialog 
@@ -125,7 +134,7 @@ export default function EmployeeDialog(props) {
                         <label htmlFor="work_place" className="font-bold">
                             Workplace
                         </label>
-                        <InputText id="work_place" value={product.work_place} onChange={(e) => onInputChange(e, 'work_place')} required autoFocus className={classNames({ 'p-invalid': submitted && !product.relation_1 })} />
+                        <InputText id="work_place" value={product.work_place} onChange={(e) => onInputChange(e, 'work_place')} required className={classNames({ 'p-invalid': submitted && !product.relation_1 })} />
                     </div>
 
                     <div className='flex justify-between items-center'>
@@ -161,7 +170,7 @@ export default function EmployeeDialog(props) {
                         <label htmlFor="supervisor_name" className="font-bold">
                             Supervisor Name 
                         </label>
-                        <InputText id="supervisor_name" value={product.supervisor_name} onChange={(e) => onInputChange(e, 'supervisor_name')} required autoFocus className={classNames({ 'p-invalid': submitted && !product.supervisor_name })} />
+                        <InputText id="supervisor_name" value={product.supervisor_name} onChange={(e) => onInputChange(e, 'supervisor_name')} required className={classNames({ 'p-invalid': submitted && !product.supervisor_name })} />
                     </div>
 
                     <div className='flex justify-between items-center'>
@@ -171,14 +180,14 @@ export default function EmployeeDialog(props) {
                             <label htmlFor="super_phone" className="font-bold">
                                 Supervisor Phone Number
                             </label>
-                            <InputText id="super_phone" value={product.super_phone} onChange={(e) => onInputChange(e, 'super_phone')} required autoFocus className={classNames({ 'p-invalid': submitted && !product.super_phone })} />
+                            <InputText id="super_phone" value={product.super_phone} onChange={(e) => onInputChange(e, 'super_phone')} required className={classNames({ 'p-invalid': submitted && !product.super_phone })} />
                         </div>
 
                         <div className="field">
                             <label htmlFor="email" className="font-bold">
                                 Supervisor email
                             </label>
-                            <InputText id="supervisor_email" value={product.supervisor_email} onChange={(e) => onInputChange(e, 'supervisor_email')} required autoFocus className={classNames({ 'p-invalid': submitted && !product.supervisor_email })} />
+                            <InputText id="supervisor_email" value={product.supervisor_email} onChange={(e) => onInputChange(e, 'supervisor_email')} required className={classNames({ 'p-invalid': submitted && !product.supervisor_email })} />
                         </div>
 
                     </div>
@@ -188,7 +197,7 @@ export default function EmployeeDialog(props) {
                         <label htmlFor="name" className="font-bold">
                             Work Position
                         </label>
-                        <InputText id="work_position" value={product.work_position} onChange={(e) => onInputChange(e, 'work_position')} required autoFocus className={classNames({ 'p-invalid': submitted && !product.work_position })} />
+                        <InputText id="work_position" value={product.work_position} onChange={(e) => onInputChange(e, 'work_position')} required className={classNames({ 'p-invalid': submitted && !product.work_position })} />
                     </div>
 
                     <div className='flex justify-between items-center'>
@@ -196,14 +205,14 @@ export default function EmployeeDialog(props) {
                             <label htmlFor="name" className="font-bold">
                                 Salary befor tax
                             </label>
-                            <InputText id="salary_before_tax" value={product.salary_before_tax} onChange={(e) => onInputChange(e, 'salary_before_tax')} required autoFocus className={classNames({ 'p-invalid': submitted && !product.salary_before_tax })} />
+                            <InputNumber id="salary_before_tax" value={product.salary_before_tax} onChange={(e) => onInputNumberChange(e, 'salary_before_tax')} required className={classNames({ 'p-invalid': submitted && !product.salary_before_tax })} />
                         </div>
 
                         <div className="field">
                             <label htmlFor="name" className="font-bold">
                                 Salary after tax
                             </label>
-                            <InputText id="salary_after_tax" value={product.salary_after_tax} onChange={(e) => onInputChange(e, 'salary_after_tax')} required autoFocus className={classNames({ 'p-invalid': submitted && !product.salary_after_tax })} />
+                            <InputNumber id="salary_after_tax" value={product.salary_after_tax} onChange={(e) => onInputNumberChange(e, 'salary_after_tax')} required className={classNames({ 'p-invalid': submitted && !product.salary_after_tax })} />
                         </div>
 
                     </div>

@@ -104,6 +104,21 @@ export const getCustomerLoan = async (data)=>{
     return body;
 }
 
+export const getUser = async (data)=>{
+    console.log("---token---",data)
+    const res = await fetch(`${BASE_URL}api/v1/users/${data.id}/`,{
+        headers:{
+            'Content-Type':'application/json',
+            "Authorization":'Bearer '+ data.token
+        },
+    })
+
+    const body = await res.json()
+    console.log("--people of coloe ---",body)
+
+    return body;
+}
+
 export const getLoan = async (data)=>{
     console.log("---token---",data)
     const res = await fetch(`${BASE_URL}api/v1/loans/`,{
@@ -114,7 +129,7 @@ export const getLoan = async (data)=>{
     })
 
     const body = await res.json()
-    console.log("--people of coloe ---",body)
+    // console.log("--people of coloe ---",body)
 
     return body;
 }

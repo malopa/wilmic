@@ -8,22 +8,32 @@ import PrimaryBtn from '../components/PrimatuButton'
 import { useTokenContext } from '../../context/TokenContext'
 import { useMutation } from '@tanstack/react-query'
 import { changePassword } from '../api/user/api'
+import { redirect } from 'next/navigation'
+import { useRouter } from 'next/navigation'
 
 export default function Changepage() {
 
   const [new_password,setNewPassword]  = useState()
   const [confirm_password,setConfirmPassword] =   useState()
-  const {token} = useTokenContext()
+  const {token,setToken} = useTokenContext()
+
+  const router = useRouter()
 
 
+  const mutation = useMutation({mutationFn:changePassword,onSuccess:(data)=>{
+    if(data.status){
+      setToken("")
+      router.push('/')
 
-  const mutation = useMutation({mutationFn:changePassword,onSettled:(data)=>{
-    alert(JSON.stringify(data))
+    }
+    // alert(JSON.stringify(data))
   }})
   const saveData = ()=>{
-    let data = {new_password,confirm_password,token}
-    // alert(JSON.stringify(data))
-    // return;
+    if(new_password != confirm_password){
+      alert("Password do not match") 
+      return
+    }
+    let data = {new_password,confirm_password,token,username:'admin'}
     mutation.mutate(data)
   }
   return (
@@ -52,7 +62,7 @@ export default function Changepage() {
                 placeholder="New password" />
               </div>
 
-              <PrimaryBtn  onClick={saveData} isLoading={mutation.isLoading} label="Change Password"/>
+              <PrimaryBtn  onClick={saveData} mutation={mutation} label="Change Password"/>
 
             </div>
           </div>

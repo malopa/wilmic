@@ -52,6 +52,7 @@ export default function LoanRequestTable(props) {
     const [min_amount,setMinAmount] = useState()
     const [max_amount,setMaxAmount] = useState()
     const [disburseProductDialog,setDisturbsedDialog] = useState(false)
+    const [messsage,setMessage] =useState()
     
     const [isEditProduct,setEditProduct] = useState(false)
 
@@ -234,12 +235,21 @@ export default function LoanRequestTable(props) {
     };
 
     const onInputNumberChange = (e, name) => {
-        const val = e.value || 0;
         let _product = { ...product };
 
-        _product[`${name}`] = val;
+        if(+e.value > +product?.amount){
+            setMessage("you can not exceed requested amount")
+            return;
+        }else{
+            setMessage("")
+            const val = e.value || 0;
+        
+            _product[`${name}`] = val;
 
-        setProduct(_product);
+            setProduct(_product);
+        }
+
+        
     };
 
     const leftToolbarTemplate = () => {
@@ -457,6 +467,8 @@ export default function LoanRequestTable(props) {
                 onHide={hideDeleteProductDialog}>
                 <div className="confirmation-content">
                     <div className='py-2 font-bold'>Amount Requested --- {formatCurrency(product?.amount)}</div>
+
+                    <div className='p-invalid text-red-400'>{messsage}</div>
                     <div className='font-bold py-2'>Enter amount to disburse</div>
                     <InputNumber
                         name="amount_disburse"

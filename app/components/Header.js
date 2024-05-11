@@ -4,11 +4,13 @@ import { Menu } from 'primereact/menu';
 import { useRouter } from 'next/navigation';
 import Link from 'next/link'
 import { Button } from 'primereact/button';
+import { useTokenContext } from '../../context/TokenContext';
 
 
 export default function Header() {
 
   const router =useRouter()
+  const {name} = useTokenContext()
 
   let items = [
     { label: 'Profile', 
@@ -31,7 +33,7 @@ const menuLeft = useRef(null);
 
   return (
     <div>
-        <div className="flex justify-end items-center px-4 shadow-sm w-full h-[8vh]"><span className='px-4'>James</span><Button rounded outlined icon='pi pi-user text-xl cursor-pointer' onClick={(event) => menuLeft.current.toggle(event)} aria-controls="popup_menu_left" aria-haspopup /></div>
+        <div className="flex justify-end items-center px-4 shadow-sm w-full h-[8vh]"><span className='font-bold'>Welcome</span><span className='px-2 text-gray-700'>, {name}</span><Button rounded outlined icon='pi pi-user text-xl cursor-pointer' onClick={(event) => menuLeft.current.toggle(event)} aria-controls="popup_menu_left" aria-haspopup /></div>
         <Menu model={items} popup ref={menuLeft} id="popup_menu_left" />
     </div>
   )

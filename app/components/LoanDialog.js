@@ -39,7 +39,7 @@ export default function LoanDialog(props) {
     const queryClient = useQueryClient()
     const mutation  = useMutation({mutationFn:addLoan,
         onSuccess:(data)=>{
-        props.setLoanVisible(false)
+            hideDialog()
         queryClient.invalidateQueries("customers")
         toast.current.show({ severity: 'success', summary: 'Successful', detail: 'Customer added successfully', life: 3000 });
     }})
@@ -70,7 +70,7 @@ export default function LoanDialog(props) {
     const productDialogFooter = (
         <React.Fragment>
             <Button label="Cancel" icon="pi pi-times" outlined onClick={hideDialog} />
-            <Button label="Save" icon="pi pi-check" onClick={saveProduct} />
+            <Button label="Save" icon={`pi ${mutation.isPending?'pi-spin pi-spinner':'pi-check'} `} onClick={saveProduct} />
         </React.Fragment>
     );
 

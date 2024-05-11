@@ -41,6 +41,7 @@ export default function PageLogin() {
 
     const mutation = useMutation({mutationFn:login,
         onSuccess:(data)=>{
+            // console.log("--login--data--",data)
             if(data?.access){
                 setToken(data.access)
                 router.push('/dashboard')
@@ -98,14 +99,22 @@ export default function PageLogin() {
                     />
 
                     <div  className='my-2 flex align-items-center'>
-                        <Checkbox inputId="show" id="show" className='show' value={show} name="show" checked={show} onChange={()=>setChecked(!show)}  />
+                        <Checkbox 
+                        inputId="show" 
+                        id="show" 
+                        className='show' 
+                        name="show" 
+                        checked={show} 
+                        onChange={()=>setChecked(!show)}  />
                         <label htmlFor="show" className="ml-2">Show password</label>
                     </div >
 
                 </div>
+                
+                
 
 
-                <SubmitButton label="Log In" isLoading={mutation.isLoading} onClick={saveData}/>
+                <SubmitButton label="Log In" mutation={mutation} onClick={saveData}/>
 
                 
 

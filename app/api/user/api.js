@@ -47,16 +47,15 @@ export const deleteUser = async (data)=>{
         }
     })
     const body = await res.json()
-    console.log("deleted--",body)
+    console.log("----deleted--",body)
     return body
 }
 
 
 export const updateUser = async (data)=>{
     
-    const res = await fetch(`${BASE_URL}api/v1/users/${data.id}`,{
-        
-        method:"POST",
+    const res = await fetch(`${BASE_URL}api/v1/users/${data.id}/`,{
+        method:"PUT",
         headers:{
             'Content-Type':'application/json',
             "Authorization":'Bearer '+ (data.token)
@@ -74,18 +73,17 @@ export const updateUser = async (data)=>{
 
 export const changePassword = async (data)=>{
     
-    const res = await fetch(`${BASE_URL}api/v1/change_password/`,{
-        
+    const res = await fetch(`${BASE_URL}api/v1/change-password/`,{
         method:"POST",
         headers:{
             'Content-Type':'application/json',
             "Authorization":'Bearer '+ (data.token)
         },
-        body:data
+        body:JSON.stringify(data)
     })
 
     const body = await res.json()
-    console.log("---body------",body)
+    console.log("---change -password------",body)
 
     return body;
 }

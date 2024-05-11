@@ -50,8 +50,7 @@ export default function AttachmentDialog(props) {
 
     const mutation  = useMutation({mutationFn:addAttachment,
         onSuccess:(data)=>{
-            alert(JSON.stringify(data))
-        props.setAttachment(false)
+            hideDialog()
         queryClient.invalidateQueries('attachments'+props.id)
         toast.current.show({ severity: 'success', summary: 'Successful', detail: 'Customer added successfully', life: 3000 });
     }})
@@ -184,7 +183,7 @@ export default function AttachmentDialog(props) {
     const productDialogFooter = (
         <React.Fragment>
             <Button label="Cancel" icon="pi pi-times" outlined onClick={hideDialog} />
-            <Button label="Save" icon={`pi ${isLoading?'pi-spin pi-spinner':'pi-check'}`} onClick={saveProduct} />
+            <Button disabled={mutation.isPending} label="Save" icon={`pi ${mutation.isPending?'pi-spin pi-spinner':'pi-check'}`} onClick={saveProduct} />
         </React.Fragment>
     );
 

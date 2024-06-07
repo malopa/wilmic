@@ -12,7 +12,7 @@ import { useTokenContext } from '../../context/TokenContext'
 export default function WeekData() {
     const {token} = useTokenContext()
 
-    const {isLoading:isDate,data:dates} = useQuery({queryKey:['dates'],queryFn:async ()=>getDates(token)})
+    const {isLoading:isDate,data:dates} = useQuery({queryKey:['months'],queryFn:async ()=>getDates(token)})
 
   const [weekData,setWeekData] = useState([])
   const [monthData,setMonthData] = useState([])
@@ -57,9 +57,10 @@ export default function WeekData() {
   return (
     <PageCover>
         <Container>
-            <Title title="This week due payments" />
+            <Title title="This Month due payments" />
 
-            <WeekDataTable data={weekData} />
+            {JSON.stringify(dates?.results)}
+            <WeekDataTable data={dates?.results} />
         </Container>
     </PageCover>
   )

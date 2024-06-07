@@ -65,7 +65,7 @@ export default function PageLogin() {
         <div className='w-[400px]'>
 
             
-            <div className='border-1 rounded-lg px-4 py-4'>
+            <div className=' rounded-lg px-4 py-4'>
 
 
                 <center>
@@ -98,16 +98,15 @@ export default function PageLogin() {
                         onChange={(e)=>setPassword(e.target.value)}
                     />
 
-                    <div  className='my-2 flex align-items-center'>
+                    {/* <div  className='my-2 flex align-items-center'>
                         <Checkbox 
                         inputId="show" 
                         id="show" 
                         className='show' 
-                        name="show" 
                         checked={show} 
                         onChange={()=>setChecked(!show)}  />
                         <label htmlFor="show" className="ml-2">Show password</label>
-                    </div >
+                    </div > */}
 
                 </div>
                 

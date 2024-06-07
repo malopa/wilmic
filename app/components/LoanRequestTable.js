@@ -107,12 +107,14 @@ export default function LoanRequestTable(props) {
     const updateMutation = useMutation({mutationFn:returnLoan,onSuccess:(data)=>{
         toast.current.show({ severity: 'success', summary: 'Successful', detail: 'Deposited successfully successfully', life: 3000 });
         client.invalidateQueries("report")
+        client.invalidateQueries("loans")
     }})
 
     const updateProduct = () =>{
         let data = {amount:product.amount,loan:product.id,customer:product.customer.id,token}
         // alert(JSON.stringify(data))
         // return;
+        
         updateMutation.mutate(data)
         setEditProduct(false);
 

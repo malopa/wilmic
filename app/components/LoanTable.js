@@ -22,6 +22,7 @@ import { getSession } from '../api/lib.js';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 import {addLoanType, deleteLoanType} from '../api/loan/api.js'
 import { revalidateTag } from 'next/cache'
+import { useTokenContext } from '../../context/TokenContext.js';
         
 
 export default function LoanTable(props) {
@@ -48,13 +49,13 @@ export default function LoanTable(props) {
     const [globalFilter, setGlobalFilter] = useState(null);
     const [visible, setVisible] = useState(false);
 
-    const [token,setToken] = useState()
     const [interest,setInterest] = useState()
     const [loan_type,setLoanType] = useState("one")
     const [min_amount,setMinAmount] = useState()
     const [max_amount,setMaxAmount] = useState()
     const [isEditProduct,setEditProduct] = useState(false)
 
+    const {token} = useTokenContext()
     const toast = useRef(null);
     const dt = useRef(null);
 
@@ -86,19 +87,16 @@ export default function LoanTable(props) {
     };
 
 
-    useEffect(()=>{
-        getSession()
-        .then(res=>{
-            setToken(res?.access)
-        })
-    },[])
+   
 
     const client = useQueryClient()
     const mutation = useMutation({
         mutationFn:addLoanType,
         onSuccess:(data)=>{
+            alert(JSON.stringify(data))            
+            client.invalidateQueries("loan-type")
             toast.current.show({ severity: 'success', summary: 'Successful', detail: 'Loan added successfully', life: 3000 });
-            client.invalidateQueries("loans-types")
+
         }
     })
 

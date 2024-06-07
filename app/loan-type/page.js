@@ -12,21 +12,15 @@ export default  function LoanTypePage() {
   const [loans,setLoans] = useState()
   const {token} = useTokenContext()
   
-  useEffect(()=>{
-    getLoanType(token)
-    .then(res=>{
-      setLoans(res.results)
-    })
-  },[token])
+  const {isLoading,data} = useQuery({queryKey:["loan-type"],queryFn:async ()=> await getLoanType(token)})
 
-  const {isLoading,data} = useQuery({queryKey:['query'],queryFn:getLoanType(token)})
-  console.log("----use query resukt----",data)
+
 
   return (
     <PageCover>
         <Title title="Loan Type" />
         <Container>
-              <LoanTable loans={loans} /> 
+              <LoanTable loans={data?.results} /> 
         </Container>
     </PageCover>
   )

@@ -72,10 +72,11 @@ export default function DashboardPage() {
   return (
       <div>
           <Container>
-            <div className='pl-28'>
-            </div>
-          {isLoading && <Spinner />}
+           
           <div className='w-[80%] m-auto'>
+            {JSON.stringify(dates)}
+          {isLoading && <Spinner />}
+
             <div className='flex justify-center'>
 
               <DashboardCard data={data?.results} number={customers?.results?.length} icon='users' title="Total Customers" path='/customer'/>
@@ -88,7 +89,7 @@ export default function DashboardPage() {
                 <DashboardCard  data={monthData} sign="TSH" number={20} icon="dollar" title="Total Cash Disbursed"/>
             </div>
 
-            <div className='flex justify-between mt-4'>
+            <div className='flex justify-center mt-4'>
                 <DashboardCard  data={weekData} number={weekData?.length} icon='users' title="Loa  due this week " path="/week" />
                 <DashboardCard  data={monthData}  number={monthData?.length} icon="users" title="Loan due this month" path="/week?page=m" />
             </div>

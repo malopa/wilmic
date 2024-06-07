@@ -41,6 +41,7 @@ export default function LoanDialog(props) {
         onSuccess:(data)=>{
             hideDialog()
         queryClient.invalidateQueries("customers")
+        queryClient.invalidateQueries("loans")
         toast.current.show({ severity: 'success', summary: 'Successful', detail: 'Customer added successfully', life: 3000 });
     }})
 

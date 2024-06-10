@@ -112,8 +112,6 @@ export default function LoanRequestTable(props) {
 
     const updateProduct = () =>{
         let data = {amount:product.amount,loan:product.id,customer:product.customer.id,token}
-        // alert(JSON.stringify(data))
-        // return;
         
         updateMutation.mutate(data)
         setEditProduct(false);
@@ -353,7 +351,7 @@ export default function LoanRequestTable(props) {
     const productDialogFooter = (
         <React.Fragment>
             <Button label="Cancel" icon="pi pi-times" outlined onClick={hideDialog} />
-            <Button label="Submit" icon="pi pi-check" onClick={updateProduct} />
+            <Button label="Submit" icon={`pi ${updateMutation.isPending?'pi-spin pi-spinner':'pi-check'}`} onClick={updateProduct} />
             
         </React.Fragment>
     );

@@ -59,7 +59,6 @@ export default function WeekData() {
         <Container>
             <Title title="This Month due payments" />
 
-            {JSON.stringify(dates?.results)}
             <WeekDataTable data={dates?.results} />
         </Container>
     </PageCover>

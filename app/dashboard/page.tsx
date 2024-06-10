@@ -74,7 +74,6 @@ export default function DashboardPage() {
           <Container>
            
           <div className='w-[80%] m-auto'>
-            {JSON.stringify(dates)}
           {isLoading && <Spinner />}
 
             <div className='flex justify-center'>

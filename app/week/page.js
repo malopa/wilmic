@@ -58,8 +58,7 @@ export default function WeekData() {
     <PageCover>
         <Container>
             <Title title="This Month due payments" />
-
-            <WeekDataTable data={dates?.results} />
+            <WeekDataTable data={monthData} />
         </Container>
     </PageCover>
   )

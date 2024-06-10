@@ -252,12 +252,12 @@ export default function WeekDataTable(props) {
         return (
             <React.Fragment>
                 <Link href={`preview-loan/${rowData.loan.id}`}>
-                    <Button icon="pi pi-eye" 
+                    {/* <Button icon="pi pi-eye" 
                         rounded outlined 
                         className="mr-2" 
                         tooltip="Edit user" 
                         tooltipOptions={{ position: 'top' }}
-                        />
+                        /> */}
                 </Link>
             </React.Fragment>
         );
@@ -313,11 +313,7 @@ export default function WeekDataTable(props) {
             <Toast ref={toast} />
             <div className="card">
                 <Toolbar className="mb-4" left={leftToolbarTemplate} right={rightToolbarTemplate}></Toolbar>
-                <center>
-                    {/* {isLoading && <Spinner />} */}
-                </center>
 
-                {JSON.stringify(data)}
                 <DataTable ref={dt} value={props.data} 
                         selection={selectedProducts} 
                         onSelectionChange={(e) => setSelectedProducts(e.value)}

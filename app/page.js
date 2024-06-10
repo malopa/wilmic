@@ -98,7 +98,8 @@ export default function PageLogin() {
                         onChange={(e)=>setPassword(e.target.value)}
                     />
 
-                    {/* <div  className='my-2 flex align-items-center'>
+                    <div  className='my-2 flex align-items-center'>
+                        
                         <Checkbox 
                         inputId="show" 
                         id="show" 
@@ -106,12 +107,11 @@ export default function PageLogin() {
                         checked={show} 
                         onChange={()=>setChecked(!show)}  />
                         <label htmlFor="show" className="ml-2">Show password</label>
-                    </div > */}
+                    </div >
 
                 </div>
                 
                 
-
 
                 <SubmitButton label="Log In" mutation={mutation} onClick={saveData}/>
 

@@ -26,6 +26,7 @@ export default function WeekDataTable(props) {
 
     const token = useTokenContext();
     const {isLoading,data} = useQuery({queryKey:['report'],queryFn:async ()=> await readLogs(token)})
+    
 
     let emptyProduct = {
         id: null,
@@ -316,6 +317,7 @@ export default function WeekDataTable(props) {
                     {/* {isLoading && <Spinner />} */}
                 </center>
 
+                {JSON.stringify(data)}
                 <DataTable ref={dt} value={props.data} 
                         selection={selectedProducts} 
                         onSelectionChange={(e) => setSelectedProducts(e.value)}

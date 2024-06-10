@@ -93,7 +93,7 @@ export default function DashboardPage() {
 
             <div className='flex justify-center mt-4'>
                 <DashboardCard  data={data?.results} number={data?.results?.filter(p=>p.status=='Approved').length} icon='dollar' path='/loan' title="Total Loans Disbursed "/>
-                <DashboardCard  data={monthData} sign="TSH" number={totalLoanDisbursed} icon="dollar" path="/" title="Total Cash Disbursed"/>
+                <DashboardCard  data={monthData} sign="TSH" number={totalLoanDisbursed} icon="dollar" path="/dashboard" title="Total Cash Disbursed"/>
             </div>
 
             <div className='flex justify-center mt-4'>

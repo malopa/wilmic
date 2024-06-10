@@ -8,7 +8,7 @@ import { useTokenContext } from '../../context/TokenContext'
 import { useEffect, useState } from 'react'
 import { useQuery } from '@tanstack/react-query'
 import { getSession } from '../api/lib'
-import { getLoan, getUser } from '../api/loan-request/api'
+import { getCustomerLoan, getLoan, getUser } from '../api/loan-request/api'
 import { getCustomer, getDates } from '../api/customer/api'
 
 
@@ -17,12 +17,13 @@ export default function DashboardPage() {
   const {token,user_id,setFname} = useTokenContext()
 
   // const {isLoading,data} = getLoanData(token)
-  const {isLoading,data} = useQuery({queryKey:['loans'],queryFn:async ()=> await getLoan(token)})
+  const {isLoading,data} = useQuery({queryKey:['loans'],queryFn:async ()=> await getCustomerLoan(token)})
   const {isLoading:isUser,data:userInfo} = useQuery({queryKey:['user'],queryFn:async ()=> await getUser({token,id:user_id})})
   const {isLoading:isCustomer,data:customers} = useQuery({queryKey:['customers'],queryFn:async ()=>getCustomer(token)})
   const {isLoading:isDate,data:dates} = useQuery({queryKey:['dates'],queryFn:async ()=>getDates(token)})
 
   const [weekData,setWeekData] = useState([])
+  const [totalLoanDisbursed,setTotalLoanDisbursed] = useState(0)
   const [monthData,setMonthData] = useState([])
 
   useEffect(()=>{
@@ -47,6 +48,15 @@ export default function DashboardPage() {
   },[dates])
 
   
+  useEffect(()=>{
+    let total = 0;
+    data?.results?.map(p=>{
+      if(p.status=='Approved'){
+        total += +p.amount
+      }
+    })
+    setTotalLoanDisbursed(total)
+  },[data])
 
   useEffect(()=>{
     var today = new Date();
@@ -74,18 +84,16 @@ export default function DashboardPage() {
           <Container>
            
           <div className='w-[80%] m-auto'>
-          {isLoading && <Spinner />}
-
+          
             <div className='flex justify-center'>
-
               <DashboardCard data={data?.results} number={customers?.results?.length} icon='users' title="Total Customers" path='/customer'/>
-              <DashboardCard  data={data?.results} number={data?.results?.length} icon='dollar'  path='/loan' title="Pending Loans"/>
+              <DashboardCard  data={data?.results} number={data?.results?.filter(p=>p.status=='pending').length} icon='dollar'  path='/loan' title="Pending Loans"/>
 
             </div>
 
             <div className='flex justify-center mt-4'>
-                <DashboardCard  data={data?.results} number={data?.results?.filter(p=>p.status=='Approved').length} icon='dollar' title="Total Loans Disbursed "/>
-                <DashboardCard  data={monthData} sign="TSH" number={20} icon="dollar" title="Total Cash Disbursed"/>
+                <DashboardCard  data={data?.results} number={data?.results?.filter(p=>p.status=='Approved').length} icon='dollar' path='/loan' title="Total Loans Disbursed "/>
+                <DashboardCard  data={monthData} sign="TSH" number={totalLoanDisbursed} icon="dollar" path="/" title="Total Cash Disbursed"/>
             </div>
 
             <div className='flex justify-center mt-4'>
